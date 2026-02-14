@@ -13,7 +13,7 @@ with open("GMAT contactlocator output SYS2.txt") as f:
     for line in f:
         if line[:10] == "Observer: ":
             station = line[10:-1]
-        if line[0] == "1":
+        if line[0] in ("0", "1", "2", "3"):
             # Example start/stop: 13 Feb 2026 03:46:42.958 ==> %d %b %Y %H:%M:%S.%f
             start = datetime.strptime(line[:24], "%d %b %Y %H:%M:%S.%f")
             stop = datetime.strptime(line[28:52], "%d %b %Y %H:%M:%S.%f")
