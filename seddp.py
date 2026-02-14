@@ -55,7 +55,7 @@ plt.tight_layout()
 if SAVEFIG:
     plt.savefig("Ground station contact times.png")
 
-### Calculate
+### CALCULATE STUFF
 intervals = [(start, stop) for station, start, stop, duration in data]
 intervals.sort(key=lambda x: x[0])
 
@@ -66,8 +66,7 @@ for start, stop in intervals:
         merged.append([start, stop])
     else:
         last_start, last_stop = merged[-1]
-        
-        if start <= last_stop:  # overlap
+        if start <= last_stop:
             merged[-1][1] = max(last_stop, stop)
         else:
             merged.append([start, stop])
@@ -77,20 +76,49 @@ total_contact = timedelta()
 for start, stop in merged:
     total_contact += (stop - start)
 
-print("Total contact time:")
-print(total_contact)
-print("Total contact time (seconds):", total_contact.total_seconds())
-print("Total contact time (hours):", total_contact.total_seconds() / 3600)
+contact_per_day = defaultdict(timedelta)
 
-start_time = min(start for start, stop in intervals)
-end_time   = max(stop for start, stop in intervals)
+for start, stop in merged:
+    current = start
 
-total_span = end_time - start_time
-total_days = total_span.total_seconds() / 86400
+    while current < stop:
+        end_of_day = datetime.combine(
+            current.date() + timedelta(days=1),
+            datetime.min.time()
+        )
 
-average_per_day_seconds = total_contact.total_seconds() / total_days
-average_per_day_minutes = average_per_day_seconds / 60
+        segment_end = min(stop, end_of_day)
 
-print("Average contact time per day:")
-print("Seconds/day:", average_per_day_seconds)
-print("Minutes/day:", average_per_day_minutes)
+        contact_per_day[current.date()] += (segment_end - current)
+
+        current = segment_end
+
+start_time = min(start for start, stop in merged)
+end_time   = max(stop for start, stop in merged)
+
+total_span_days = (end_time - start_time).total_seconds() / 86400
+calendar_days = (end_time.date() - start_time.date()).days + 1
+
+average_per_day_minutes = total_contact.total_seconds() / 60 / total_span_days
+average_calendar_day_minutes = total_contact.total_seconds() / 60 / calendar_days
+
+print("\n========== CONTACT SUMMARY ==========\n")
+
+print(f"Analysis window:")
+print(f"Start: {start_time}")
+print(f"End:   {end_time}")
+print(f"Duration: {total_span_days:.3f} days\n")
+
+print(f"Total contact time:")
+print(f"{total_contact} = {total_contact.total_seconds() / 60} minutes")
+
+print("Contact time per day:")
+for day in sorted(contact_per_day.keys()):
+    minutes = contact_per_day[day].total_seconds() / 60
+    print(f"{day} : {minutes:.3f} min")
+
+print("\nAverage contact per day (continuous window): "
+      f"{average_per_day_minutes:.3f} min/day")
+
+print("Average contact per calendar day: "
+      f"{average_calendar_day_minutes:.3f} min/day")
