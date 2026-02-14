@@ -1,0 +1,430 @@
+%General Mission Analysis Tool(GMAT) Script
+%Created: 2026-02-12 15:29:00
+
+
+%----------------------------------------
+%---------- Spacecraft
+%----------------------------------------
+
+Create Spacecraft DefaultSC;
+DefaultSC.DateFormat = UTCGregorian;
+DefaultSC.Epoch = '13 Feb 2026 00:00:00.000';
+DefaultSC.CoordinateSystem = EarthMJ2000Eq;
+DefaultSC.DisplayStateType = Keplerian;
+DefaultSC.SMA = 6928.137000000007;
+DefaultSC.ECC = 6.175027552874367e-16;
+DefaultSC.INC = 97.59000000000002;
+DefaultSC.RAAN = 0;
+DefaultSC.AOP = 0;
+DefaultSC.TA = 0;
+DefaultSC.DryMass = 850;
+DefaultSC.Cd = 2.2;
+DefaultSC.Cr = 1.8;
+DefaultSC.DragArea = 15;
+DefaultSC.SRPArea = 1;
+DefaultSC.SPADDragScaleFactor = 1;
+DefaultSC.SPADSRPScaleFactor = 1;
+DefaultSC.AtmosDensityScaleFactor = 1;
+DefaultSC.ExtendedMassPropertiesModel = 'None';
+DefaultSC.NAIFId = -10000001;
+DefaultSC.NAIFIdReferenceFrame = -9000001;
+DefaultSC.OrbitColor = Red;
+DefaultSC.TargetColor = Teal;
+DefaultSC.OrbitErrorCovariance = [ 1e+70 0 0 0 0 0 ; 0 1e+70 0 0 0 0 ; 0 0 1e+70 0 0 0 ; 0 0 0 1e+70 0 0 ; 0 0 0 0 1e+70 0 ; 0 0 0 0 0 1e+70 ];
+DefaultSC.CdSigma = 1e+70;
+DefaultSC.CrSigma = 1e+70;
+DefaultSC.Id = 'SatId';
+DefaultSC.Attitude = CoordinateSystemFixed;
+DefaultSC.SPADSRPInterpolationMethod = Bilinear;
+DefaultSC.SPADSRPScaleFactorSigma = 1e+70;
+DefaultSC.SPADDragInterpolationMethod = Bilinear;
+DefaultSC.SPADDragScaleFactorSigma = 1e+70;
+DefaultSC.AtmosDensityScaleFactorSigma = 1e+70;
+DefaultSC.ModelFile = 'aura.3ds';
+DefaultSC.ModelOffsetX = 0;
+DefaultSC.ModelOffsetY = 0;
+DefaultSC.ModelOffsetZ = 0;
+DefaultSC.ModelRotationX = 0;
+DefaultSC.ModelRotationY = 0;
+DefaultSC.ModelRotationZ = 0;
+DefaultSC.ModelScale = 1;
+DefaultSC.AttitudeDisplayStateType = 'Quaternion';
+DefaultSC.AttitudeRateDisplayStateType = 'AngularVelocity';
+DefaultSC.AttitudeCoordinateSystem = EarthMJ2000Eq;
+DefaultSC.EulerAngleSequence = '321';
+
+%----------------------------------------
+%---------- GroundStations
+%----------------------------------------
+
+Create GroundStation Nicosia;
+Nicosia.OrbitColor = Thistle;
+Nicosia.TargetColor = DarkGray;
+Nicosia.CentralBody = Earth;
+Nicosia.StateType = Spherical;
+Nicosia.HorizonReference = Sphere;
+Nicosia.Location1 = 34.8;
+Nicosia.Location2 = 33.4;
+Nicosia.Location3 = 0.22;
+Nicosia.Id = 'Nicosia';
+Nicosia.IonosphereModel = 'None';
+Nicosia.TroposphereModel = 'None';
+Nicosia.DataSource = 'Constant';
+Nicosia.Temperature = 295.1;
+Nicosia.Pressure = 1013.5;
+Nicosia.Humidity = 55;
+Nicosia.MinimumElevationAngle = 30;
+
+Create GroundStation Gibraltar;
+Gibraltar.OrbitColor = Thistle;
+Gibraltar.TargetColor = DarkGray;
+Gibraltar.CentralBody = Earth;
+Gibraltar.StateType = Spherical;
+Gibraltar.HorizonReference = Sphere;
+Gibraltar.Location1 = 36.1;
+Gibraltar.Location2 = 354.2;
+Gibraltar.Location3 = 0;
+Gibraltar.Id = 'Gibraltar';
+Gibraltar.IonosphereModel = 'None';
+Gibraltar.TroposphereModel = 'None';
+Gibraltar.DataSource = 'Constant';
+Gibraltar.Temperature = 295.1;
+Gibraltar.Pressure = 1013.5;
+Gibraltar.Humidity = 55;
+Gibraltar.MinimumElevationAngle = 30;
+
+Create GroundStation Barcelona;
+Barcelona.OrbitColor = Thistle;
+Barcelona.TargetColor = DarkGray;
+Barcelona.CentralBody = Earth;
+Barcelona.StateType = Spherical;
+Barcelona.HorizonReference = Sphere;
+Barcelona.Location1 = 41.3;
+Barcelona.Location2 = 1.8;
+Barcelona.Location3 = 0;
+Barcelona.Id = 'Barcelona';
+Barcelona.IonosphereModel = 'None';
+Barcelona.TroposphereModel = 'None';
+Barcelona.DataSource = 'Constant';
+Barcelona.Temperature = 295.1;
+Barcelona.Pressure = 1013.5;
+Barcelona.Humidity = 55;
+Barcelona.MinimumElevationAngle = 30;
+
+Create GroundStation Lausanne;
+Lausanne.OrbitColor = Thistle;
+Lausanne.TargetColor = DarkGray;
+Lausanne.CentralBody = Earth;
+Lausanne.StateType = Spherical;
+Lausanne.HorizonReference = Sphere;
+Lausanne.Location1 = 46.4;
+Lausanne.Location2 = 6.9;
+Lausanne.Location3 = 0.526;
+Lausanne.Id = 'Lausanne';
+Lausanne.IonosphereModel = 'None';
+Lausanne.TroposphereModel = 'None';
+Lausanne.DataSource = 'Constant';
+Lausanne.Temperature = 295.1;
+Lausanne.Pressure = 1013.5;
+Lausanne.Humidity = 55;
+Lausanne.MinimumElevationAngle = 30;
+
+Create GroundStation Naples;
+Naples.OrbitColor = Thistle;
+Naples.TargetColor = DarkGray;
+Naples.CentralBody = Earth;
+Naples.StateType = Spherical;
+Naples.HorizonReference = Sphere;
+Naples.Location1 = 41;
+Naples.Location2 = 14;
+Naples.Location3 = 0;
+Naples.Id = 'Naples';
+Naples.IonosphereModel = 'None';
+Naples.TroposphereModel = 'None';
+Naples.DataSource = 'Constant';
+Naples.Temperature = 295.1;
+Naples.Pressure = 1013.5;
+Naples.Humidity = 55;
+Naples.MinimumElevationAngle = 30;
+
+Create GroundStation Porto;
+Porto.OrbitColor = Thistle;
+Porto.TargetColor = DarkGray;
+Porto.CentralBody = Earth;
+Porto.StateType = Spherical;
+Porto.HorizonReference = Sphere;
+Porto.Location1 = 41.5;
+Porto.Location2 = 351.2;
+Porto.Location3 = 0;
+Porto.Id = 'Porto';
+Porto.IonosphereModel = 'None';
+Porto.TroposphereModel = 'None';
+Porto.DataSource = 'Constant';
+Porto.Temperature = 295.1;
+Porto.Pressure = 1013.5;
+Porto.Humidity = 55;
+Porto.MinimumElevationAngle = 30;
+
+Create GroundStation Rennes;
+Rennes.OrbitColor = Thistle;
+Rennes.TargetColor = DarkGray;
+Rennes.CentralBody = Earth;
+Rennes.StateType = Spherical;
+Rennes.HorizonReference = Sphere;
+Rennes.Location1 = 48.1;
+Rennes.Location2 = 357.9;
+Rennes.Location3 = 0;
+Rennes.Id = 'Rennes';
+Rennes.IonosphereModel = 'None';
+Rennes.TroposphereModel = 'None';
+Rennes.DataSource = 'Constant';
+Rennes.Temperature = 295.1;
+Rennes.Pressure = 1013.5;
+Rennes.Humidity = 55;
+Rennes.MinimumElevationAngle = 30;
+
+Create GroundStation Tirana;
+Tirana.OrbitColor = Thistle;
+Tirana.TargetColor = DarkGray;
+Tirana.CentralBody = Earth;
+Tirana.StateType = Spherical;
+Tirana.HorizonReference = Sphere;
+Tirana.Location1 = 41.3;
+Tirana.Location2 = 19.5;
+Tirana.Location3 = 0;
+Tirana.Id = 'Tirana';
+Tirana.IonosphereModel = 'None';
+Tirana.TroposphereModel = 'None';
+Tirana.DataSource = 'Constant';
+Tirana.Temperature = 295.1;
+Tirana.Pressure = 1013.5;
+Tirana.Humidity = 55;
+Tirana.MinimumElevationAngle = 30;
+
+Create GroundStation Avilla;
+Avilla.OrbitColor = Thistle;
+Avilla.TargetColor = DarkGray;
+Avilla.CentralBody = Earth;
+Avilla.StateType = Spherical;
+Avilla.HorizonReference = Sphere;
+Avilla.Location1 = 40.4;
+Avilla.Location2 = 355.2;
+Avilla.Location3 = 1.132;
+Avilla.Id = 'Avilla';
+Avilla.IonosphereModel = 'None';
+Avilla.TroposphereModel = 'None';
+Avilla.DataSource = 'Constant';
+Avilla.Temperature = 295.1;
+Avilla.Pressure = 1013.5;
+Avilla.Humidity = 55;
+Avilla.MinimumElevationAngle = 30;
+
+Create GroundStation Messina;
+Messina.OrbitColor = Thistle;
+Messina.TargetColor = DarkGray;
+Messina.CentralBody = Earth;
+Messina.StateType = Spherical;
+Messina.HorizonReference = Sphere;
+Messina.Location1 = 38.2;
+Messina.Location2 = 15.2;
+Messina.Location3 = 0;
+Messina.Id = 'Messina';
+Messina.IonosphereModel = 'None';
+Messina.TroposphereModel = 'None';
+Messina.DataSource = 'Constant';
+Messina.Temperature = 295.1;
+Messina.Pressure = 1013.5;
+Messina.Humidity = 55;
+Messina.MinimumElevationAngle = 30;
+
+Create GroundStation Granada;
+Granada.OrbitColor = Thistle;
+Granada.TargetColor = DarkGray;
+Granada.CentralBody = Earth;
+Granada.StateType = Spherical;
+Granada.HorizonReference = Sphere;
+Granada.Location1 = 37;
+Granada.Location2 = 356.8;
+Granada.Location3 = 0.738;
+Granada.Id = 'Granada';
+Granada.IonosphereModel = 'None';
+Granada.TroposphereModel = 'None';
+Granada.DataSource = 'Constant';
+Granada.Temperature = 295.1;
+Granada.Pressure = 1013.5;
+Granada.Humidity = 55;
+Granada.MinimumElevationAngle = 30;
+
+Create GroundStation Lisbon;
+Lisbon.OrbitColor = Thistle;
+Lisbon.TargetColor = DarkGray;
+Lisbon.CentralBody = Earth;
+Lisbon.StateType = Spherical;
+Lisbon.HorizonReference = Sphere;
+Lisbon.Location1 = 38.6;
+Lisbon.Location2 = 350.8;
+Lisbon.Location3 = 0;
+Lisbon.Id = 'Lisbon';
+Lisbon.IonosphereModel = 'None';
+Lisbon.TroposphereModel = 'None';
+Lisbon.DataSource = 'Constant';
+Lisbon.Temperature = 295.1;
+Lisbon.Pressure = 1013.5;
+Lisbon.Humidity = 55;
+Lisbon.MinimumElevationAngle = 30;
+
+Create GroundStation Poitiers;
+Poitiers.OrbitColor = Thistle;
+Poitiers.TargetColor = DarkGray;
+Poitiers.CentralBody = Earth;
+Poitiers.StateType = Spherical;
+Poitiers.HorizonReference = Sphere;
+Poitiers.Location1 = 46.8;
+Poitiers.Location2 = 0.2;
+Poitiers.Location3 = 0;
+Poitiers.Id = 'Poitiers';
+Poitiers.IonosphereModel = 'None';
+Poitiers.TroposphereModel = 'None';
+Poitiers.DataSource = 'Constant';
+Poitiers.Temperature = 295.1;
+Poitiers.Pressure = 1013.5;
+Poitiers.Humidity = 55;
+Poitiers.MinimumElevationAngle = 30;
+
+Create GroundStation Strasbourg;
+Strasbourg.OrbitColor = Thistle;
+Strasbourg.TargetColor = DarkGray;
+Strasbourg.CentralBody = Earth;
+Strasbourg.StateType = Spherical;
+Strasbourg.HorizonReference = Sphere;
+Strasbourg.Location1 = 47.5;
+Strasbourg.Location2 = 7.2;
+Strasbourg.Location3 = 0;
+Strasbourg.Id = 'Strasbourg';
+Strasbourg.IonosphereModel = 'None';
+Strasbourg.TroposphereModel = 'None';
+Strasbourg.DataSource = 'Constant';
+Strasbourg.Temperature = 295.1;
+Strasbourg.Pressure = 1013.5;
+Strasbourg.Humidity = 55;
+Strasbourg.MinimumElevationAngle = 30;
+
+
+
+
+
+
+%----------------------------------------
+%---------- ForceModels
+%----------------------------------------
+
+Create ForceModel DefaultProp_ForceModel;
+DefaultProp_ForceModel.CentralBody = Earth;
+DefaultProp_ForceModel.PrimaryBodies = {Earth};
+DefaultProp_ForceModel.Drag = None;
+DefaultProp_ForceModel.SRP = Off;
+DefaultProp_ForceModel.RelativisticCorrection = Off;
+DefaultProp_ForceModel.ErrorControl = RSSStep;
+DefaultProp_ForceModel.GravityField.Earth.Degree = 4;
+DefaultProp_ForceModel.GravityField.Earth.Order = 4;
+DefaultProp_ForceModel.GravityField.Earth.StmLimit = 100;
+DefaultProp_ForceModel.GravityField.Earth.PotentialFile = 'JGM2.cof';
+DefaultProp_ForceModel.GravityField.Earth.TideModel = 'None';
+
+%----------------------------------------
+%---------- Propagators
+%----------------------------------------
+
+Create Propagator DefaultProp;
+DefaultProp.FM = DefaultProp_ForceModel;
+DefaultProp.Type = RungeKutta89;
+DefaultProp.InitialStepSize = 1;
+DefaultProp.Accuracy = 1e-08;
+DefaultProp.MinStep = 1;
+DefaultProp.MaxStep = 2;
+DefaultProp.MaxStepAttempts = 50;
+DefaultProp.StopIfAccuracyIsViolated = false;
+
+%----------------------------------------
+%---------- EventLocators
+%----------------------------------------
+
+Create ContactLocator ContactLocator1;
+ContactLocator1.Target = DefaultSC;
+ContactLocator1.Filename = 'ContactLocator1.txt';
+ContactLocator1.OccultingBodies = {Earth};
+ContactLocator1.InputEpochFormat = 'TAIModJulian';
+ContactLocator1.InitialEpoch = '21545';
+ContactLocator1.StepSize = 1;
+ContactLocator1.FinalEpoch = '21545.138';
+ContactLocator1.UseLightTimeDelay = true;
+ContactLocator1.UseStellarAberration = true;
+ContactLocator1.WriteReport = true;
+ContactLocator1.RunMode = Automatic;
+ContactLocator1.UseEntireInterval = true;
+ContactLocator1.Observers = {Avilla, Barcelona, Gibraltar, Granada, Lausanne, Lisbon, Messina, Naples, Nicosia, Poitiers, Porto, Rennes, Strasbourg, Tirana};
+ContactLocator1.LightTimeDirection = Transmit;
+ContactLocator1.LeftJustified = false;
+ContactLocator1.ReportPrecision = 6;
+ContactLocator1.ReportFormat = 'Legacy';
+ContactLocator1.IntervalStepSize = 0;
+ContactLocator1.ReportTimeFormat = 'UTCGregorian';
+
+%----------------------------------------
+%---------- Subscribers
+%----------------------------------------
+
+Create OrbitView DefaultOrbitView;
+DefaultOrbitView.SolverIterations = Current;
+DefaultOrbitView.UpperLeft = [ 0.001709401709401709 0 ];
+DefaultOrbitView.Size = [ 0.5 0.450363196125908 ];
+DefaultOrbitView.RelativeZOrder = 133;
+DefaultOrbitView.Maximized = false;
+DefaultOrbitView.Add = {DefaultSC, Earth};
+DefaultOrbitView.CoordinateSystem = EarthMJ2000Eq;
+DefaultOrbitView.DrawObject = [ true true ];
+DefaultOrbitView.DataCollectFrequency = 1;
+DefaultOrbitView.UpdatePlotFrequency = 50;
+DefaultOrbitView.NumPointsToRedraw = 0;
+DefaultOrbitView.ShowPlot = false;
+DefaultOrbitView.MaxPlotPoints = 20000;
+DefaultOrbitView.ShowLabels = true;
+DefaultOrbitView.ViewPointReference = Earth;
+DefaultOrbitView.ViewPointVector = [ 30000 0 0 ];
+DefaultOrbitView.ViewDirection = Earth;
+DefaultOrbitView.ViewScaleFactor = 1;
+DefaultOrbitView.ViewUpCoordinateSystem = EarthMJ2000Eq;
+DefaultOrbitView.ViewUpAxis = Z;
+DefaultOrbitView.EclipticPlane = Off;
+DefaultOrbitView.XYPlane = On;
+DefaultOrbitView.WireFrame = Off;
+DefaultOrbitView.Axes = On;
+DefaultOrbitView.Grid = Off;
+DefaultOrbitView.SunLine = Off;
+DefaultOrbitView.UseInitialView = On;
+DefaultOrbitView.StarCount = 7000;
+DefaultOrbitView.EnableStars = On;
+DefaultOrbitView.EnableConstellations = On;
+
+Create GroundTrackPlot DefaultGroundTrackPlot;
+DefaultGroundTrackPlot.SolverIterations = Current;
+DefaultGroundTrackPlot.UpperLeft = [ 0.0008547008547008547 0.04470198675496689 ];
+DefaultGroundTrackPlot.Size = [ 0.9448717948717948 0.8791390728476821 ];
+DefaultGroundTrackPlot.RelativeZOrder = 489;
+DefaultGroundTrackPlot.Maximized = false;
+DefaultGroundTrackPlot.Add = {Avilla, Barcelona, DefaultSC, Gibraltar, Granada, Lausanne, Lisbon, Messina, Naples, Nicosia, Poitiers, Porto, Rennes, Strasbourg, Tirana};
+DefaultGroundTrackPlot.DataCollectFrequency = 1;
+DefaultGroundTrackPlot.UpdatePlotFrequency = 50;
+DefaultGroundTrackPlot.NumPointsToRedraw = 0;
+DefaultGroundTrackPlot.ShowPlot = true;
+DefaultGroundTrackPlot.MaxPlotPoints = 30000;
+DefaultGroundTrackPlot.CentralBody = Earth;
+DefaultGroundTrackPlot.TextureMap = 'ModifiedBlueMarble.jpg';
+
+
+%----------------------------------------
+%---------- Mission Sequence
+%----------------------------------------
+
+BeginMissionSequence;
+Propagate DefaultProp(DefaultSC) {DefaultSC.ElapsedDays = 1.0};
