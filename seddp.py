@@ -1,7 +1,6 @@
 ### IMPORTS
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
-import pandas as pd
 from datetime import datetime, timedelta
 from collections import defaultdict
 
@@ -88,16 +87,12 @@ for start, stop in merged:
         )
 
         segment_end = min(stop, end_of_day)
-
         contact_per_day[current.date()] += (segment_end - current)
-
         current = segment_end
 
 start_time = min(start for start, stop in merged)
 end_time   = max(stop for start, stop in merged)
-
 calendar_days = (end_time.date() - start_time.date()).days + 1
-
 average_minutes = total_contact.total_seconds() / 60 / calendar_days
 
 print("\n========== CONTACT SUMMARY ==========\n")
