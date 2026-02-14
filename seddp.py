@@ -96,10 +96,8 @@ for start, stop in merged:
 start_time = min(start for start, stop in merged)
 end_time   = max(stop for start, stop in merged)
 
-total_span_days = (end_time - start_time).total_seconds() / 86400
 calendar_days = (end_time.date() - start_time.date()).days + 1
 
-average_per_day_minutes = total_contact.total_seconds() / 60 / total_span_days
 average_calendar_day_minutes = total_contact.total_seconds() / 60 / calendar_days
 
 print("\n========== CONTACT SUMMARY ==========\n")
@@ -107,7 +105,7 @@ print("\n========== CONTACT SUMMARY ==========\n")
 print(f"Analysis window:")
 print(f"Start: {start_time}")
 print(f"End:   {end_time}")
-print(f"Duration: {total_span_days:.3f} days\n")
+print(f"Duration: {calendar_days:.3f} days\n")
 
 print(f"Total contact time:")
 print(f"{total_contact} = {total_contact.total_seconds() / 60} minutes")
@@ -116,9 +114,6 @@ print("Contact time per day:")
 for day in sorted(contact_per_day.keys()):
     minutes = contact_per_day[day].total_seconds() / 60
     print(f"{day} : {minutes:.3f} min")
-
-print("\nAverage contact per day (continuous window): "
-      f"{average_per_day_minutes:.3f} min/day")
 
 print("Average contact per calendar day: "
       f"{average_calendar_day_minutes:.3f} min/day")
