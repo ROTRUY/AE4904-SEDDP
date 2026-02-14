@@ -98,7 +98,7 @@ end_time   = max(stop for start, stop in merged)
 
 calendar_days = (end_time.date() - start_time.date()).days + 1
 
-average_calendar_day_minutes = total_contact.total_seconds() / 60 / calendar_days
+average_minutes = total_contact.total_seconds() / 60 / calendar_days
 
 print("\n========== CONTACT SUMMARY ==========\n")
 
@@ -115,5 +115,5 @@ for day in sorted(contact_per_day.keys()):
     minutes = contact_per_day[day].total_seconds() / 60
     print(f"{day} : {minutes:.3f} min")
 
-print("Average contact per calendar day: "
-      f"{average_calendar_day_minutes:.3f} min/day")
+print("Average contact per day: "
+      f"{average_minutes:.3f} min/day\n")
