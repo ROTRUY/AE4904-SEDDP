@@ -1,0 +1,96 @@
+### IMPORTS
+import matplotlib.pyplot as plt
+import matplotlib.dates as mdates
+import pandas as pd
+from datetime import datetime, timedelta
+from collections import defaultdict
+
+### READ AND CONVERT DATA
+# Initialise data
+data = [] # ["station", "start", "stop", "duration"]
+
+# Read file
+with open("GMAT contactlocator output SYS2.txt") as f:
+    for line in f:
+        if line[:10] == "Observer: ":
+            station = line[10:-1]
+        if line[0] == "1":
+            # Example start/stop: 13 Feb 2026 03:46:42.958 ==> %d %b %Y %H:%M:%S.%f
+            start = datetime.strptime(line[:24], "%d %b %Y %H:%M:%S.%f")
+            stop = datetime.strptime(line[28:52], "%d %b %Y %H:%M:%S.%f")
+            duration = float(line[58:70])
+            data.append([station, start, stop, duration])
+
+# Group contact times per station
+stations = defaultdict(list)
+
+for station, start, stop, duration in data:
+    stations[station].append((start, stop))
+
+### PLOT
+SAVEFIG = False
+
+fig, ax = plt.subplots(figsize=(14, 8))
+station_names = sorted(stations.keys())
+
+for i, station in enumerate(station_names):
+    for start, stop in stations[station]:
+        ax.barh(
+            y=i,
+            width=(stop - start).total_seconds() / 86400,  # convert to days
+            left=mdates.date2num(start),
+            height=0.6
+        )
+
+ax.set_yticks(range(len(station_names)))
+ax.set_yticklabels(station_names)
+ax.xaxis_date()
+ax.xaxis.set_major_formatter(mdates.DateFormatter('%m-%d %H:%M'))
+plt.xticks(rotation=45)
+ax.set_xlabel("Time")
+ax.set_ylabel("Ground Station")
+ax.set_title("Ground Station Contact Windows")
+
+plt.tight_layout()
+if SAVEFIG:
+    plt.savefig("Ground station contact times.png")
+
+### Calculate
+intervals = [(start, stop) for station, start, stop, duration in data]
+intervals.sort(key=lambda x: x[0])
+
+merged = []
+
+for start, stop in intervals:
+    if not merged:
+        merged.append([start, stop])
+    else:
+        last_start, last_stop = merged[-1]
+        
+        if start <= last_stop:  # overlap
+            merged[-1][1] = max(last_stop, stop)
+        else:
+            merged.append([start, stop])
+
+total_contact = timedelta()
+
+for start, stop in merged:
+    total_contact += (stop - start)
+
+print("Total contact time:")
+print(total_contact)
+print("Total contact time (seconds):", total_contact.total_seconds())
+print("Total contact time (hours):", total_contact.total_seconds() / 3600)
+
+start_time = min(start for start, stop in intervals)
+end_time   = max(stop for start, stop in intervals)
+
+total_span = end_time - start_time
+total_days = total_span.total_seconds() / 86400
+
+average_per_day_seconds = total_contact.total_seconds() / total_days
+average_per_day_minutes = average_per_day_seconds / 60
+
+print("Average contact time per day:")
+print("Seconds/day:", average_per_day_seconds)
+print("Minutes/day:", average_per_day_minutes)
