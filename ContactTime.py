@@ -86,6 +86,9 @@ class ContactTimes():
     
     
     def contactTime(self) -> None:
+        """
+        Calculates all necessary factors to evaluate contact with ground station.
+        """
         intervals = list()
         merged = list()
 
@@ -124,6 +127,9 @@ class ContactTimes():
         self.avgContactTime = self.totalContactTime.total_seconds() / self.length  # Average contact time per day [s]
     
     def summary(self) -> None:
+        """
+        Prints summary of calculated factors.
+        """
         print("\n========== CONTACT SUMMARY ==========\n")
 
         print(f"Analysis window:")
