@@ -2,7 +2,7 @@ altitude = 550  # km
 inclination = 98  # deg
 dataVolume = 2.5  # Tb/day
 
-RF Parameters:
+#RF Parameters:
 
 # Geometry / frequency
 f_hz = 20e9
