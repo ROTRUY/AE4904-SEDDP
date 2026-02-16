@@ -3,113 +3,148 @@ import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 from datetime import datetime, timedelta
 from collections import defaultdict
+from CONSTANTS import dataVolume
 
-### READ AND CONVERT DATA
-# Initialise data
-data = [] # ["station", "start", "stop", "duration"]
+### CLASSES
+class ContactTimes():
+    """
+    Class for calculating stuff about the contact times.
 
-# Read file
-with open("ContactLocatorSYS2+.txt") as f:
-    for line in f:
-        if line[:10] == "Observer: ":
-            station = line[10:-1]
-        if line[0] in ("0", "1", "2", "3"):
-            # Example start/stop: 13 Feb 2026 03:46:42.958 ==> %d %b %Y %H:%M:%S.%f
-            start = datetime.strptime(line[:24], "%d %b %Y %H:%M:%S.%f")
-            stop = datetime.strptime(line[28:52], "%d %b %Y %H:%M:%S.%f")
-            duration = float(line[58:70])
-            data.append([station, start, stop, duration])
+    :param filename: Name of the text file with the contactLocator data from GMAT (don't include .txt).
+    :type filename: str
+    """
 
-# Group contact times per station
-stations = defaultdict(list)
+    def __init__(self, filename: str) -> None:
+        """
+        Initialiser.
 
-for station, start, stop, duration in data:
-    stations[station].append((start, stop))
+        :param filename: Name of the text file with the contactLocator data from GMAT (don't include .txt).
+        :type filename: str
+        """
+        # Initialise variables
+        self.data: dict[str, list[(float, float, float)]] = defaultdict(list) # {station: [(start, stop, duration), ...]}
+        self.start: datetime  # Start epoch of time interval
+        self.stop: datetime  # Stop epoch of time interval
+        self.length: int  # Length of time interval in days
+        self.contactPerDay: dict[datetime, timedelta] = defaultdict(timedelta)  # Contact time per day {date, time}
+        self.totalContactTime: timedelta = timedelta()  # Total contact time
+        self.avgContactTime: float  # Average contact time per day [s]
 
-### PLOT
-SAVEFIG = True
+        # Read file
+        with open(f"{filename}.txt") as f:
+            for line in f:
+                if line[:10] == "Observer: ":
+                    station = line[10:-1]
+                if line[0] in ("0", "1", "2", "3"):
+                    start = datetime.strptime(line[:24], "%d %b %Y %H:%M:%S.%f")
+                    stop = datetime.strptime(line[28:52], "%d %b %Y %H:%M:%S.%f")
+                    duration = float(line[58:70])
+                    self.data[station].append((start, stop, duration))
+        
+        # Calculate everything
+        self.contactTime()
+    
+            
+    def plot(self, show: bool = True, save: bool = False, name: str = f"ContactPlot {datetime.now()}") -> None:
+        """
+        Method to plot the contact times per ground station.
+        
+        :param show: Whether you want the method to show the plot when ran.
+        :type show: bool
+        :param save: Whether you want the method to save the plot when ran.
+        :type save: bool
+        :param name: Name for the plot when saved.
+        :type name: str
+        """
+        fig, ax = plt.subplots(figsize=(14, 8))
+        station_names = sorted(self.data.keys())
 
-fig, ax = plt.subplots(figsize=(14, 8))
-station_names = sorted(stations.keys())
+        for i, station in enumerate(station_names):
+            for start, stop, _ in self.data[station]:
+                ax.barh(
+                    y=i,
+                    width=(stop - start).total_seconds() / 60 / 60 / 24,  # convert to days
+                    left=mdates.date2num(start),
+                    height=0.6
+                )
 
-for i, station in enumerate(station_names):
-    for start, stop in stations[station]:
-        ax.barh(
-            y=i,
-            width=(stop - start).total_seconds() / 86400,  # convert to days
-            left=mdates.date2num(start),
-            height=0.6
-        )
+        ax.set_yticks(range(len(station_names)))
+        ax.set_yticklabels(station_names)
+        ax.xaxis_date()
+        ax.xaxis.set_major_formatter(mdates.DateFormatter('%m-%d %H:%M'))
+        plt.xticks(rotation=45)
+        ax.set_xlabel("Time")
+        ax.set_ylabel("Ground Station")
+        ax.set_title("Ground Station Contact Windows")
+        plt.tight_layout()
 
-ax.set_yticks(range(len(station_names)))
-ax.set_yticklabels(station_names)
-ax.xaxis_date()
-ax.xaxis.set_major_formatter(mdates.DateFormatter('%m-%d %H:%M'))
-plt.xticks(rotation=45)
-ax.set_xlabel("Time")
-ax.set_ylabel("Ground Station")
-ax.set_title("Ground Station Contact Windows")
+        if show:
+            plt.show()
 
-plt.tight_layout()
-if SAVEFIG:
-    plt.savefig("ContactTimesPlotSYS2+.png")
+        if save:
+            plt.savefig(f"{name}.png")
+    
+    
+    def contactTime(self) -> None:
+        intervals = list()
+        merged = list()
 
-### CALCULATE STUFF
-# Actual contact time, taking into account overlaps
-intervals = [(start, stop) for station, start, stop, duration in data]
-intervals.sort(key=lambda x: x[0])
+        for station in sorted(self.data.keys()):
+            for start, stop, _ in self.data[station]:
+                intervals.append((start, stop))
 
-merged = []
+        intervals.sort(key=lambda x: x[0])
 
-for start, stop in intervals:
-    if not merged:
-        merged.append([start, stop])
-    else:
-        last_start, last_stop = merged[-1]
-        if start <= last_stop:
-            merged[-1][1] = max(last_stop, stop)
-        else:
-            merged.append([start, stop])
+        for start, stop in intervals:
+            if not merged:
+                merged.append([start, stop])
+            else:
+                last_start, last_stop = merged[-1]
+                if start <= last_stop:
+                    merged[-1][1] = max(last_stop, stop)
+                else:
+                    merged.append([start, stop])
 
-total_contact = timedelta()
+        for start, stop in merged:
+            self.totalContactTime += (stop - start)
 
-for start, stop in merged:
-    total_contact += (stop - start)
+        for start, stop in merged:
+            current = start
 
-contact_per_day = defaultdict(timedelta)
+            while current < stop:
+                end_of_day = datetime.combine(current.date() + timedelta(days=1), datetime.min.time())
 
-for start, stop in merged:
-    current = start
+                segment_end = min(stop, end_of_day)
+                self.contactPerDay[current.date()] += (segment_end - current)
+                current = segment_end
 
-    while current < stop:
-        end_of_day = datetime.combine(
-            current.date() + timedelta(days=1),
-            datetime.min.time()
-        )
+        self.start = min(start for start, stop in merged)
+        self.stop   = max(stop for start, stop in merged)
+        self.length = (self.stop.date() - self.start.date()).days + 1
+        self.avgContactTime = self.totalContactTime.total_seconds() / self.length  # Average contact time per day [s]
+    
+    def summary(self) -> None:
+        print("\n========== CONTACT SUMMARY ==========\n")
 
-        segment_end = min(stop, end_of_day)
-        contact_per_day[current.date()] += (segment_end - current)
-        current = segment_end
+        print(f"Analysis window:")
+        print(f"Start: {self.start}")
+        print(f"End:   {self.stop}")
+        print(f"Duration: {self.length} days\n")
 
-start_time = min(start for start, stop in merged)
-end_time   = max(stop for start, stop in merged)
-calendar_days = (end_time.date() - start_time.date()).days + 1
-average_minutes = total_contact.total_seconds() / 60 / calendar_days
+        print(f"Total contact time:")
+        print(f"{self.totalContactTime} = {self.totalContactTime.total_seconds() / 60} minutes")
 
-print("\n========== CONTACT SUMMARY ==========\n")
+        print("Contact time per day:")
+        for day in sorted(self.contactPerDay.keys()):
+            minutes = self.contactPerDay[day].total_seconds() / 60
+            print(f"{day} : {minutes:.3f} min")
 
-print(f"Analysis window:")
-print(f"Start: {start_time}")
-print(f"End:   {end_time}")
-print(f"Duration: {calendar_days:.3f} days\n")
+        print("Average contact per day: "
+            f"{self.avgContactTime / 60:.3f} min/day\n")
 
-print(f"Total contact time:")
-print(f"{total_contact} = {total_contact.total_seconds() / 60} minutes")
+        print(f"Data rate required based on average: {dataVolume / self.avgContactTime * 1e6:.3f} Mbps\n")
 
-print("Contact time per day:")
-for day in sorted(contact_per_day.keys()):
-    minutes = contact_per_day[day].total_seconds() / 60
-    print(f"{day} : {minutes:.3f} min")
 
-print("Average contact per day: "
-      f"{average_minutes:.3f} min/day\n")
+### RUN HERE
+a = ContactTimes("ContactLocatorSYS2+")
+a.summary()
