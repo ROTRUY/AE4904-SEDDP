@@ -1,5 +1,5 @@
 import math
-import constants as C
+import CONSTANTS as C
 
 # Constants
 
