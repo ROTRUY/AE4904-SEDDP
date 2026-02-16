@@ -9,7 +9,7 @@ from collections import defaultdict
 data = [] # ["station", "start", "stop", "duration"]
 
 # Read file
-with open("GMAT contactlocator output SYS2.txt") as f:
+with open("ContactLocatorSYS2+.txt") as f:
     for line in f:
         if line[:10] == "Observer: ":
             station = line[10:-1]
@@ -52,9 +52,10 @@ ax.set_title("Ground Station Contact Windows")
 
 plt.tight_layout()
 if SAVEFIG:
-    plt.savefig("ContactTimesPlot.png")
+    plt.savefig("ContactTimesPlotSYS2+.png")
 
 ### CALCULATE STUFF
+# Actual contact time, taking into account overlaps
 intervals = [(start, stop) for station, start, stop, duration in data]
 intervals.sort(key=lambda x: x[0])
 
