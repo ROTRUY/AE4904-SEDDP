@@ -27,7 +27,7 @@ for station, start, stop, duration in data:
     stations[station].append((start, stop))
 
 ### PLOT
-SAVEFIG = False
+SAVEFIG = True
 
 fig, ax = plt.subplots(figsize=(14, 8))
 station_names = sorted(stations.keys())
@@ -52,7 +52,7 @@ ax.set_title("Ground Station Contact Windows")
 
 plt.tight_layout()
 if SAVEFIG:
-    plt.savefig("Ground station contact times.png")
+    plt.savefig("ContactTimesPlot.png")
 
 ### CALCULATE STUFF
 intervals = [(start, stop) for station, start, stop, duration in data]
