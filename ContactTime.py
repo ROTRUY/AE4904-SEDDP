@@ -152,5 +152,22 @@ class ContactTimes():
 
 
 ### RUN HERE
-a = ContactTimes("ContactLocatorSYS2+")
-a.summary()
+# SYS2+ is entirity of SYS2 plus Tenerife
+SYS2E = ContactTimes("ContactLocatorSYS2+")
+
+# minimal99 is the minimum amount of the SYS2 ground stations to get 99% availability: Nicosia, Gibraltar, Barcelona, Lausanne, Naples and Porto
+minimal99 = ContactTimes("minimal99")
+
+# minimal99A is minimal99 plus Tenerife
+minimal99A = ContactTimes("minimal99A")
+
+# minimal99B is minimal99A plus Nemea
+minimal99B = ContactTimes("minimal99B")
+
+# minimal99C is minimal99B plus Delft
+minimal99C = ContactTimes("minimal99C")
+
+# Full is every single European optical ground station found
+full = ContactTimes("full")
+full.summary()
+full.plot(False, True, "fullPlot")
