@@ -170,4 +170,3 @@ minimal99C = ContactTimes("minimal99C")
 # Full is every single European optical ground station found
 full = ContactTimes("full")
 full.summary()
-full.plot(False, True, "fullPlot")
