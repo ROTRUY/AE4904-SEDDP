@@ -150,7 +150,6 @@ class ContactTimes():
 
         print(f"Data rate required based on average: {dataVolume / self.avgContactTime * 1e6:.3f} Mbps\n")
 
-
 ### RUN HERE
 # SYS2+ is entirity of SYS2 plus Tenerife
 SYS2E = ContactTimes("ContactLocatorSYS2+")

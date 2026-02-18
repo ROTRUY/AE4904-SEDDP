@@ -7,12 +7,12 @@
 %----------------------------------------
 
 Create Spacecraft DefaultSC;
-DefaultSC.DateFormat = TAIModJulian;
-DefaultSC.Epoch = '21545';
+DefaultSC.DateFormat = UTCGregorian;
+DefaultSC.Epoch = '13 Feb 2026 00:00:00.000';
 DefaultSC.CoordinateSystem = EarthMJ2000Eq;
 DefaultSC.DisplayStateType = Keplerian;
-DefaultSC.SMA = 7077.999999999999;
-DefaultSC.ECC = 2.523439996596184e-16;
+DefaultSC.SMA = 6928;
+DefaultSC.ECC = 0;
 DefaultSC.INC = 98;
 DefaultSC.RAAN = 0;
 DefaultSC.AOP = 0;
@@ -57,23 +57,319 @@ DefaultSC.EulerAngleSequence = '321';
 %---------- GroundStations
 %----------------------------------------
 
-Create GroundStation GroundStation1;
-GroundStation1.OrbitColor = Thistle;
-GroundStation1.TargetColor = DarkGray;
-GroundStation1.CentralBody = Earth;
-GroundStation1.StateType = Spherical;
-GroundStation1.HorizonReference = Sphere;
-GroundStation1.Location1 = 36.19999999999999;
-GroundStation1.Location2 = 354.2;
-GroundStation1.Location3 = 0;
-GroundStation1.Id = 'Gibraltar';
-GroundStation1.IonosphereModel = 'None';
-GroundStation1.TroposphereModel = 'None';
-GroundStation1.DataSource = 'Constant';
-GroundStation1.Temperature = 295.1;
-GroundStation1.Pressure = 1013.5;
-GroundStation1.Humidity = 55;
-GroundStation1.MinimumElevationAngle = 12;
+Create GroundStation Nicosia;
+Nicosia.OrbitColor = Thistle;
+Nicosia.TargetColor = DarkGray;
+Nicosia.CentralBody = Earth;
+Nicosia.StateType = Spherical;
+Nicosia.HorizonReference = Ellipsoid;
+Nicosia.Location1 = 34.8;
+Nicosia.Location2 = 33.4;
+Nicosia.Location3 = 0.22;
+Nicosia.Id = 'Nicosia';
+Nicosia.IonosphereModel = 'None';
+Nicosia.TroposphereModel = 'None';
+Nicosia.DataSource = 'Constant';
+Nicosia.Temperature = 295.1;
+Nicosia.Pressure = 1013.5;
+Nicosia.Humidity = 55;
+Nicosia.MinimumElevationAngle = 30;
+
+Create GroundStation Gibraltar;
+Gibraltar.OrbitColor = Thistle;
+Gibraltar.TargetColor = DarkGray;
+Gibraltar.CentralBody = Earth;
+Gibraltar.StateType = Spherical;
+Gibraltar.HorizonReference = Ellipsoid;
+Gibraltar.Location1 = 36.1;
+Gibraltar.Location2 = 354.2;
+Gibraltar.Location3 = 0;
+Gibraltar.Id = 'Gibraltar';
+Gibraltar.IonosphereModel = 'None';
+Gibraltar.TroposphereModel = 'None';
+Gibraltar.DataSource = 'Constant';
+Gibraltar.Temperature = 295.1;
+Gibraltar.Pressure = 1013.5;
+Gibraltar.Humidity = 55;
+Gibraltar.MinimumElevationAngle = 30;
+
+Create GroundStation Barcelona;
+Barcelona.OrbitColor = Thistle;
+Barcelona.TargetColor = DarkGray;
+Barcelona.CentralBody = Earth;
+Barcelona.StateType = Spherical;
+Barcelona.HorizonReference = Ellipsoid;
+Barcelona.Location1 = 41.3;
+Barcelona.Location2 = 1.8;
+Barcelona.Location3 = 0;
+Barcelona.Id = 'Barcelona';
+Barcelona.IonosphereModel = 'None';
+Barcelona.TroposphereModel = 'None';
+Barcelona.DataSource = 'Constant';
+Barcelona.Temperature = 295.1;
+Barcelona.Pressure = 1013.5;
+Barcelona.Humidity = 55;
+Barcelona.MinimumElevationAngle = 30;
+
+Create GroundStation Lausanne;
+Lausanne.OrbitColor = Thistle;
+Lausanne.TargetColor = DarkGray;
+Lausanne.CentralBody = Earth;
+Lausanne.StateType = Spherical;
+Lausanne.HorizonReference = Ellipsoid;
+Lausanne.Location1 = 46.4;
+Lausanne.Location2 = 6.9;
+Lausanne.Location3 = 0.526;
+Lausanne.Id = 'Lausanne';
+Lausanne.IonosphereModel = 'None';
+Lausanne.TroposphereModel = 'None';
+Lausanne.DataSource = 'Constant';
+Lausanne.Temperature = 295.1;
+Lausanne.Pressure = 1013.5;
+Lausanne.Humidity = 55;
+Lausanne.MinimumElevationAngle = 30;
+
+Create GroundStation Naples;
+Naples.OrbitColor = Thistle;
+Naples.TargetColor = DarkGray;
+Naples.CentralBody = Earth;
+Naples.StateType = Spherical;
+Naples.HorizonReference = Ellipsoid;
+Naples.Location1 = 41;
+Naples.Location2 = 14;
+Naples.Location3 = 0;
+Naples.Id = 'Naples';
+Naples.IonosphereModel = 'None';
+Naples.TroposphereModel = 'None';
+Naples.DataSource = 'Constant';
+Naples.Temperature = 295.1;
+Naples.Pressure = 1013.5;
+Naples.Humidity = 55;
+Naples.MinimumElevationAngle = 30;
+
+Create GroundStation Porto;
+Porto.OrbitColor = Thistle;
+Porto.TargetColor = DarkGray;
+Porto.CentralBody = Earth;
+Porto.StateType = Spherical;
+Porto.HorizonReference = Ellipsoid;
+Porto.Location1 = 41.5;
+Porto.Location2 = 351.2;
+Porto.Location3 = 0;
+Porto.Id = 'Porto';
+Porto.IonosphereModel = 'None';
+Porto.TroposphereModel = 'None';
+Porto.DataSource = 'Constant';
+Porto.Temperature = 295.1;
+Porto.Pressure = 1013.5;
+Porto.Humidity = 55;
+Porto.MinimumElevationAngle = 30;
+
+Create GroundStation Rennes;
+Rennes.OrbitColor = Thistle;
+Rennes.TargetColor = DarkGray;
+Rennes.CentralBody = Earth;
+Rennes.StateType = Spherical;
+Rennes.HorizonReference = Ellipsoid;
+Rennes.Location1 = 48.1;
+Rennes.Location2 = 357.9;
+Rennes.Location3 = 0;
+Rennes.Id = 'Rennes';
+Rennes.IonosphereModel = 'None';
+Rennes.TroposphereModel = 'None';
+Rennes.DataSource = 'Constant';
+Rennes.Temperature = 295.1;
+Rennes.Pressure = 1013.5;
+Rennes.Humidity = 55;
+Rennes.MinimumElevationAngle = 30;
+
+Create GroundStation Tirana;
+Tirana.OrbitColor = Thistle;
+Tirana.TargetColor = DarkGray;
+Tirana.CentralBody = Earth;
+Tirana.StateType = Spherical;
+Tirana.HorizonReference = Ellipsoid;
+Tirana.Location1 = 41.3;
+Tirana.Location2 = 19.5;
+Tirana.Location3 = 0;
+Tirana.Id = 'Tirana';
+Tirana.IonosphereModel = 'None';
+Tirana.TroposphereModel = 'None';
+Tirana.DataSource = 'Constant';
+Tirana.Temperature = 295.1;
+Tirana.Pressure = 1013.5;
+Tirana.Humidity = 55;
+Tirana.MinimumElevationAngle = 30;
+
+Create GroundStation Avilla;
+Avilla.OrbitColor = Thistle;
+Avilla.TargetColor = DarkGray;
+Avilla.CentralBody = Earth;
+Avilla.StateType = Spherical;
+Avilla.HorizonReference = Ellipsoid;
+Avilla.Location1 = 40.4;
+Avilla.Location2 = 355.2;
+Avilla.Location3 = 1.132;
+Avilla.Id = 'Avilla';
+Avilla.IonosphereModel = 'None';
+Avilla.TroposphereModel = 'None';
+Avilla.DataSource = 'Constant';
+Avilla.Temperature = 295.1;
+Avilla.Pressure = 1013.5;
+Avilla.Humidity = 55;
+Avilla.MinimumElevationAngle = 30;
+
+Create GroundStation Messina;
+Messina.OrbitColor = Thistle;
+Messina.TargetColor = DarkGray;
+Messina.CentralBody = Earth;
+Messina.StateType = Spherical;
+Messina.HorizonReference = Ellipsoid;
+Messina.Location1 = 38.2;
+Messina.Location2 = 15.2;
+Messina.Location3 = 0;
+Messina.Id = 'Messina';
+Messina.IonosphereModel = 'None';
+Messina.TroposphereModel = 'None';
+Messina.DataSource = 'Constant';
+Messina.Temperature = 295.1;
+Messina.Pressure = 1013.5;
+Messina.Humidity = 55;
+Messina.MinimumElevationAngle = 30;
+
+Create GroundStation Granada;
+Granada.OrbitColor = Thistle;
+Granada.TargetColor = DarkGray;
+Granada.CentralBody = Earth;
+Granada.StateType = Spherical;
+Granada.HorizonReference = Ellipsoid;
+Granada.Location1 = 37;
+Granada.Location2 = 356.8;
+Granada.Location3 = 0.738;
+Granada.Id = 'Granada';
+Granada.IonosphereModel = 'None';
+Granada.TroposphereModel = 'None';
+Granada.DataSource = 'Constant';
+Granada.Temperature = 295.1;
+Granada.Pressure = 1013.5;
+Granada.Humidity = 55;
+Granada.MinimumElevationAngle = 30;
+
+Create GroundStation Lisbon;
+Lisbon.OrbitColor = Thistle;
+Lisbon.TargetColor = DarkGray;
+Lisbon.CentralBody = Earth;
+Lisbon.StateType = Spherical;
+Lisbon.HorizonReference = Ellipsoid;
+Lisbon.Location1 = 38.6;
+Lisbon.Location2 = 350.8;
+Lisbon.Location3 = 0;
+Lisbon.Id = 'Lisbon';
+Lisbon.IonosphereModel = 'None';
+Lisbon.TroposphereModel = 'None';
+Lisbon.DataSource = 'Constant';
+Lisbon.Temperature = 295.1;
+Lisbon.Pressure = 1013.5;
+Lisbon.Humidity = 55;
+Lisbon.MinimumElevationAngle = 30;
+
+Create GroundStation Poitiers;
+Poitiers.OrbitColor = Thistle;
+Poitiers.TargetColor = DarkGray;
+Poitiers.CentralBody = Earth;
+Poitiers.StateType = Spherical;
+Poitiers.HorizonReference = Ellipsoid;
+Poitiers.Location1 = 46.8;
+Poitiers.Location2 = 0.2;
+Poitiers.Location3 = 0;
+Poitiers.Id = 'Poitiers';
+Poitiers.IonosphereModel = 'None';
+Poitiers.TroposphereModel = 'None';
+Poitiers.DataSource = 'Constant';
+Poitiers.Temperature = 295.1;
+Poitiers.Pressure = 1013.5;
+Poitiers.Humidity = 55;
+Poitiers.MinimumElevationAngle = 30;
+
+Create GroundStation Strasbourg;
+Strasbourg.OrbitColor = Thistle;
+Strasbourg.TargetColor = DarkGray;
+Strasbourg.CentralBody = Earth;
+Strasbourg.StateType = Spherical;
+Strasbourg.HorizonReference = Ellipsoid;
+Strasbourg.Location1 = 47.5;
+Strasbourg.Location2 = 7.2;
+Strasbourg.Location3 = 0;
+Strasbourg.Id = 'Strasbourg';
+Strasbourg.IonosphereModel = 'None';
+Strasbourg.TroposphereModel = 'None';
+Strasbourg.DataSource = 'Constant';
+Strasbourg.Temperature = 295.1;
+Strasbourg.Pressure = 1013.5;
+Strasbourg.Humidity = 55;
+Strasbourg.MinimumElevationAngle = 30;
+
+Create GroundStation Tenerife;
+Tenerife.OrbitColor = Thistle;
+Tenerife.TargetColor = DarkGray;
+Tenerife.CentralBody = Earth;
+Tenerife.StateType = Spherical;
+Tenerife.HorizonReference = Ellipsoid;
+Tenerife.Location1 = 28.3;
+Tenerife.Location2 = 343.5;
+Tenerife.Location3 = 2.4;
+Tenerife.Id = 'Tenerife';
+Tenerife.IonosphereModel = 'None';
+Tenerife.TroposphereModel = 'None';
+Tenerife.DataSource = 'Constant';
+Tenerife.Temperature = 295.1;
+Tenerife.Pressure = 1013.5;
+Tenerife.Humidity = 55;
+Tenerife.MinimumElevationAngle = 30;
+
+Create GroundStation Nemea;
+Nemea.OrbitColor = Thistle;
+Nemea.TargetColor = DarkGray;
+Nemea.CentralBody = Earth;
+Nemea.StateType = Spherical;
+Nemea.HorizonReference = Ellipsoid;
+Nemea.Location1 = 37.8;
+Nemea.Location2 = 22.6;
+Nemea.Location3 = 0.44;
+Nemea.Id = 'Nemea';
+Nemea.IonosphereModel = 'None';
+Nemea.TroposphereModel = 'None';
+Nemea.DataSource = 'Constant';
+Nemea.Temperature = 295.1;
+Nemea.Pressure = 1013.5;
+Nemea.Humidity = 55;
+Nemea.MinimumElevationAngle = 30;
+
+Create GroundStation Delft;
+Delft.OrbitColor = Thistle;
+Delft.TargetColor = DarkGray;
+Delft.CentralBody = Earth;
+Delft.StateType = Spherical;
+Delft.HorizonReference = Ellipsoid;
+Delft.Location1 = 52;
+Delft.Location2 = 4.36;
+Delft.Location3 = 0.44;
+Delft.Id = 'Delft';
+Delft.IonosphereModel = 'None';
+Delft.TroposphereModel = 'None';
+Delft.DataSource = 'Constant';
+Delft.Temperature = 295.1;
+Delft.Pressure = 1013.5;
+Delft.Humidity = 55;
+Delft.MinimumElevationAngle = 30;
+
+
+
+
+
+
+
+
 
 
 %----------------------------------------
@@ -101,11 +397,83 @@ Create Propagator DefaultProp;
 DefaultProp.FM = DefaultProp_ForceModel;
 DefaultProp.Type = RungeKutta89;
 DefaultProp.InitialStepSize = 1;
-DefaultProp.Accuracy = 9.999999999999999e-10;
-DefaultProp.MinStep = 0.001;
-DefaultProp.MaxStep = 600;
+DefaultProp.Accuracy = 1e-08;
+DefaultProp.MinStep = 1;
+DefaultProp.MaxStep = 10;
 DefaultProp.MaxStepAttempts = 50;
 DefaultProp.StopIfAccuracyIsViolated = false;
+
+%----------------------------------------
+%---------- Coordinate Systems
+%----------------------------------------
+
+Create CoordinateSystem NicosiaC;
+NicosiaC.Origin = Nicosia;
+NicosiaC.Axes = Topocentric;
+
+Create CoordinateSystem GibraltarC;
+GibraltarC.Origin = Gibraltar;
+GibraltarC.Axes = Topocentric;
+
+Create CoordinateSystem BarcelonaC;
+BarcelonaC.Origin = Barcelona;
+BarcelonaC.Axes = Topocentric;
+
+Create CoordinateSystem LausanneC;
+LausanneC.Origin = Lausanne;
+LausanneC.Axes = Topocentric;
+
+Create CoordinateSystem NaplesC;
+NaplesC.Origin = Naples;
+NaplesC.Axes = Topocentric;
+
+Create CoordinateSystem PortoC;
+PortoC.Origin = Porto;
+PortoC.Axes = Topocentric;
+
+Create CoordinateSystem RennesC;
+RennesC.Origin = Rennes;
+RennesC.Axes = Topocentric;
+
+Create CoordinateSystem TiranaC;
+TiranaC.Origin = Tirana;
+TiranaC.Axes = Topocentric;
+
+Create CoordinateSystem AvillaC;
+AvillaC.Origin = Avilla;
+AvillaC.Axes = Topocentric;
+
+Create CoordinateSystem MessinaC;
+MessinaC.Origin = Messina;
+MessinaC.Axes = Topocentric;
+
+Create CoordinateSystem GranadaC;
+GranadaC.Origin = Granada;
+GranadaC.Axes = Topocentric;
+
+Create CoordinateSystem LisbonC;
+LisbonC.Origin = Lisbon;
+LisbonC.Axes = Topocentric;
+
+Create CoordinateSystem PoitiersC;
+PoitiersC.Origin = Poitiers;
+PoitiersC.Axes = Topocentric;
+
+Create CoordinateSystem StrasbourgC;
+StrasbourgC.Origin = Strasbourg;
+StrasbourgC.Axes = Topocentric;
+
+Create CoordinateSystem TenerifeC;
+TenerifeC.Origin = Tenerife;
+TenerifeC.Axes = Topocentric;
+
+Create CoordinateSystem NemeaC;
+NemeaC.Origin = Nemea;
+NemeaC.Axes = Topocentric;
+
+Create CoordinateSystem DelftC;
+DelftC.Origin = Delft;
+DelftC.Axes = Topocentric;
 
 %----------------------------------------
 %---------- EventLocators
@@ -117,14 +485,14 @@ ContactLocator1.Filename = 'ContactLocator1.txt';
 ContactLocator1.OccultingBodies = {Earth};
 ContactLocator1.InputEpochFormat = 'TAIModJulian';
 ContactLocator1.InitialEpoch = '21545';
-ContactLocator1.StepSize = 10;
+ContactLocator1.StepSize = 1;
 ContactLocator1.FinalEpoch = '21545.138';
 ContactLocator1.UseLightTimeDelay = true;
 ContactLocator1.UseStellarAberration = true;
 ContactLocator1.WriteReport = true;
 ContactLocator1.RunMode = Automatic;
 ContactLocator1.UseEntireInterval = true;
-ContactLocator1.Observers = {GroundStation1};
+ContactLocator1.Observers = {Avilla, Barcelona, Delft, Gibraltar, Granada, Lausanne, Lisbon, Messina, Naples, Nemea, Nicosia, Poitiers, Porto, Rennes, Strasbourg, Tenerife, Tirana};
 ContactLocator1.LightTimeDirection = Transmit;
 ContactLocator1.LeftJustified = false;
 ContactLocator1.ReportPrecision = 6;
@@ -138,9 +506,9 @@ ContactLocator1.ReportTimeFormat = 'UTCGregorian';
 
 Create OrbitView DefaultOrbitView;
 DefaultOrbitView.SolverIterations = Current;
-DefaultOrbitView.UpperLeft = [ 0.001796945193171608 0 ];
-DefaultOrbitView.Size = [ 0.5 0.4503703703703704 ];
-DefaultOrbitView.RelativeZOrder = 129;
+DefaultOrbitView.UpperLeft = [ 0.001709401709401709 0 ];
+DefaultOrbitView.Size = [ 0.5 0.450363196125908 ];
+DefaultOrbitView.RelativeZOrder = 133;
 DefaultOrbitView.Maximized = false;
 DefaultOrbitView.Add = {DefaultSC, Earth};
 DefaultOrbitView.CoordinateSystem = EarthMJ2000Eq;
@@ -148,7 +516,7 @@ DefaultOrbitView.DrawObject = [ true true ];
 DefaultOrbitView.DataCollectFrequency = 1;
 DefaultOrbitView.UpdatePlotFrequency = 50;
 DefaultOrbitView.NumPointsToRedraw = 0;
-DefaultOrbitView.ShowPlot = true;
+DefaultOrbitView.ShowPlot = false;
 DefaultOrbitView.MaxPlotPoints = 20000;
 DefaultOrbitView.ShowLabels = true;
 DefaultOrbitView.ViewPointReference = Earth;
@@ -170,23 +538,328 @@ DefaultOrbitView.EnableConstellations = On;
 
 Create GroundTrackPlot DefaultGroundTrackPlot;
 DefaultGroundTrackPlot.SolverIterations = Current;
-DefaultGroundTrackPlot.UpperLeft = [ 0.001796945193171608 0.4525925925925926 ];
-DefaultGroundTrackPlot.Size = [ 0.5 0.4503703703703704 ];
-DefaultGroundTrackPlot.RelativeZOrder = 173;
+DefaultGroundTrackPlot.UpperLeft = [ 0 0.04789915966386555 ];
+DefaultGroundTrackPlot.Size = [ 0.944743935309973 0.9966386554621849 ];
+DefaultGroundTrackPlot.RelativeZOrder = 178;
 DefaultGroundTrackPlot.Maximized = false;
-DefaultGroundTrackPlot.Add = {DefaultSC};
+DefaultGroundTrackPlot.Add = {Avilla, Barcelona, DefaultSC, Delft, Gibraltar, Granada, Lausanne, Lisbon, Messina, Naples, Nemea, Nicosia, Poitiers, Porto, Rennes, Strasbourg, Tenerife, Tirana};
 DefaultGroundTrackPlot.DataCollectFrequency = 1;
 DefaultGroundTrackPlot.UpdatePlotFrequency = 50;
 DefaultGroundTrackPlot.NumPointsToRedraw = 0;
-DefaultGroundTrackPlot.ShowPlot = true;
-DefaultGroundTrackPlot.MaxPlotPoints = 20000;
+DefaultGroundTrackPlot.ShowPlot = false;
+DefaultGroundTrackPlot.MaxPlotPoints = 100000;
 DefaultGroundTrackPlot.CentralBody = Earth;
 DefaultGroundTrackPlot.TextureMap = 'ModifiedBlueMarble.jpg';
 
+Create ReportFile NicosiaReport;
+NicosiaReport.SolverIterations = Current;
+NicosiaReport.UpperLeft = [ 0.1176999101527403 0.1941176470588235 ];
+NicosiaReport.Size = [ 0.5988319856244384 0.7974789915966387 ];
+NicosiaReport.RelativeZOrder = 120;
+NicosiaReport.Maximized = false;
+NicosiaReport.Filename = 'NicosiaReport.txt';
+NicosiaReport.Precision = 16;
+NicosiaReport.Add = {DefaultSC.A1Gregorian, DefaultSC.EarthFixed.PlanetodeticLAT, DefaultSC.EarthFixed.PlanetodeticLON, DefaultSC.Earth.Altitude, DefaultSC.NicosiaC.X, DefaultSC.NicosiaC.Y, DefaultSC.NicosiaC.Z};
+NicosiaReport.WriteHeaders = true;
+NicosiaReport.LeftJustify = On;
+NicosiaReport.ZeroFill = Off;
+NicosiaReport.FixedWidth = false;
+NicosiaReport.Delimiter = ',';
+NicosiaReport.ColumnWidth = 23;
+NicosiaReport.WriteReport = true;
+NicosiaReport.AppendToExistingFile = false;
+
+Create ReportFile GibraltarReport;
+GibraltarReport.SolverIterations = Current;
+GibraltarReport.UpperLeft = [ 0.1176999101527403 0.1941176470588235 ];
+GibraltarReport.Size = [ 0.5988319856244384 0.7974789915966387 ];
+GibraltarReport.RelativeZOrder = 120;
+GibraltarReport.Maximized = false;
+GibraltarReport.Filename = 'NicosiaReport.txt';
+GibraltarReport.Precision = 16;
+GibraltarReport.Add = {DefaultSC.A1Gregorian, DefaultSC.EarthFixed.PlanetodeticLAT, DefaultSC.EarthFixed.PlanetodeticLON, DefaultSC.Earth.Altitude, DefaultSC.GibraltarC.X, DefaultSC.GibraltarC.Y, DefaultSC.GibraltarC.Z};
+GibraltarReport.WriteHeaders = true;
+GibraltarReport.LeftJustify = On;
+GibraltarReport.ZeroFill = Off;
+GibraltarReport.FixedWidth = false;
+GibraltarReport.Delimiter = ',';
+GibraltarReport.ColumnWidth = 23;
+GibraltarReport.WriteReport = true;
+GibraltarReport.AppendToExistingFile = false;
+
+Create ReportFile BarcelonaReport;
+BarcelonaReport.SolverIterations = Current;
+BarcelonaReport.UpperLeft = [ 0.1181491464510332 0.1948148148148148 ];
+BarcelonaReport.Size = [ 0.5992812219227314 0.7985185185185185 ];
+BarcelonaReport.RelativeZOrder = 120;
+BarcelonaReport.Maximized = false;
+BarcelonaReport.Filename = 'BarcelonaReport.txt';
+BarcelonaReport.Precision = 16;
+BarcelonaReport.Add = {DefaultSC.A1Gregorian, DefaultSC.EarthFixed.PlanetodeticLAT, DefaultSC.EarthFixed.PlanetodeticLON, DefaultSC.Earth.Altitude, DefaultSC.BarcelonaC.X, DefaultSC.BarcelonaC.Y, DefaultSC.BarcelonaC.Z};
+BarcelonaReport.WriteHeaders = true;
+BarcelonaReport.LeftJustify = On;
+BarcelonaReport.ZeroFill = Off;
+BarcelonaReport.FixedWidth = false;
+BarcelonaReport.Delimiter = ',';
+BarcelonaReport.ColumnWidth = 23;
+BarcelonaReport.WriteReport = true;
+BarcelonaReport.AppendToExistingFile = false;
+
+Create ReportFile LausanneReport;
+LausanneReport.SolverIterations = Current;
+LausanneReport.UpperLeft = [ 0.1181491464510332 0.1948148148148148 ];
+LausanneReport.Size = [ 0.5992812219227314 0.7985185185185185 ];
+LausanneReport.RelativeZOrder = 120;
+LausanneReport.Maximized = false;
+LausanneReport.Filename = 'LausanneReport.txt';
+LausanneReport.Precision = 16;
+LausanneReport.Add = {DefaultSC.A1Gregorian, DefaultSC.EarthFixed.PlanetodeticLAT, DefaultSC.EarthFixed.PlanetodeticLON, DefaultSC.Earth.Altitude, DefaultSC.LausanneC.X, DefaultSC.LausanneC.Y, DefaultSC.LausanneC.Z};
+LausanneReport.WriteHeaders = true;
+LausanneReport.LeftJustify = On;
+LausanneReport.ZeroFill = Off;
+LausanneReport.FixedWidth = false;
+LausanneReport.Delimiter = ',';
+LausanneReport.ColumnWidth = 23;
+LausanneReport.WriteReport = true;
+LausanneReport.AppendToExistingFile = false;
+
+Create ReportFile NaplesReport;
+NaplesReport.SolverIterations = Current;
+NaplesReport.UpperLeft = [ 0.1181491464510332 0.1948148148148148 ];
+NaplesReport.Size = [ 0.5992812219227314 0.7985185185185185 ];
+NaplesReport.RelativeZOrder = 120;
+NaplesReport.Maximized = false;
+NaplesReport.Filename = 'NaplesReport.txt';
+NaplesReport.Precision = 16;
+NaplesReport.Add = {DefaultSC.A1Gregorian, DefaultSC.EarthFixed.PlanetodeticLAT, DefaultSC.EarthFixed.PlanetodeticLON, DefaultSC.Earth.Altitude, DefaultSC.NaplesC.X, DefaultSC.NaplesC.Y, DefaultSC.NaplesC.Z};
+NaplesReport.WriteHeaders = true;
+NaplesReport.LeftJustify = On;
+NaplesReport.ZeroFill = Off;
+NaplesReport.FixedWidth = false;
+NaplesReport.Delimiter = ',';
+NaplesReport.ColumnWidth = 23;
+NaplesReport.WriteReport = true;
+NaplesReport.AppendToExistingFile = false;
+
+Create ReportFile PortoReport;
+PortoReport.SolverIterations = Current;
+PortoReport.UpperLeft = [ 0.1181491464510332 0.1948148148148148 ];
+PortoReport.Size = [ 0.5992812219227314 0.7985185185185185 ];
+PortoReport.RelativeZOrder = 120;
+PortoReport.Maximized = false;
+PortoReport.Filename = 'PortoReport.txt';
+PortoReport.Precision = 16;
+PortoReport.Add = {DefaultSC.A1Gregorian, DefaultSC.EarthFixed.PlanetodeticLAT, DefaultSC.EarthFixed.PlanetodeticLON, DefaultSC.Earth.Altitude, DefaultSC.PortoC.X, DefaultSC.PortoC.Y, DefaultSC.PortoC.Z};
+PortoReport.WriteHeaders = true;
+PortoReport.LeftJustify = On;
+PortoReport.ZeroFill = Off;
+PortoReport.FixedWidth = false;
+PortoReport.Delimiter = ',';
+PortoReport.ColumnWidth = 23;
+PortoReport.WriteReport = true;
+PortoReport.AppendToExistingFile = false;
+
+Create ReportFile RennesReport;
+RennesReport.SolverIterations = Current;
+RennesReport.UpperLeft = [ 0.1181491464510332 0.1948148148148148 ];
+RennesReport.Size = [ 0.5992812219227314 0.7985185185185185 ];
+RennesReport.RelativeZOrder = 120;
+RennesReport.Maximized = false;
+RennesReport.Filename = 'RennesReport.txt';
+RennesReport.Precision = 16;
+RennesReport.Add = {DefaultSC.A1Gregorian, DefaultSC.EarthFixed.PlanetodeticLAT, DefaultSC.EarthFixed.PlanetodeticLON, DefaultSC.Earth.Altitude, DefaultSC.RennesC.X, DefaultSC.RennesC.Y, DefaultSC.RennesC.Z};
+RennesReport.WriteHeaders = true;
+RennesReport.LeftJustify = On;
+RennesReport.ZeroFill = Off;
+RennesReport.FixedWidth = false;
+RennesReport.Delimiter = ',';
+RennesReport.ColumnWidth = 23;
+RennesReport.WriteReport = true;
+RennesReport.AppendToExistingFile = false;
+
+Create ReportFile TiranaReport;
+TiranaReport.SolverIterations = Current;
+TiranaReport.UpperLeft = [ 0.1181491464510332 0.1948148148148148 ];
+TiranaReport.Size = [ 0.5992812219227314 0.7985185185185185 ];
+TiranaReport.RelativeZOrder = 120;
+TiranaReport.Maximized = false;
+TiranaReport.Filename = 'TiranaReport.txt';
+TiranaReport.Precision = 16;
+TiranaReport.Add = {DefaultSC.A1Gregorian, DefaultSC.EarthFixed.PlanetodeticLAT, DefaultSC.EarthFixed.PlanetodeticLON, DefaultSC.Earth.Altitude, DefaultSC.TiranaC.X, DefaultSC.TiranaC.Y, DefaultSC.TiranaC.Z};
+TiranaReport.WriteHeaders = true;
+TiranaReport.LeftJustify = On;
+TiranaReport.ZeroFill = Off;
+TiranaReport.FixedWidth = false;
+TiranaReport.Delimiter = ',';
+TiranaReport.ColumnWidth = 23;
+TiranaReport.WriteReport = true;
+TiranaReport.AppendToExistingFile = false;
+
+Create ReportFile AvillaReport;
+AvillaReport.SolverIterations = Current;
+AvillaReport.UpperLeft = [ 0.1181491464510332 0.1948148148148148 ];
+AvillaReport.Size = [ 0.5992812219227314 0.7985185185185185 ];
+AvillaReport.RelativeZOrder = 120;
+AvillaReport.Maximized = false;
+AvillaReport.Filename = 'AvillaReport.txt';
+AvillaReport.Precision = 16;
+AvillaReport.Add = {DefaultSC.A1Gregorian, DefaultSC.EarthFixed.PlanetodeticLAT, DefaultSC.EarthFixed.PlanetodeticLON, DefaultSC.Earth.Altitude, DefaultSC.AvillaC.X, DefaultSC.AvillaC.Y, DefaultSC.AvillaC.Z};
+AvillaReport.WriteHeaders = true;
+AvillaReport.LeftJustify = On;
+AvillaReport.ZeroFill = Off;
+AvillaReport.FixedWidth = false;
+AvillaReport.Delimiter = ',';
+AvillaReport.ColumnWidth = 23;
+AvillaReport.WriteReport = true;
+AvillaReport.AppendToExistingFile = false;
+
+Create ReportFile MessinaReport;
+MessinaReport.SolverIterations = Current;
+MessinaReport.UpperLeft = [ 0.1181491464510332 0.1948148148148148 ];
+MessinaReport.Size = [ 0.5992812219227314 0.7985185185185185 ];
+MessinaReport.RelativeZOrder = 120;
+MessinaReport.Maximized = false;
+MessinaReport.Filename = 'MessinaReport.txt';
+MessinaReport.Precision = 16;
+MessinaReport.Add = {DefaultSC.A1Gregorian, DefaultSC.EarthFixed.PlanetodeticLAT, DefaultSC.EarthFixed.PlanetodeticLON, DefaultSC.Earth.Altitude, DefaultSC.MessinaC.X, DefaultSC.MessinaC.Y, DefaultSC.MessinaC.Z};
+MessinaReport.WriteHeaders = true;
+MessinaReport.LeftJustify = On;
+MessinaReport.ZeroFill = Off;
+MessinaReport.FixedWidth = false;
+MessinaReport.Delimiter = ',';
+MessinaReport.ColumnWidth = 23;
+MessinaReport.WriteReport = true;
+MessinaReport.AppendToExistingFile = false;
+
+Create ReportFile GranadaReport;
+GranadaReport.SolverIterations = Current;
+GranadaReport.UpperLeft = [ 0.1181491464510332 0.1948148148148148 ];
+GranadaReport.Size = [ 0.5992812219227314 0.7985185185185185 ];
+GranadaReport.RelativeZOrder = 120;
+GranadaReport.Maximized = false;
+GranadaReport.Filename = 'GranadaReport.txt';
+GranadaReport.Precision = 16;
+GranadaReport.Add = {DefaultSC.A1Gregorian, DefaultSC.EarthFixed.PlanetodeticLAT, DefaultSC.EarthFixed.PlanetodeticLON, DefaultSC.Earth.Altitude, DefaultSC.GranadaC.X, DefaultSC.GranadaC.Y, DefaultSC.GranadaC.Z};
+GranadaReport.WriteHeaders = true;
+GranadaReport.LeftJustify = On;
+GranadaReport.ZeroFill = Off;
+GranadaReport.FixedWidth = false;
+GranadaReport.Delimiter = ',';
+GranadaReport.ColumnWidth = 23;
+GranadaReport.WriteReport = true;
+GranadaReport.AppendToExistingFile = false;
+
+Create ReportFile LisbonReport;
+LisbonReport.SolverIterations = Current;
+LisbonReport.UpperLeft = [ 0.1181491464510332 0.1948148148148148 ];
+LisbonReport.Size = [ 0.5992812219227314 0.7985185185185185 ];
+LisbonReport.RelativeZOrder = 120;
+LisbonReport.Maximized = false;
+LisbonReport.Filename = 'LisbonReport.txt';
+LisbonReport.Precision = 16;
+LisbonReport.Add = {DefaultSC.A1Gregorian, DefaultSC.EarthFixed.PlanetodeticLAT, DefaultSC.EarthFixed.PlanetodeticLON, DefaultSC.Earth.Altitude, DefaultSC.LisbonC.X, DefaultSC.LisbonC.Y, DefaultSC.LisbonC.Z};
+LisbonReport.WriteHeaders = true;
+LisbonReport.LeftJustify = On;
+LisbonReport.ZeroFill = Off;
+LisbonReport.FixedWidth = false;
+LisbonReport.Delimiter = ',';
+LisbonReport.ColumnWidth = 23;
+LisbonReport.WriteReport = true;
+LisbonReport.AppendToExistingFile = false;
+
+Create ReportFile PoitiersReport;
+PoitiersReport.SolverIterations = Current;
+PoitiersReport.UpperLeft = [ 0.1181491464510332 0.1948148148148148 ];
+PoitiersReport.Size = [ 0.5992812219227314 0.7985185185185185 ];
+PoitiersReport.RelativeZOrder = 120;
+PoitiersReport.Maximized = false;
+PoitiersReport.Filename = 'PoitiersReport.txt';
+PoitiersReport.Precision = 16;
+PoitiersReport.Add = {DefaultSC.A1Gregorian, DefaultSC.EarthFixed.PlanetodeticLAT, DefaultSC.EarthFixed.PlanetodeticLON, DefaultSC.Earth.Altitude, DefaultSC.PoitiersC.X, DefaultSC.PoitiersC.Y, DefaultSC.PoitiersC.Z};
+PoitiersReport.WriteHeaders = true;
+PoitiersReport.LeftJustify = On;
+PoitiersReport.ZeroFill = Off;
+PoitiersReport.FixedWidth = false;
+PoitiersReport.Delimiter = ',';
+PoitiersReport.ColumnWidth = 23;
+PoitiersReport.WriteReport = true;
+PoitiersReport.AppendToExistingFile = false;
+
+Create ReportFile StrasbourgReport;
+StrasbourgReport.SolverIterations = Current;
+StrasbourgReport.UpperLeft = [ 0.1181491464510332 0.1948148148148148 ];
+StrasbourgReport.Size = [ 0.5992812219227314 0.7985185185185185 ];
+StrasbourgReport.RelativeZOrder = 120;
+StrasbourgReport.Maximized = false;
+StrasbourgReport.Filename = 'StrasbourgReport.txt';
+StrasbourgReport.Precision = 16;
+StrasbourgReport.Add = {DefaultSC.A1Gregorian, DefaultSC.EarthFixed.PlanetodeticLAT, DefaultSC.EarthFixed.PlanetodeticLON, DefaultSC.Earth.Altitude, DefaultSC.StrasbourgC.X, DefaultSC.StrasbourgC.Y, DefaultSC.StrasbourgC.Z};
+StrasbourgReport.WriteHeaders = true;
+StrasbourgReport.LeftJustify = On;
+StrasbourgReport.ZeroFill = Off;
+StrasbourgReport.FixedWidth = false;
+StrasbourgReport.Delimiter = ',';
+StrasbourgReport.ColumnWidth = 23;
+StrasbourgReport.WriteReport = true;
+StrasbourgReport.AppendToExistingFile = false;
+
+Create ReportFile TenerifeReport;
+TenerifeReport.SolverIterations = Current;
+TenerifeReport.UpperLeft = [ 0.1181491464510332 0.1948148148148148 ];
+TenerifeReport.Size = [ 0.5992812219227314 0.7985185185185185 ];
+TenerifeReport.RelativeZOrder = 120;
+TenerifeReport.Maximized = false;
+TenerifeReport.Filename = 'TenerifeReport.txt';
+TenerifeReport.Precision = 16;
+TenerifeReport.Add = {DefaultSC.A1Gregorian, DefaultSC.EarthFixed.PlanetodeticLAT, DefaultSC.EarthFixed.PlanetodeticLON, DefaultSC.Earth.Altitude, DefaultSC.TenerifeC.X, DefaultSC.TenerifeC.Y, DefaultSC.TenerifeC.Z};
+TenerifeReport.WriteHeaders = true;
+TenerifeReport.LeftJustify = On;
+TenerifeReport.ZeroFill = Off;
+TenerifeReport.FixedWidth = false;
+TenerifeReport.Delimiter = ',';
+TenerifeReport.ColumnWidth = 23;
+TenerifeReport.WriteReport = true;
+TenerifeReport.AppendToExistingFile = false;
+
+Create ReportFile NemeaReport;
+NemeaReport.SolverIterations = Current;
+NemeaReport.UpperLeft = [ 0.1181491464510332 0.1948148148148148 ];
+NemeaReport.Size = [ 0.5992812219227314 0.7985185185185185 ];
+NemeaReport.RelativeZOrder = 120;
+NemeaReport.Maximized = false;
+NemeaReport.Filename = 'NemeaReport.txt';
+NemeaReport.Precision = 16;
+NemeaReport.Add = {DefaultSC.A1Gregorian, DefaultSC.EarthFixed.PlanetodeticLAT, DefaultSC.EarthFixed.PlanetodeticLON, DefaultSC.Earth.Altitude, DefaultSC.NemeaC.X, DefaultSC.NemeaC.Y, DefaultSC.NemeaC.Z};
+NemeaReport.WriteHeaders = true;
+NemeaReport.LeftJustify = On;
+NemeaReport.ZeroFill = Off;
+NemeaReport.FixedWidth = false;
+NemeaReport.Delimiter = ',';
+NemeaReport.ColumnWidth = 23;
+NemeaReport.WriteReport = true;
+NemeaReport.AppendToExistingFile = false;
+
+Create ReportFile DelftReport;
+DelftReport.SolverIterations = Current;
+DelftReport.UpperLeft = [ 0.1181491464510332 0.1948148148148148 ];
+DelftReport.Size = [ 0.5992812219227314 0.7985185185185185 ];
+DelftReport.RelativeZOrder = 120;
+DelftReport.Maximized = false;
+DelftReport.Filename = 'DelftReport.txt';
+DelftReport.Precision = 16;
+DelftReport.Add = {DefaultSC.A1Gregorian, DefaultSC.EarthFixed.PlanetodeticLAT, DefaultSC.EarthFixed.PlanetodeticLON, DefaultSC.Earth.Altitude, DefaultSC.DelftC.X, DefaultSC.DelftC.Y, DefaultSC.DelftC.Z};
+DelftReport.WriteHeaders = true;
+DelftReport.LeftJustify = On;
+DelftReport.ZeroFill = Off;
+DelftReport.FixedWidth = false;
+DelftReport.Delimiter = ',';
+DelftReport.ColumnWidth = 23;
+DelftReport.WriteReport = true;
+DelftReport.AppendToExistingFile = false;
 
 %----------------------------------------
 %---------- Mission Sequence
 %----------------------------------------
 
 BeginMissionSequence;
-Propagate DefaultProp(DefaultSC) {DefaultSC.ElapsedDays = 3.0};
+Propagate DefaultProp(DefaultSC) {DefaultSC.ElapsedDays = 7.0};
