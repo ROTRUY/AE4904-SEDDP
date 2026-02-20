@@ -4,22 +4,23 @@ import matplotlib.dates as mdates
 from datetime import datetime, timedelta
 from collections import defaultdict
 from CONSTANTS import dataVolume
+from math import prod
+import numpy as np
 
 ### CLASSES
 class ContactTimes():
     """
     Class for calculating stuff about the contact times.
-
-    :param filename: Name of the text file with the contactLocator data from GMAT (don't include .txt).
-    :type filename: str
     """
 
-    def __init__(self, filename: str) -> None:
+    def __init__(self, filename: str, stations: list[str]=None) -> None:
         """
         Initialiser.
 
-        :param filename: Name of the text file with the contactLocator data from GMAT (don't include .txt).
+        :param filename: Name of the text file with the contactLocator data from GMAT.
         :type filename: str
+        :param stations: List of station names (strings) to take into account. If none are given, all are taken into account. Names must be accurate!
+        :type stations: list[str]
         """
         # Initialise variables
         self.data: dict[str, list[(float, float, float)]] = defaultdict(list) # {station: [(start, stop, duration), ...]}
@@ -29,9 +30,10 @@ class ContactTimes():
         self.contactPerDay: dict[datetime, timedelta] = defaultdict(timedelta)  # Contact time per day {date, time}
         self.totalContactTime: timedelta = timedelta()  # Total contact time
         self.avgContactTime: float  # Average contact time per day [s]
+        self.stations = stations  # The stations to take into account, if empty it will account for them all.
 
         # Read file
-        with open(f"{filename}.txt") as f:
+        with open(f"GMATContacts\{filename}") as f:
             for line in f:
                 if line[:10] == "Observer: ":
                     station = line[10:-1]
@@ -82,7 +84,7 @@ class ContactTimes():
             plt.show()
 
         if save:
-            plt.savefig(f"{name}.png")
+            plt.savefig(f"Plots\{name}.png")
     
     
     def contactTime(self) -> None:
@@ -93,8 +95,10 @@ class ContactTimes():
         merged = list()
 
         for station in sorted(self.data.keys()):
-            for start, stop, _ in self.data[station]:
-                intervals.append((start, stop))
+            # Only count the times if the station is in the input list, or if no input list was given.
+            if not self.stations or station in self.stations:
+                for start, stop, _ in self.data[station]:
+                    intervals.append((start, stop))
 
         intervals.sort(key=lambda x: x[0])
 
@@ -126,46 +130,90 @@ class ContactTimes():
         self.length = (self.stop.date() - self.start.date()).days + 1
         self.avgContactTime = self.totalContactTime.total_seconds() / self.length  # Average contact time per day [s]
     
-    def summary(self) -> None:
+    def summary(self, Print:bool=True, save:bool=False, name:str = f"ContactSummary {datetime.now()}") -> None:
         """
         Prints summary of calculated factors.
+
+        :param print: Whether or not to print the summary. (Default True)
+        :type print: bool
+        :param save: Whether or not to save the summary to a text file. (Default False)
+        :type save: bool
+        :param name: Name to give the summary file if saved.
+        :type name: str
         """
-        print("\n========== CONTACT SUMMARY ==========\n")
+        if Print:
+            print("\n========== CONTACT SUMMARY ==========\n")
 
-        print(f"Analysis window:")
-        print(f"Start: {self.start}")
-        print(f"End:   {self.stop}")
-        print(f"Duration: {self.length} days\n")
+            print("Stations taken into account:\n")
+            if self.stations:
+                print(f"{self.stations}\n")
+            else:
+                print("All\n")
 
-        print(f"Total contact time:")
-        print(f"{self.totalContactTime} = {self.totalContactTime.total_seconds() / 60} minutes")
+            print(f"\nAnalysis window:")
+            print(f"Start: {self.start}")
+            print(f"End:   {self.stop}")
+            print(f"Duration: {self.length} days\n")
 
-        print("Contact time per day:")
-        for day in sorted(self.contactPerDay.keys()):
-            minutes = self.contactPerDay[day].total_seconds() / 60
-            print(f"{day} : {minutes:.3f} min")
+            print(f"Total contact time:")
+            print(f"{self.totalContactTime} = {self.totalContactTime.total_seconds() / 60} minutes")
 
-        print("Average contact per day: "
-            f"{self.avgContactTime / 60:.3f} min/day\n")
+            print("Contact time per day:")
+            for day in sorted(self.contactPerDay.keys()):
+                minutes = self.contactPerDay[day].total_seconds() / 60
+                print(f"{day} : {minutes:.3f} min")
 
-        print(f"Data rate required based on average: {dataVolume / self.avgContactTime * 1e6:.3f} Mbps\n")
+            print("Average contact per day: "
+                f"{self.avgContactTime / 60:.3f} min/day\n")
+
+            print(f"Data rate required based on average: {dataVolume / self.avgContactTime * 1e6:.3f} Mbps\n")
+
+        if save:
+            f = open(f"ContactSummaries\{name}.txt", "x")
+            with f:
+                f.write("========== CONTACT SUMMARY ==========\n")
+
+                f.write("Stations taken into account:\n")
+                if self.stations:
+                    f.write(f"{self.stations}\n")
+                else:
+                    f.write("All\n")
+
+                f.write(f"\nAnalysis window:\n")
+                f.write(f"Start: {self.start}\n")
+                f.write(f"End:   {self.stop}\n")
+                f.write(f"Duration: {self.length} days\n")
+
+                f.write(f"\nTotal contact time:\n")
+                f.write(f"{self.totalContactTime} = {self.totalContactTime.total_seconds() / 60} minutes\n")
+                
+                f.write("\nContact time per day:\n")
+                for day in sorted(self.contactPerDay.keys()):
+                    minutes = self.contactPerDay[day].total_seconds() / 60
+                    f.write(f"{day} : {minutes:.3f} min\n")
+
+                f.write("\nAverage contact per day: \n")
+                f.write(f"{self.avgContactTime / 60:.3f} min/day\n")
+
+                f.write(f"\nData rate required based on average: {dataVolume / self.avgContactTime * 1e6:.3f} Mbps\n")
+
+def availability(P_CFLOS: list[float]) -> float:
+    """
+    Estimates availability based on list of cloud-free line-of-sight probabilities.
+    Assumes probabilities are independent.
+
+    :param P_CFLOS: List of cloud-free line-of-sight probabilities.
+    :type P_CFLOS: list[float]
+    """
+    P_CFLOS = np.array(P_CFLOS)
+    P_outage = np.prod(1 - P_CFLOS)
+    return 1 - P_outage
 
 ### RUN HERE
-# SYS2+ is entirity of SYS2 plus Tenerife
-SYS2E = ContactTimes("ContactLocatorSYS2+")
+# sixA: ["Delft", "Granada", "Tenerife", "Nemea", "Nicosia", "Porto"]
+#print(availability([.35, .6708, .60, .60, .7931, .5962]))  # 0.997139644775104
 
-# minimal99 is the minimum amount of the SYS2 ground stations to get 99% availability: Nicosia, Gibraltar, Barcelona, Lausanne, Naples and Porto
-minimal99 = ContactTimes("minimal99")
+times = ContactTimes("sixA50RF.txt")
+times.summary(False, True, "sixA50RF")
+times.plot(False, True, "sixA50RFPlot")
 
-# minimal99A is minimal99 plus Tenerife
-minimal99A = ContactTimes("minimal99A")
-
-# minimal99B is minimal99A plus Nemea
-minimal99B = ContactTimes("minimal99B")
-
-# minimal99C is minimal99B plus Delft
-minimal99C = ContactTimes("minimal99C")
-
-# Full is every single European optical ground station found
-full = ContactTimes("full")
-full.summary()

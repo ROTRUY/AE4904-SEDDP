@@ -12,7 +12,7 @@ DefaultSC.CoordinateSystem = EarthMJ2000Eq;
 DefaultSC.DisplayStateType = Keplerian;
 DefaultSC.SMA = 6928;
 DefaultSC.ECC = 0;
-DefaultSC.INC = 98;
+DefaultSC.INC = 59.99999999999999;
 DefaultSC.RAAN = 0;
 DefaultSC.AOP = 0;
 DefaultSC.TA = 0;
@@ -372,6 +372,13 @@ Delft.MinimumElevationAngle = 30;
 
 
 
+
+
+
+
+
+
+
 %----------------------------------------
 %---------- ForceModels
 %----------------------------------------
@@ -481,7 +488,7 @@ DelftC.Axes = Topocentric;
 
 Create ContactLocator ContactLocator1;
 ContactLocator1.Target = DefaultSC;
-ContactLocator1.Filename = 'ContactLocator1.txt';
+ContactLocator1.Filename = 'C:\Users\robbe\Documents\Git Repositories\AE4904-SEDDP\GMATContacts\ContactLocator.txt';
 ContactLocator1.OccultingBodies = {Earth};
 ContactLocator1.InputEpochFormat = 'TAIModJulian';
 ContactLocator1.InitialEpoch = '21545';
@@ -538,26 +545,26 @@ DefaultOrbitView.EnableConstellations = On;
 
 Create GroundTrackPlot DefaultGroundTrackPlot;
 DefaultGroundTrackPlot.SolverIterations = Current;
-DefaultGroundTrackPlot.UpperLeft = [ 0 0.04789915966386555 ];
-DefaultGroundTrackPlot.Size = [ 0.944743935309973 0.9966386554621849 ];
-DefaultGroundTrackPlot.RelativeZOrder = 178;
+DefaultGroundTrackPlot.UpperLeft = [ 0.0008547008547008547 -0.00645682001614205 ];
+DefaultGroundTrackPlot.Size = [ 0.9880341880341881 1.042776432606941 ];
+DefaultGroundTrackPlot.RelativeZOrder = 24;
 DefaultGroundTrackPlot.Maximized = false;
 DefaultGroundTrackPlot.Add = {Avilla, Barcelona, DefaultSC, Delft, Gibraltar, Granada, Lausanne, Lisbon, Messina, Naples, Nemea, Nicosia, Poitiers, Porto, Rennes, Strasbourg, Tenerife, Tirana};
 DefaultGroundTrackPlot.DataCollectFrequency = 1;
-DefaultGroundTrackPlot.UpdatePlotFrequency = 50;
+DefaultGroundTrackPlot.UpdatePlotFrequency = 100;
 DefaultGroundTrackPlot.NumPointsToRedraw = 0;
 DefaultGroundTrackPlot.ShowPlot = false;
-DefaultGroundTrackPlot.MaxPlotPoints = 100000;
+DefaultGroundTrackPlot.MaxPlotPoints = 30000;
 DefaultGroundTrackPlot.CentralBody = Earth;
 DefaultGroundTrackPlot.TextureMap = 'ModifiedBlueMarble.jpg';
 
 Create ReportFile NicosiaReport;
 NicosiaReport.SolverIterations = Current;
-NicosiaReport.UpperLeft = [ 0.1176999101527403 0.1941176470588235 ];
-NicosiaReport.Size = [ 0.5988319856244384 0.7974789915966387 ];
-NicosiaReport.RelativeZOrder = 120;
+NicosiaReport.UpperLeft = [ 0.1162393162393162 0.1912832929782082 ];
+NicosiaReport.Size = [ 0.597008547008547 0.7941888619854721 ];
+NicosiaReport.RelativeZOrder = 265;
 NicosiaReport.Maximized = false;
-NicosiaReport.Filename = 'NicosiaReport.txt';
+NicosiaReport.Filename = 'C:\Users\robbe\Documents\Git Repositories\AE4904-SEDDP\GMATReports\NicosiaReport.csv';
 NicosiaReport.Precision = 16;
 NicosiaReport.Add = {DefaultSC.A1Gregorian, DefaultSC.EarthFixed.PlanetodeticLAT, DefaultSC.EarthFixed.PlanetodeticLON, DefaultSC.Earth.Altitude, DefaultSC.NicosiaC.X, DefaultSC.NicosiaC.Y, DefaultSC.NicosiaC.Z};
 NicosiaReport.WriteHeaders = true;
@@ -571,11 +578,11 @@ NicosiaReport.AppendToExistingFile = false;
 
 Create ReportFile GibraltarReport;
 GibraltarReport.SolverIterations = Current;
-GibraltarReport.UpperLeft = [ 0.1176999101527403 0.1941176470588235 ];
-GibraltarReport.Size = [ 0.5988319856244384 0.7974789915966387 ];
-GibraltarReport.RelativeZOrder = 120;
+GibraltarReport.UpperLeft = [ 0.1170940170940171 0.1928974979822437 ];
+GibraltarReport.Size = [ 0.5978632478632478 0.7958030669895076 ];
+GibraltarReport.RelativeZOrder = 96;
 GibraltarReport.Maximized = false;
-GibraltarReport.Filename = 'GibraltarReport.txt';
+GibraltarReport.Filename = 'C:\Users\robbe\Documents\Git Repositories\AE4904-SEDDP\GMATReports\GibraltarReport.csv';
 GibraltarReport.Precision = 16;
 GibraltarReport.Add = {DefaultSC.A1Gregorian, DefaultSC.EarthFixed.PlanetodeticLAT, DefaultSC.EarthFixed.PlanetodeticLON, DefaultSC.Earth.Altitude, DefaultSC.GibraltarC.X, DefaultSC.GibraltarC.Y, DefaultSC.GibraltarC.Z};
 GibraltarReport.WriteHeaders = true;
@@ -589,11 +596,11 @@ GibraltarReport.AppendToExistingFile = false;
 
 Create ReportFile BarcelonaReport;
 BarcelonaReport.SolverIterations = Current;
-BarcelonaReport.UpperLeft = [ 0.1181491464510332 0.1948148148148148 ];
-BarcelonaReport.Size = [ 0.5992812219227314 0.7985185185185185 ];
-BarcelonaReport.RelativeZOrder = 120;
+BarcelonaReport.UpperLeft = [ 0.1179487179487179 0.1945117029862793 ];
+BarcelonaReport.Size = [ 0.5987179487179487 0.7974172719935432 ];
+BarcelonaReport.RelativeZOrder = 124;
 BarcelonaReport.Maximized = false;
-BarcelonaReport.Filename = 'BarcelonaReport.txt';
+BarcelonaReport.Filename = 'C:\Users\robbe\Documents\Git Repositories\AE4904-SEDDP\GMATReports\BarcelonaReport.csv';
 BarcelonaReport.Precision = 16;
 BarcelonaReport.Add = {DefaultSC.A1Gregorian, DefaultSC.EarthFixed.PlanetodeticLAT, DefaultSC.EarthFixed.PlanetodeticLON, DefaultSC.Earth.Altitude, DefaultSC.BarcelonaC.X, DefaultSC.BarcelonaC.Y, DefaultSC.BarcelonaC.Z};
 BarcelonaReport.WriteHeaders = true;
@@ -607,11 +614,11 @@ BarcelonaReport.AppendToExistingFile = false;
 
 Create ReportFile LausanneReport;
 LausanneReport.SolverIterations = Current;
-LausanneReport.UpperLeft = [ 0.1181491464510332 0.1948148148148148 ];
-LausanneReport.Size = [ 0.5992812219227314 0.7985185185185185 ];
-LausanneReport.RelativeZOrder = 120;
+LausanneReport.UpperLeft = [ 0.1179487179487179 0.1945117029862793 ];
+LausanneReport.Size = [ 0.5987179487179487 0.7974172719935432 ];
+LausanneReport.RelativeZOrder = 123;
 LausanneReport.Maximized = false;
-LausanneReport.Filename = 'LausanneReport.txt';
+LausanneReport.Filename = 'C:\Users\robbe\Documents\Git Repositories\AE4904-SEDDP\GMATReports\LausanneReport.csv';
 LausanneReport.Precision = 16;
 LausanneReport.Add = {DefaultSC.A1Gregorian, DefaultSC.EarthFixed.PlanetodeticLAT, DefaultSC.EarthFixed.PlanetodeticLON, DefaultSC.Earth.Altitude, DefaultSC.LausanneC.X, DefaultSC.LausanneC.Y, DefaultSC.LausanneC.Z};
 LausanneReport.WriteHeaders = true;
@@ -625,11 +632,11 @@ LausanneReport.AppendToExistingFile = false;
 
 Create ReportFile NaplesReport;
 NaplesReport.SolverIterations = Current;
-NaplesReport.UpperLeft = [ 0.1181491464510332 0.1948148148148148 ];
-NaplesReport.Size = [ 0.5992812219227314 0.7985185185185185 ];
-NaplesReport.RelativeZOrder = 120;
+NaplesReport.UpperLeft = [ 0.1179487179487179 0.1945117029862793 ];
+NaplesReport.Size = [ 0.5987179487179487 0.7974172719935432 ];
+NaplesReport.RelativeZOrder = 122;
 NaplesReport.Maximized = false;
-NaplesReport.Filename = 'NaplesReport.txt';
+NaplesReport.Filename = 'C:\Users\robbe\Documents\Git Repositories\AE4904-SEDDP\GMATReports\NaplesReport.csv';
 NaplesReport.Precision = 16;
 NaplesReport.Add = {DefaultSC.A1Gregorian, DefaultSC.EarthFixed.PlanetodeticLAT, DefaultSC.EarthFixed.PlanetodeticLON, DefaultSC.Earth.Altitude, DefaultSC.NaplesC.X, DefaultSC.NaplesC.Y, DefaultSC.NaplesC.Z};
 NaplesReport.WriteHeaders = true;
@@ -643,11 +650,11 @@ NaplesReport.AppendToExistingFile = false;
 
 Create ReportFile PortoReport;
 PortoReport.SolverIterations = Current;
-PortoReport.UpperLeft = [ 0.1181491464510332 0.1948148148148148 ];
-PortoReport.Size = [ 0.5992812219227314 0.7985185185185185 ];
-PortoReport.RelativeZOrder = 120;
+PortoReport.UpperLeft = [ 0.1179487179487179 0.1945117029862793 ];
+PortoReport.Size = [ 0.5987179487179487 0.7974172719935432 ];
+PortoReport.RelativeZOrder = 121;
 PortoReport.Maximized = false;
-PortoReport.Filename = 'PortoReport.txt';
+PortoReport.Filename = 'C:\Users\robbe\Documents\Git Repositories\AE4904-SEDDP\GMATReports\PortoReport.csv';
 PortoReport.Precision = 16;
 PortoReport.Add = {DefaultSC.A1Gregorian, DefaultSC.EarthFixed.PlanetodeticLAT, DefaultSC.EarthFixed.PlanetodeticLON, DefaultSC.Earth.Altitude, DefaultSC.PortoC.X, DefaultSC.PortoC.Y, DefaultSC.PortoC.Z};
 PortoReport.WriteHeaders = true;
@@ -661,11 +668,11 @@ PortoReport.AppendToExistingFile = false;
 
 Create ReportFile RennesReport;
 RennesReport.SolverIterations = Current;
-RennesReport.UpperLeft = [ 0.1181491464510332 0.1948148148148148 ];
-RennesReport.Size = [ 0.5992812219227314 0.7985185185185185 ];
-RennesReport.RelativeZOrder = 120;
+RennesReport.UpperLeft = [ 0.1179487179487179 0.1945117029862793 ];
+RennesReport.Size = [ 0.5987179487179487 0.7974172719935432 ];
+RennesReport.RelativeZOrder = 192;
 RennesReport.Maximized = false;
-RennesReport.Filename = 'RennesReport.txt';
+RennesReport.Filename = 'C:\Users\robbe\Documents\Git Repositories\AE4904-SEDDP\GMATReports\RennesReport.csv';
 RennesReport.Precision = 16;
 RennesReport.Add = {DefaultSC.A1Gregorian, DefaultSC.EarthFixed.PlanetodeticLAT, DefaultSC.EarthFixed.PlanetodeticLON, DefaultSC.Earth.Altitude, DefaultSC.RennesC.X, DefaultSC.RennesC.Y, DefaultSC.RennesC.Z};
 RennesReport.WriteHeaders = true;
@@ -679,11 +686,11 @@ RennesReport.AppendToExistingFile = false;
 
 Create ReportFile TiranaReport;
 TiranaReport.SolverIterations = Current;
-TiranaReport.UpperLeft = [ 0.1181491464510332 0.1948148148148148 ];
-TiranaReport.Size = [ 0.5992812219227314 0.7985185185185185 ];
-TiranaReport.RelativeZOrder = 120;
+TiranaReport.UpperLeft = [ 0.1179487179487179 0.1945117029862793 ];
+TiranaReport.Size = [ 0.5987179487179487 0.7974172719935432 ];
+TiranaReport.RelativeZOrder = 191;
 TiranaReport.Maximized = false;
-TiranaReport.Filename = 'TiranaReport.txt';
+TiranaReport.Filename = 'C:\Users\robbe\Documents\Git Repositories\AE4904-SEDDP\GMATReports\TiranaReport.csv';
 TiranaReport.Precision = 16;
 TiranaReport.Add = {DefaultSC.A1Gregorian, DefaultSC.EarthFixed.PlanetodeticLAT, DefaultSC.EarthFixed.PlanetodeticLON, DefaultSC.Earth.Altitude, DefaultSC.TiranaC.X, DefaultSC.TiranaC.Y, DefaultSC.TiranaC.Z};
 TiranaReport.WriteHeaders = true;
@@ -697,11 +704,11 @@ TiranaReport.AppendToExistingFile = false;
 
 Create ReportFile AvillaReport;
 AvillaReport.SolverIterations = Current;
-AvillaReport.UpperLeft = [ 0.1181491464510332 0.1948148148148148 ];
-AvillaReport.Size = [ 0.5992812219227314 0.7985185185185185 ];
-AvillaReport.RelativeZOrder = 120;
+AvillaReport.UpperLeft = [ 0.1179487179487179 0.1945117029862793 ];
+AvillaReport.Size = [ 0.5987179487179487 0.7974172719935432 ];
+AvillaReport.RelativeZOrder = 190;
 AvillaReport.Maximized = false;
-AvillaReport.Filename = 'AvillaReport.txt';
+AvillaReport.Filename = 'C:\Users\robbe\Documents\Git Repositories\AE4904-SEDDP\GMATReports\AvillaReport.csv';
 AvillaReport.Precision = 16;
 AvillaReport.Add = {DefaultSC.A1Gregorian, DefaultSC.EarthFixed.PlanetodeticLAT, DefaultSC.EarthFixed.PlanetodeticLON, DefaultSC.Earth.Altitude, DefaultSC.AvillaC.X, DefaultSC.AvillaC.Y, DefaultSC.AvillaC.Z};
 AvillaReport.WriteHeaders = true;
@@ -715,11 +722,11 @@ AvillaReport.AppendToExistingFile = false;
 
 Create ReportFile MessinaReport;
 MessinaReport.SolverIterations = Current;
-MessinaReport.UpperLeft = [ 0.1181491464510332 0.1948148148148148 ];
-MessinaReport.Size = [ 0.5992812219227314 0.7985185185185185 ];
-MessinaReport.RelativeZOrder = 120;
+MessinaReport.UpperLeft = [ 0.1179487179487179 0.1945117029862793 ];
+MessinaReport.Size = [ 0.5987179487179487 0.7974172719935432 ];
+MessinaReport.RelativeZOrder = 189;
 MessinaReport.Maximized = false;
-MessinaReport.Filename = 'MessinaReport.txt';
+MessinaReport.Filename = 'C:\Users\robbe\Documents\Git Repositories\AE4904-SEDDP\GMATReports\MessinaReport.csv';
 MessinaReport.Precision = 16;
 MessinaReport.Add = {DefaultSC.A1Gregorian, DefaultSC.EarthFixed.PlanetodeticLAT, DefaultSC.EarthFixed.PlanetodeticLON, DefaultSC.Earth.Altitude, DefaultSC.MessinaC.X, DefaultSC.MessinaC.Y, DefaultSC.MessinaC.Z};
 MessinaReport.WriteHeaders = true;
@@ -733,11 +740,11 @@ MessinaReport.AppendToExistingFile = false;
 
 Create ReportFile GranadaReport;
 GranadaReport.SolverIterations = Current;
-GranadaReport.UpperLeft = [ 0.1181491464510332 0.1948148148148148 ];
-GranadaReport.Size = [ 0.5992812219227314 0.7985185185185185 ];
-GranadaReport.RelativeZOrder = 120;
+GranadaReport.UpperLeft = [ 0.1179487179487179 0.1945117029862793 ];
+GranadaReport.Size = [ 0.5987179487179487 0.7974172719935432 ];
+GranadaReport.RelativeZOrder = 188;
 GranadaReport.Maximized = false;
-GranadaReport.Filename = 'GranadaReport.txt';
+GranadaReport.Filename = 'C:\Users\robbe\Documents\Git Repositories\AE4904-SEDDP\GMATReports\GranadaReport.csv';
 GranadaReport.Precision = 16;
 GranadaReport.Add = {DefaultSC.A1Gregorian, DefaultSC.EarthFixed.PlanetodeticLAT, DefaultSC.EarthFixed.PlanetodeticLON, DefaultSC.Earth.Altitude, DefaultSC.GranadaC.X, DefaultSC.GranadaC.Y, DefaultSC.GranadaC.Z};
 GranadaReport.WriteHeaders = true;
@@ -751,11 +758,11 @@ GranadaReport.AppendToExistingFile = false;
 
 Create ReportFile LisbonReport;
 LisbonReport.SolverIterations = Current;
-LisbonReport.UpperLeft = [ 0.1181491464510332 0.1948148148148148 ];
-LisbonReport.Size = [ 0.5992812219227314 0.7985185185185185 ];
-LisbonReport.RelativeZOrder = 120;
+LisbonReport.UpperLeft = [ 0.1179487179487179 0.1945117029862793 ];
+LisbonReport.Size = [ 0.5987179487179487 0.7974172719935432 ];
+LisbonReport.RelativeZOrder = 187;
 LisbonReport.Maximized = false;
-LisbonReport.Filename = 'LisbonReport.txt';
+LisbonReport.Filename = 'C:\Users\robbe\Documents\Git Repositories\AE4904-SEDDP\GMATReports\LisbonReport.csv';
 LisbonReport.Precision = 16;
 LisbonReport.Add = {DefaultSC.A1Gregorian, DefaultSC.EarthFixed.PlanetodeticLAT, DefaultSC.EarthFixed.PlanetodeticLON, DefaultSC.Earth.Altitude, DefaultSC.LisbonC.X, DefaultSC.LisbonC.Y, DefaultSC.LisbonC.Z};
 LisbonReport.WriteHeaders = true;
@@ -769,11 +776,11 @@ LisbonReport.AppendToExistingFile = false;
 
 Create ReportFile PoitiersReport;
 PoitiersReport.SolverIterations = Current;
-PoitiersReport.UpperLeft = [ 0.1181491464510332 0.1948148148148148 ];
-PoitiersReport.Size = [ 0.5992812219227314 0.7985185185185185 ];
-PoitiersReport.RelativeZOrder = 120;
+PoitiersReport.UpperLeft = [ 0.1179487179487179 0.1945117029862793 ];
+PoitiersReport.Size = [ 0.5987179487179487 0.7974172719935432 ];
+PoitiersReport.RelativeZOrder = 186;
 PoitiersReport.Maximized = false;
-PoitiersReport.Filename = 'PoitiersReport.txt';
+PoitiersReport.Filename = 'C:\Users\robbe\Documents\Git Repositories\AE4904-SEDDP\GMATReports\PoitiersReport.csv';
 PoitiersReport.Precision = 16;
 PoitiersReport.Add = {DefaultSC.A1Gregorian, DefaultSC.EarthFixed.PlanetodeticLAT, DefaultSC.EarthFixed.PlanetodeticLON, DefaultSC.Earth.Altitude, DefaultSC.PoitiersC.X, DefaultSC.PoitiersC.Y, DefaultSC.PoitiersC.Z};
 PoitiersReport.WriteHeaders = true;
@@ -787,11 +794,11 @@ PoitiersReport.AppendToExistingFile = false;
 
 Create ReportFile StrasbourgReport;
 StrasbourgReport.SolverIterations = Current;
-StrasbourgReport.UpperLeft = [ 0.1181491464510332 0.1948148148148148 ];
-StrasbourgReport.Size = [ 0.5992812219227314 0.7985185185185185 ];
-StrasbourgReport.RelativeZOrder = 120;
+StrasbourgReport.UpperLeft = [ 0.1179487179487179 0.1945117029862793 ];
+StrasbourgReport.Size = [ 0.5987179487179487 0.7974172719935432 ];
+StrasbourgReport.RelativeZOrder = 185;
 StrasbourgReport.Maximized = false;
-StrasbourgReport.Filename = 'StrasbourgReport.txt';
+StrasbourgReport.Filename = 'C:\Users\robbe\Documents\Git Repositories\AE4904-SEDDP\GMATReports\StrasbourgReport.csv';
 StrasbourgReport.Precision = 16;
 StrasbourgReport.Add = {DefaultSC.A1Gregorian, DefaultSC.EarthFixed.PlanetodeticLAT, DefaultSC.EarthFixed.PlanetodeticLON, DefaultSC.Earth.Altitude, DefaultSC.StrasbourgC.X, DefaultSC.StrasbourgC.Y, DefaultSC.StrasbourgC.Z};
 StrasbourgReport.WriteHeaders = true;
@@ -805,11 +812,11 @@ StrasbourgReport.AppendToExistingFile = false;
 
 Create ReportFile TenerifeReport;
 TenerifeReport.SolverIterations = Current;
-TenerifeReport.UpperLeft = [ 0.1181491464510332 0.1948148148148148 ];
-TenerifeReport.Size = [ 0.5992812219227314 0.7985185185185185 ];
-TenerifeReport.RelativeZOrder = 120;
+TenerifeReport.UpperLeft = [ 0.1179487179487179 0.1945117029862793 ];
+TenerifeReport.Size = [ 0.5987179487179487 0.7974172719935432 ];
+TenerifeReport.RelativeZOrder = 184;
 TenerifeReport.Maximized = false;
-TenerifeReport.Filename = 'TenerifeReport.txt';
+TenerifeReport.Filename = 'C:\Users\robbe\Documents\Git Repositories\AE4904-SEDDP\GMATReports\TenerifeReport.csv';
 TenerifeReport.Precision = 16;
 TenerifeReport.Add = {DefaultSC.A1Gregorian, DefaultSC.EarthFixed.PlanetodeticLAT, DefaultSC.EarthFixed.PlanetodeticLON, DefaultSC.Earth.Altitude, DefaultSC.TenerifeC.X, DefaultSC.TenerifeC.Y, DefaultSC.TenerifeC.Z};
 TenerifeReport.WriteHeaders = true;
@@ -823,11 +830,11 @@ TenerifeReport.AppendToExistingFile = false;
 
 Create ReportFile NemeaReport;
 NemeaReport.SolverIterations = Current;
-NemeaReport.UpperLeft = [ 0.1181491464510332 0.1948148148148148 ];
-NemeaReport.Size = [ 0.5992812219227314 0.7985185185185185 ];
-NemeaReport.RelativeZOrder = 120;
+NemeaReport.UpperLeft = [ 0.1179487179487179 0.1945117029862793 ];
+NemeaReport.Size = [ 0.5987179487179487 0.7974172719935432 ];
+NemeaReport.RelativeZOrder = 183;
 NemeaReport.Maximized = false;
-NemeaReport.Filename = 'NemeaReport.txt';
+NemeaReport.Filename = 'C:\Users\robbe\Documents\Git Repositories\AE4904-SEDDP\GMATReports\NemeaReport.csv';
 NemeaReport.Precision = 16;
 NemeaReport.Add = {DefaultSC.A1Gregorian, DefaultSC.EarthFixed.PlanetodeticLAT, DefaultSC.EarthFixed.PlanetodeticLON, DefaultSC.Earth.Altitude, DefaultSC.NemeaC.X, DefaultSC.NemeaC.Y, DefaultSC.NemeaC.Z};
 NemeaReport.WriteHeaders = true;
@@ -841,11 +848,11 @@ NemeaReport.AppendToExistingFile = false;
 
 Create ReportFile DelftReport;
 DelftReport.SolverIterations = Current;
-DelftReport.UpperLeft = [ 0.1181491464510332 0.1948148148148148 ];
-DelftReport.Size = [ 0.5992812219227314 0.7985185185185185 ];
-DelftReport.RelativeZOrder = 120;
+DelftReport.UpperLeft = [ 0.1179487179487179 0.1945117029862793 ];
+DelftReport.Size = [ 0.5987179487179487 0.7974172719935432 ];
+DelftReport.RelativeZOrder = 182;
 DelftReport.Maximized = false;
-DelftReport.Filename = 'DelftReport.txt';
+DelftReport.Filename = 'C:\Users\robbe\Documents\Git Repositories\AE4904-SEDDP\GMATReports\DelftReport.csv';
 DelftReport.Precision = 16;
 DelftReport.Add = {DefaultSC.A1Gregorian, DefaultSC.EarthFixed.PlanetodeticLAT, DefaultSC.EarthFixed.PlanetodeticLON, DefaultSC.Earth.Altitude, DefaultSC.DelftC.X, DefaultSC.DelftC.Y, DefaultSC.DelftC.Z};
 DelftReport.WriteHeaders = true;
@@ -862,6 +869,13 @@ DelftReport.AppendToExistingFile = false;
 %----------------------------------------
 Create Variable minElevation;
 minElevation = 30;
+
+
+
+
+
+
+
 
 
 %----------------------------------------

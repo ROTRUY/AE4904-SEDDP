@@ -1,0 +1,25 @@
+========== CONTACT SUMMARY ==========
+Stations taken into account:
+['Delft', 'Granada', 'Tenerife', 'Nemea', 'Nicosia', 'Porto']
+
+Analysis window:
+Start: 2026-02-13 00:31:45.333000
+End:   2026-02-19 23:48:47.746000
+Duration: 7 days
+
+Total contact time:
+3:47:14.062000 = 227.23436666666666 minutes
+
+Contact time per day:
+2026-02-13 : 31.522 min
+2026-02-14 : 34.805 min
+2026-02-15 : 34.713 min
+2026-02-16 : 32.005 min
+2026-02-17 : 33.513 min
+2026-02-18 : 33.426 min
+2026-02-19 : 27.250 min
+
+Average contact per day: 
+32.462 min/day
+
+Data rate required based on average: 1283.550 Mbps
