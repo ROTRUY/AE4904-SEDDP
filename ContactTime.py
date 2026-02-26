@@ -214,6 +214,6 @@ def availability(P_CFLOS: list[float]) -> float:
 #print(availability([.35, .6708, .60, .60, .7931, .5962]))  # 0.997139644775104
 
 times = ContactTimes("sixA50RF.txt")
-times.summary(False, True, "sixA50RF")
-times.plot(False, True, "sixA50RFPlot")
+times.summary(True, False, "sixA50RF")
+#times.plot(False, True, "sixA50RFPlot")
 

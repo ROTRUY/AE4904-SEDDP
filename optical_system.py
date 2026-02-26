@@ -30,6 +30,9 @@ optical_system1 = {
         beam_divergence_angle: 1,       # degrees
         beam_jitter_angle_std: 1,       # degrees
         beam_divergence_angle_std: 1,   # degrees
+    },
+    "noise_specifications" : {
+        system_temperature: 300  # Kelvin
     }
 }
 
