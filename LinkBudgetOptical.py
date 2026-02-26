@@ -17,6 +17,7 @@ class LinkBudget():
 
     def __init__(self, optical_system):
         self.elevation_angle = optical_system['link_benchmark_specs']['average_angle']
+        self.transmitter_divergence_angle = optical_system['transmitter_specs']['transmitter_divergence_angle']
         self.D_T = optical_system['link_benchmark_specs']['transmitter_aperture']  # Transmitter aperture
         self.D_R = optical_system['link_benchmark_specs']['receiver_aperture']  # Receiver aperture
         self.Lambda = optical_system['system_specs']['system_frequency']  # Wavelength
@@ -29,29 +30,77 @@ class LinkBudget():
     def dB(self, x):
         return 10 * log10(x)
 
-    def G_T(self):
+    def get_transmitter_gain(self):
         """
-        Gain of transmitting aperture
+        Gain of transmitter
         """
-        return (pi * self.D_T / self.Lambda)**2
-    
-    def L_PT(self):
+        gain_TX = 8 / (self.transmitter_divergence_angle)**2
+        return gain_TX
+
+    def get_receiver_gain(self):
         """
-        Pointing loss of the transmitter (assuming a Gaussian-shaped single-mode beam)
+        Gain of receiver
         """
-        return exp(-8 * self.theta**2 / self.theta_div**2)
+        gain_RX = (np.pi * self.D_R / (self.Lambda))**2
+        return gain_RX
+
+# TODO define pointing error, pointing jitter RMS, outage probability
+
+    def get_pointing_jitter(self):
+        """
+        Platform jitter
+        """
+        def get_PSD(f):
+            return 160 / (1 + f**2) 
+
+        # f = np.linspace(0, 1000, 1000)
+        # pointing_jitter_variance = np.trapz([get_PSD(f) for fi in f], f)
+        pointing_jitter = 160 * np.arctan(1000) * 10^-6 # radians (sigma_pj^2)
+        return pointing_jitter
+
+
+    def get_static_pointing_error_loss(self): # what is pointing error?
+        """
+        Static pointing error loss
+        """
+        T_pe = exp(-2 * self.transmitter_static_pointing_error**2 / self.transmitter_divergence_angle**2)
+        return 10 * log10(T_pe)
+
+    def get_avg_pointing_jitter_loss(self):
+        """
+        Average pointing jitter loss
+        """
+        pointing_jitter = self.get_pointing_jitter()
+        T_pa = self.transmitter_divergence_angle**2 / (self.transmitter_divergence_angle**2 + 4 * pointing_jitter**2) 
+        return 10 * log10(T_pa)
+
+    def get_pointing_jitter_scintillation_loss(self):
+        """
+        Pointing jitter scintillation loss
+        """
+        pointing_jitter = self.get_pointing_jitter()
+        outage_probability = self.()
+        T_ps = outage_probability**(4*pointing_jitter**2 / self.transmitter_divergence_angle**2)
+        return 10 * log10(T_ps)
+
+
+
+
+    def get_pointing_jitter_RMS(self): # what is pointing jitter RMS?
+        """
+        Pointing jitter RMS
+        """
+
+        return self.theta_div / np.sqrt(12)
+
+
     
     def L_FS(self):
         """
         Free-space propagation loss
         """
         return (4 * pi * self.R / self.Lambda)**2
-    
-    def G_R(self):
-        """
-        Gain of the receiving aperture
-        """
-        return 
+
 
     def get_HV57_CN(self, h, A=1.7e-14, h_0=0, v=21):
         """
@@ -143,3 +192,28 @@ class LinkBudget():
 optical_system = OS.optical_system1
 link_budget = LinkBudget(optical_system)
 
+print('Computing Link Budget...\n')
+
+print('Method: Transmitter + Medium + Receiver\n')
+
+print('Transmitter:\n')
+
+print("Pointing losses:")
+print(f'- Static pointing error loss: {link_budget.get_static_pointing_error_loss()} dB')
+print(f'- Average pointing jitter loss: {link_budget.get_avg_pointing_jitter_loss()} dB')
+print(f'- Pointing jitter induced scintillation loss: {link_budget.get_pointing_jitter_scintillation_loss()} dB')
+
+
+
+print(f'Transmitter power: {optical_system['transmitter_specs']['transmitter_laser_power']} dBm')
+print(f'Transmitter gain: {link_budget.get_transmitter_gain()} dB')
+print(f'Transmitter losses: {}')
+
+print('Medium:\n')
+
+print('Receiver:\n')
+
+print(f'Gain receiver: {link_budget.get_receiver_gain()} dB')
+print(f'Receiver losses: {}')
+
+print('Final Link Budget:\n')
