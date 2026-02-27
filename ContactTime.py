@@ -3,9 +3,22 @@ import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 from datetime import datetime, timedelta
 from collections import defaultdict
-from CONSTANTS import dataVolume
+from CONSTANTS import dataVolume, altitude
 from math import prod
 import numpy as np
+
+### GROUND STATION NETWORKS
+# Format: "StationName": (Latitude [deg], Longitude [deg], Altitude [km], Minimum Elevation [deg])
+# Optical
+OpticalNetwork = {
+                "Delft":    (51.99,   4.38, 0.060, 30), 
+                "Granada":  (37.00,  -3.20, 0.738, 30), 
+                "Tenerife": (28.30, -16.51, 2.400, 30), 
+                "Nemea":    (37.85,  22.62, 0.300, 30), 
+                "Nicosia":  (34.80,  33.40, 0.220, 30), 
+                "Porto":    (41.50,  -8.80, 0.100, 30)
+                }
+
 
 ### CLASSES
 class ContactTimes():
@@ -79,6 +92,62 @@ class ContactTimes():
         ax.set_ylabel("Ground Station")
         ax.set_title("Ground Station Contact Windows")
         plt.tight_layout()
+
+        if show:
+            plt.show()
+
+        if save:
+            plt.savefig(f"Plots\{name}.png")
+    
+
+    def plotMap(self, GroundStationNetwork: dict[str, tuple[float, float]], show: bool = True, save: bool = False, name: str = f"ContactMap {datetime.now()}") -> None:
+        
+        R_E = 6371  # Earth radius [km]
+
+        # Maximum Earth central angle (radians)
+        psi = np.arccos(R_E / (R_E + altitude))
+
+        fig, ax = plt.subplots(figsize=(12, 6))
+
+        # Draw simple world map grid
+        ax.set_xlim(-180, 180)
+        ax.set_ylim(-90, 90)
+        ax.set_xlabel("Longitude [deg]")
+        ax.set_ylabel("Latitude [deg]")
+        ax.set_title(f"Ground Stations and Visibility Footprint (h = {altitude} km)")
+        ax.grid(True, linestyle="--", alpha=0.5)
+
+        # Draw each station + footprint
+        for station, (lat_deg, lon_deg) in GroundStationNetwork.items():
+
+            # Plot station
+            ax.plot(lon_deg, lat_deg, 'ro')
+            ax.text(lon_deg + 2, lat_deg + 2, station)
+
+            # Create visibility circle
+            circle_lats = []
+            circle_lons = []
+
+            for theta in np.linspace(0, 2*np.pi, 200):
+
+                # Great circle approximation
+                lat0 = np.radians(lat_deg)
+                lon0 = np.radians(lon_deg)
+
+                lat = np.arcsin(
+                    np.sin(lat0)*np.cos(psi) +
+                    np.cos(lat0)*np.sin(psi)*np.cos(theta)
+                )
+
+                lon = lon0 + np.arctan2(
+                    np.sin(theta)*np.sin(psi)*np.cos(lat0),
+                    np.cos(psi) - np.sin(lat0)*np.sin(lat)
+                )
+
+                circle_lats.append(np.degrees(lat))
+                circle_lons.append(np.degrees(lon))
+
+            ax.plot(circle_lons, circle_lats, alpha=0.4)
 
         if show:
             plt.show()
