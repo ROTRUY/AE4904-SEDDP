@@ -4,8 +4,10 @@ import matplotlib.dates as mdates
 from datetime import datetime, timedelta
 from collections import defaultdict
 from CONSTANTS import dataVolume, altitude
-from math import prod
 import numpy as np
+import cartopy.crs as ccrs
+import cartopy.feature as cfeature
+import pandas as pd
 
 ### GROUND STATION NETWORKS
 # Format: "StationName": (Latitude [deg], Longitude [deg], Altitude [km], Minimum Elevation [deg])
@@ -17,6 +19,24 @@ OpticalNetwork = {
                 "Nemea":    (37.85,  22.62, 0.300, 30), 
                 "Nicosia":  (34.80,  33.40, 0.220, 30), 
                 "Porto":    (41.50,  -8.80, 0.100, 30)
+                }
+
+RFFromOptical = {
+                "Delft":    (51.99,   4.38, 0.060, 10), 
+                "Granada":  (37.00,  -3.20, 0.738, 10), 
+                "Tenerife": (28.30, -16.51, 2.400, 10), 
+                "Nemea":    (37.85,  22.62, 0.300, 10), 
+                "Nicosia":  (34.80,  33.40, 0.220, 10), 
+                "Porto":    (41.50,  -8.80, 0.100, 10)
+                }
+
+# "Weilheim":  (47.88, 11.08, 0.563, 10), 
+
+RFNetwork = {
+                "Redu":       (50.00,  5.15,  0.387, 10), 
+                "Cebreros":   (40.45, -4.37,  0.794, 10), 
+                "Maspalomas": (27.76, -15.63, 0.205, 10),
+                "Fucino":     (41.98,  13.60, 0.661, 10)
                 }
 
 
@@ -35,7 +55,7 @@ class ContactTimes():
         :param stations: List of station names (strings) to take into account. If none are given, all are taken into account. Names must be accurate!
         :type stations: list[str]
         """
-        # Initialise variables
+        # === Initialise variables ===
         self.data: dict[str, list[(float, float, float)]] = defaultdict(list) # {station: [(start, stop, duration), ...]}
         self.start: datetime  # Start epoch of time interval
         self.stop: datetime  # Stop epoch of time interval
@@ -45,7 +65,7 @@ class ContactTimes():
         self.avgContactTime: float  # Average contact time per day [s]
         self.stations = stations  # The stations to take into account, if empty it will account for them all.
 
-        # Read file
+        # === Read file ===
         with open(f"GMATContacts\{filename}") as f:
             for line in f:
                 if line[:10] == "Observer: ":
@@ -56,11 +76,11 @@ class ContactTimes():
                     duration = float(line[58:70])
                     self.data[station].append((start, stop, duration))
         
-        # Calculate everything
+        # === Calculate everything ===
         self.contactTime()
     
             
-    def plot(self, show: bool = True, save: bool = False, name: str = f"ContactPlot {datetime.now()}") -> None:
+    def plot(self, show: bool = True, save: bool = False, name: str = "ContactPlot") -> None:
         """
         Method to plot the contact times per ground station.
         
@@ -100,39 +120,82 @@ class ContactTimes():
             plt.savefig(f"Plots\{name}.png")
     
 
-    def plotMap(self, GroundStationNetwork: dict[str, tuple[float, float]], show: bool = True, save: bool = False, name: str = f"ContactMap {datetime.now()}") -> None:
-        
-        R_E = 6371  # Earth radius [km]
+    def plotMap(self, network: dict[str, tuple[float, float, float, float]], altitude: float, inclination: float, groundtrack_file: str, show: bool = True, save: bool = False, name: str = "ContactMap") -> None:
+        """
+        Plots the ground stations and their visibility footprints on a world map.
+        :param network: Dictionary of station coordinates and parameters. Format: {station_name: (latitude [deg], longitude [deg], altitude [km], min elevation [deg])}
+        :type network: dict[str, tuple[float, float, float, float]]
+        :param altitude: Altitude of the satellite. [km]
+        :type altitude: float
+        :param show: Whether you want the method to show the plot when ran.
+        :type show: bool
+        :param save: Whether you want the method to save the plot when ran.
+        :type save: bool
+        :param name: Name for the plot when saved.
+        :type name: str
+        """
 
-        # Maximum Earth central angle (radians)
-        psi = np.arccos(R_E / (R_E + altitude))
+        R_E = 6371  # km
+        r_s = R_E + altitude
 
-        fig, ax = plt.subplots(figsize=(12, 6))
+        # === Create map with projection ===
+        fig = plt.figure(figsize=(14, 7))
+        ax = plt.axes(projection=ccrs.PlateCarree())
 
-        # Draw simple world map grid
-        ax.set_xlim(-180, 180)
-        ax.set_ylim(-90, 90)
-        ax.set_xlabel("Longitude [deg]")
-        ax.set_ylabel("Latitude [deg]")
-        ax.set_title(f"Ground Stations and Visibility Footprint (h = {altitude} km)")
-        ax.grid(True, linestyle="--", alpha=0.5)
+        # === Add Earth features ===
+        ax.add_feature(cfeature.LAND, facecolor='lightgray')
+        ax.add_feature(cfeature.OCEAN, facecolor='aliceblue')
+        ax.add_feature(cfeature.COASTLINE, linewidth=0.8)
+        ax.add_feature(cfeature.BORDERS, linestyle=':')
+        ax.set_global()
 
-        # Draw each station + footprint
-        for station, (lat_deg, lon_deg) in GroundStationNetwork.items():
+        ax.set_title(f"Ground Stations and Visibility Footprints (h = {altitude} km, i = {inclination} deg)")
 
-            # Plot station
-            ax.plot(lon_deg, lat_deg, 'ro')
-            ax.text(lon_deg + 2, lat_deg + 2, station)
+        # === Plot Ground Track ===
+        df = pd.read_csv(groundtrack_file)
 
-            # Create visibility circle
+        lats = df.iloc[:, 1].values
+        lons = df.iloc[:, 2].values
+
+        ax.scatter(lons,
+                lats,
+                s=1, # point size
+                color='gray',
+                alpha=0.1,
+                transform=ccrs.PlateCarree())
+
+        # === Loop through stations ===
+        for station, (lat_deg, lon_deg, h_g, min_elev_deg) in network.items():
+
+            r_g = R_E + h_g
+            E = np.radians(min_elev_deg)
+
+            # === Compute Earth central angle ψ ===
+            term1 = (r_g / r_s) * np.cos(E)**2
+            term2 = np.sin(E) * np.sqrt(1 - ((r_g / r_s) * np.cos(E))**2)
+            cos_psi = np.clip(term1 + term2, -1, 1)
+            psi = np.arccos(cos_psi)
+
+            # === Plot station ===
+            ax.plot(lon_deg, lat_deg,
+                    marker='o',
+                    color='red',
+                    markersize=5,
+                    transform=ccrs.PlateCarree())
+
+            ax.text(lon_deg + 2, lat_deg + 2,
+                    station,
+                    fontweight='bold',
+                    transform=ccrs.PlateCarree())
+
+            # === Generate footprint circle ===
             circle_lats = []
             circle_lons = []
 
-            for theta in np.linspace(0, 2*np.pi, 200):
+            lat0 = np.radians(lat_deg)
+            lon0 = np.radians(lon_deg)
 
-                # Great circle approximation
-                lat0 = np.radians(lat_deg)
-                lon0 = np.radians(lon_deg)
+            for theta in np.linspace(0, 2*np.pi, 300):
 
                 lat = np.arcsin(
                     np.sin(lat0)*np.cos(psi) +
@@ -147,13 +210,16 @@ class ContactTimes():
                 circle_lats.append(np.degrees(lat))
                 circle_lons.append(np.degrees(lon))
 
-            ax.plot(circle_lons, circle_lats, alpha=0.4)
+            ax.plot(circle_lons,
+                    circle_lats,
+                    transform=ccrs.PlateCarree(),
+                    alpha=0.8)
+
+        if save:
+            plt.savefig(f"Plots\\{name}.png", dpi=300, bbox_inches="tight")
 
         if show:
             plt.show()
-
-        if save:
-            plt.savefig(f"Plots\{name}.png")
     
     
     def contactTime(self) -> None:
@@ -165,7 +231,7 @@ class ContactTimes():
 
         for station in sorted(self.data.keys()):
             # Only count the times if the station is in the input list, or if no input list was given.
-            if not self.stations or station in self.stations:
+            if self.stations is None or station in self.stations:
                 for start, stop, _ in self.data[station]:
                     intervals.append((start, stop))
 
@@ -199,7 +265,7 @@ class ContactTimes():
         self.length = (self.stop.date() - self.start.date()).days + 1
         self.avgContactTime = self.totalContactTime.total_seconds() / self.length  # Average contact time per day [s]
     
-    def summary(self, Print:bool=True, save:bool=False, name:str = f"ContactSummary {datetime.now()}") -> None:
+    def summary(self, Print:bool=True, save:bool=False, name:str = "ContactSummary") -> None:
         """
         Prints summary of calculated factors.
 
@@ -238,7 +304,7 @@ class ContactTimes():
             print(f"Data rate required based on average: {dataVolume / self.avgContactTime * 1e6:.3f} Mbps\n")
 
         if save:
-            f = open(f"ContactSummaries\{name}.txt", "x")
+            f = open(f"ContactSummaries\{name}.txt", "w")
             with f:
                 f.write("========== CONTACT SUMMARY ==========\n")
 
@@ -266,23 +332,40 @@ class ContactTimes():
 
                 f.write(f"\nData rate required based on average: {dataVolume / self.avgContactTime * 1e6:.3f} Mbps\n")
 
-def availability(P_CFLOS: list[float]) -> float:
+def availability(P_contact: list[float]) -> float:
     """
-    Estimates availability based on list of cloud-free line-of-sight probabilities.
+    Estimates availability based on list of cloud-free line-of-sight probabilities for optical, or for list of rain probabilities for RF.
     Assumes probabilities are independent.
 
-    :param P_CFLOS: List of cloud-free line-of-sight probabilities.
-    :type P_CFLOS: list[float]
+    :param P_contact: List of contact probabilities.
+    :type P_contact: list[float]
     """
-    P_CFLOS = np.array(P_CFLOS)
-    P_outage = np.prod(1 - P_CFLOS)
+    P_contact = np.array(P_contact)
+    P_outage = np.prod(1 - P_contact)
     return 1 - P_outage
 
 ### RUN HERE
-# sixA: ["Delft", "Granada", "Tenerife", "Nemea", "Nicosia", "Porto"]
-#print(availability([.35, .6708, .60, .60, .7931, .5962]))  # 0.997139644775104
+# Optical Network: ["Delft", "Granada", "Tenerife", "Nemea", "Nicosia", "Porto"]
+#print(availability([.35, .6708, .60, .60, .7931, .5962])) # Optical network availability: 0.997139644775104
 
-times = ContactTimes("sixA50RF.txt")
-times.summary(True, False, "sixA50RF")
-#times.plot(False, True, "sixA50RFPlot")
+# For RF, instead of P_CFLOS we use percentage of rainy days in the year
+# RF Network: ["Redu", "Cebreros", "Maspalomas", "Fucino"]
+# print(availability([.5069, .8767, .9288, .7260])) # RF network availability: 0.9996002775538585
 
+inclination = 80
+
+opt_groundtrack = "GMATReports\DelftReport.csv"
+rf_groundtrack = "GMATReports\CebrerosReport.csv"
+
+opticalTimes = ContactTimes(f"Opt{inclination}.txt")
+opticalTimes.summary(False, True, f"OptSum{inclination}")
+opticalTimes.plot(False, True, f"OptPlot{inclination}")
+opticalTimes.plotMap(OpticalNetwork, 550, inclination, opt_groundtrack, False, True, f"OptMap{inclination}")
+
+
+"""
+rfTimes = ContactTimes(f"RF{inclination}.txt")
+rfTimes.summary(False, True, f"RFSum{inclination}")
+rfTimes.plot(False, True, f"RFPlot{inclination}")
+rfTimes.plotMap(RFNetwork, 550, inclination, rf_groundtrack, False, True, f"RFMap{inclination}")
+"""

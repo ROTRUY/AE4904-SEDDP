@@ -1,0 +1,350 @@
+%General Mission Analysis Tool(GMAT) Script
+%Created: 2026-02-12 15:29:00
+
+%----------------------------------------
+%---------- Spacecraft
+%----------------------------------------
+
+Create Spacecraft DefaultSC;
+DefaultSC.DateFormat = UTCGregorian;
+DefaultSC.Epoch = '01 Mar 2026 00:00:00.000';
+DefaultSC.CoordinateSystem = EarthMJ2000Eq;
+DefaultSC.DisplayStateType = Keplerian;
+DefaultSC.SMA = 6928;
+DefaultSC.ECC = 0;
+DefaultSC.INC = 75;
+DefaultSC.RAAN = 0;
+DefaultSC.AOP = 0;
+DefaultSC.TA = 0;
+DefaultSC.DryMass = 1500;
+DefaultSC.Cd = 2.2;
+DefaultSC.Cr = 1.8;
+DefaultSC.DragArea = 15;
+DefaultSC.SRPArea = 1;
+DefaultSC.SPADDragScaleFactor = 1;
+DefaultSC.SPADSRPScaleFactor = 1;
+DefaultSC.AtmosDensityScaleFactor = 1;
+DefaultSC.ExtendedMassPropertiesModel = 'None';
+DefaultSC.NAIFId = -10000001;
+DefaultSC.NAIFIdReferenceFrame = -9000001;
+DefaultSC.OrbitColor = Red;
+DefaultSC.TargetColor = Teal;
+DefaultSC.OrbitErrorCovariance = [ 1e+70 0 0 0 0 0 ; 0 1e+70 0 0 0 0 ; 0 0 1e+70 0 0 0 ; 0 0 0 1e+70 0 0 ; 0 0 0 0 1e+70 0 ; 0 0 0 0 0 1e+70 ];
+DefaultSC.CdSigma = 1e+70;
+DefaultSC.CrSigma = 1e+70;
+DefaultSC.Id = 'SatId';
+DefaultSC.Attitude = CoordinateSystemFixed;
+DefaultSC.SPADSRPInterpolationMethod = Bilinear;
+DefaultSC.SPADSRPScaleFactorSigma = 1e+70;
+DefaultSC.SPADDragInterpolationMethod = Bilinear;
+DefaultSC.SPADDragScaleFactorSigma = 1e+70;
+DefaultSC.AtmosDensityScaleFactorSigma = 1e+70;
+DefaultSC.ModelFile = 'aura.3ds';
+DefaultSC.ModelOffsetX = 0;
+DefaultSC.ModelOffsetY = 0;
+DefaultSC.ModelOffsetZ = 0;
+DefaultSC.ModelRotationX = 0;
+DefaultSC.ModelRotationY = 0;
+DefaultSC.ModelRotationZ = 0;
+DefaultSC.ModelScale = 1;
+DefaultSC.AttitudeDisplayStateType = 'Quaternion';
+DefaultSC.AttitudeRateDisplayStateType = 'AngularVelocity';
+DefaultSC.AttitudeCoordinateSystem = EarthMJ2000Eq;
+DefaultSC.EulerAngleSequence = '321';
+
+%----------------------------------------
+%---------- GroundStations
+%----------------------------------------
+
+Create GroundStation Redu;
+Redu.OrbitColor = Thistle;
+Redu.TargetColor = DarkGray;
+Redu.CentralBody = Earth;
+Redu.StateType = Spherical;
+Redu.HorizonReference = Ellipsoid;
+Redu.Location1 = 50;
+Redu.Location2 = 5.15;
+Redu.Location3 = 0.387;
+Redu.Id = 'Redu';
+Redu.IonosphereModel = 'None';
+Redu.TroposphereModel = 'None';
+Redu.DataSource = 'Constant';
+Redu.Temperature = 295.1;
+Redu.Pressure = 1013.5;
+Redu.Humidity = 55;
+Redu.MinimumElevationAngle = 10;
+
+Create GroundStation Cebreros;
+Cebreros.OrbitColor = Thistle;
+Cebreros.TargetColor = DarkGray;
+Cebreros.CentralBody = Earth;
+Cebreros.StateType = Spherical;
+Cebreros.HorizonReference = Ellipsoid;
+Cebreros.Location1 = 40.45;
+Cebreros.Location2 = 355.63;
+Cebreros.Location3 = 0.794;
+Cebreros.Id = 'Cebreros';
+Cebreros.IonosphereModel = 'None';
+Cebreros.TroposphereModel = 'None';
+Cebreros.DataSource = 'Constant';
+Cebreros.Temperature = 295.1;
+Cebreros.Pressure = 1013.5;
+Cebreros.Humidity = 55;
+Cebreros.MinimumElevationAngle = 10;
+
+Create GroundStation Maspalomas;
+Maspalomas.OrbitColor = Thistle;
+Maspalomas.TargetColor = DarkGray;
+Maspalomas.CentralBody = Earth;
+Maspalomas.StateType = Spherical;
+Maspalomas.HorizonReference = Ellipsoid;
+Maspalomas.Location1 = 27.76000000000001;
+Maspalomas.Location2 = 344.37;
+Maspalomas.Location3 = 0.205;
+Maspalomas.Id = 'Maspalomas';
+Maspalomas.IonosphereModel = 'None';
+Maspalomas.TroposphereModel = 'None';
+Maspalomas.DataSource = 'Constant';
+Maspalomas.Temperature = 295.1;
+Maspalomas.Pressure = 1013.5;
+Maspalomas.Humidity = 55;
+Maspalomas.MinimumElevationAngle = 10;
+
+Create GroundStation Fucino;
+Fucino.OrbitColor = Thistle;
+Fucino.TargetColor = DarkGray;
+Fucino.CentralBody = Earth;
+Fucino.StateType = Spherical;
+Fucino.HorizonReference = Ellipsoid;
+Fucino.Location1 = 41.98;
+Fucino.Location2 = 13.6;
+Fucino.Location3 = 0.661;
+Fucino.Id = 'Fucino';
+Fucino.IonosphereModel = 'None';
+Fucino.TroposphereModel = 'None';
+Fucino.DataSource = 'Constant';
+Fucino.Temperature = 295.1;
+Fucino.Pressure = 1013.5;
+Fucino.Humidity = 55;
+Fucino.MinimumElevationAngle = 10;
+
+
+
+
+
+%----------------------------------------
+%---------- ForceModels
+%----------------------------------------
+
+Create ForceModel DefaultProp_ForceModel;
+DefaultProp_ForceModel.CentralBody = Earth;
+DefaultProp_ForceModel.PrimaryBodies = {Earth};
+DefaultProp_ForceModel.Drag = None;
+DefaultProp_ForceModel.SRP = Off;
+DefaultProp_ForceModel.RelativisticCorrection = Off;
+DefaultProp_ForceModel.ErrorControl = RSSStep;
+DefaultProp_ForceModel.GravityField.Earth.Degree = 4;
+DefaultProp_ForceModel.GravityField.Earth.Order = 4;
+DefaultProp_ForceModel.GravityField.Earth.StmLimit = 100;
+DefaultProp_ForceModel.GravityField.Earth.PotentialFile = 'JGM2.cof';
+DefaultProp_ForceModel.GravityField.Earth.TideModel = 'None';
+
+%----------------------------------------
+%---------- Propagators
+%----------------------------------------
+
+Create Propagator DefaultProp;
+DefaultProp.FM = DefaultProp_ForceModel;
+DefaultProp.Type = RungeKutta89;
+DefaultProp.InitialStepSize = 10;
+DefaultProp.Accuracy = 1e-08;
+DefaultProp.MinStep = 1;
+DefaultProp.MaxStep = 10;
+DefaultProp.MaxStepAttempts = 50;
+DefaultProp.StopIfAccuracyIsViolated = false;
+
+%----------------------------------------
+%---------- Coordinate Systems
+%----------------------------------------
+
+Create CoordinateSystem ReduC;
+ReduC.Origin = Redu;
+ReduC.Axes = Topocentric;
+
+Create CoordinateSystem CebrerosC;
+CebrerosC.Origin = Cebreros;
+CebrerosC.Axes = Topocentric;
+
+Create CoordinateSystem MaspalomasC;
+MaspalomasC.Origin = Maspalomas;
+MaspalomasC.Axes = Topocentric;
+
+Create CoordinateSystem FucinoC;
+FucinoC.Origin = Fucino;
+FucinoC.Axes = Topocentric;
+
+%----------------------------------------
+%---------- EventLocators
+%----------------------------------------
+
+Create ContactLocator ContactLocator1;
+ContactLocator1.Target = DefaultSC;
+ContactLocator1.Filename = 'C:\Users\robbe\Documents\Git Repositories\AE4904-SEDDP\GMATContacts\ContactLocator.txt';
+ContactLocator1.OccultingBodies = {Earth};
+ContactLocator1.InputEpochFormat = 'TAIModJulian';
+ContactLocator1.InitialEpoch = '21545';
+ContactLocator1.StepSize = 1;
+ContactLocator1.FinalEpoch = '21545.138';
+ContactLocator1.UseLightTimeDelay = true;
+ContactLocator1.UseStellarAberration = true;
+ContactLocator1.WriteReport = true;
+ContactLocator1.RunMode = Automatic;
+ContactLocator1.UseEntireInterval = true;
+ContactLocator1.Observers = {Cebreros, Fucino, Maspalomas, Redu};
+ContactLocator1.LightTimeDirection = Transmit;
+ContactLocator1.LeftJustified = false;
+ContactLocator1.ReportPrecision = 6;
+ContactLocator1.ReportFormat = 'Legacy';
+ContactLocator1.IntervalStepSize = 0;
+ContactLocator1.ReportTimeFormat = 'UTCGregorian';
+
+%----------------------------------------
+%---------- Subscribers
+%----------------------------------------
+
+Create OrbitView DefaultOrbitView;
+DefaultOrbitView.SolverIterations = Current;
+DefaultOrbitView.UpperLeft = [ 0.001709401709401709 0 ];
+DefaultOrbitView.Size = [ 0.5 0.450363196125908 ];
+DefaultOrbitView.RelativeZOrder = 133;
+DefaultOrbitView.Maximized = false;
+DefaultOrbitView.Add = {DefaultSC, Earth};
+DefaultOrbitView.CoordinateSystem = EarthMJ2000Eq;
+DefaultOrbitView.DrawObject = [ true true ];
+DefaultOrbitView.DataCollectFrequency = 1;
+DefaultOrbitView.UpdatePlotFrequency = 50;
+DefaultOrbitView.NumPointsToRedraw = 0;
+DefaultOrbitView.ShowPlot = false;
+DefaultOrbitView.MaxPlotPoints = 20000;
+DefaultOrbitView.ShowLabels = true;
+DefaultOrbitView.ViewPointReference = Earth;
+DefaultOrbitView.ViewPointVector = [ 30000 0 0 ];
+DefaultOrbitView.ViewDirection = Earth;
+DefaultOrbitView.ViewScaleFactor = 1;
+DefaultOrbitView.ViewUpCoordinateSystem = EarthMJ2000Eq;
+DefaultOrbitView.ViewUpAxis = Z;
+DefaultOrbitView.EclipticPlane = Off;
+DefaultOrbitView.XYPlane = On;
+DefaultOrbitView.WireFrame = Off;
+DefaultOrbitView.Axes = On;
+DefaultOrbitView.Grid = Off;
+DefaultOrbitView.SunLine = Off;
+DefaultOrbitView.UseInitialView = On;
+DefaultOrbitView.StarCount = 7000;
+DefaultOrbitView.EnableStars = On;
+DefaultOrbitView.EnableConstellations = On;
+
+Create GroundTrackPlot DefaultGroundTrackPlot;
+DefaultGroundTrackPlot.SolverIterations = Current;
+DefaultGroundTrackPlot.UpperLeft = [ 0.000588235294117647 -0.00576036866359447 ];
+DefaultGroundTrackPlot.Size = [ 0.9876470588235294 1.042626728110599 ];
+DefaultGroundTrackPlot.RelativeZOrder = 48;
+DefaultGroundTrackPlot.Maximized = false;
+DefaultGroundTrackPlot.Add = {Cebreros, DefaultSC, Fucino, Redu, Maspalomas};
+DefaultGroundTrackPlot.DataCollectFrequency = 1;
+DefaultGroundTrackPlot.UpdatePlotFrequency = 50;
+DefaultGroundTrackPlot.NumPointsToRedraw = 0;
+DefaultGroundTrackPlot.ShowPlot = false;
+DefaultGroundTrackPlot.MaxPlotPoints = 10000;
+DefaultGroundTrackPlot.CentralBody = Earth;
+DefaultGroundTrackPlot.TextureMap = 'ModifiedBlueMarble.jpg';
+
+Create ReportFile ReduReport;
+ReduReport.SolverIterations = Current;
+ReduReport.UpperLeft = [ 0.1162393162393162 0.1912832929782082 ];
+ReduReport.Size = [ 0.597008547008547 0.7941888619854721 ];
+ReduReport.RelativeZOrder = 265;
+ReduReport.Maximized = false;
+ReduReport.Filename = 'C:\Users\robbe\Documents\Git Repositories\AE4904-SEDDP\GMATReports\ReduReport.csv';
+ReduReport.Precision = 7;
+ReduReport.Add = {DefaultSC.A1Gregorian, DefaultSC.EarthFixed.PlanetodeticLAT, DefaultSC.EarthFixed.PlanetodeticLON, DefaultSC.Earth.Altitude, DefaultSC.ReduC.X, DefaultSC.ReduC.Y, DefaultSC.ReduC.Z};
+ReduReport.WriteHeaders = true;
+ReduReport.LeftJustify = On;
+ReduReport.ZeroFill = Off;
+ReduReport.FixedWidth = false;
+ReduReport.Delimiter = ',';
+ReduReport.ColumnWidth = 23;
+ReduReport.WriteReport = true;
+ReduReport.AppendToExistingFile = false;
+
+Create ReportFile CebrerosReport;
+CebrerosReport.SolverIterations = Current;
+CebrerosReport.UpperLeft = [ 0.1179487179487179 0.1945117029862793 ];
+CebrerosReport.Size = [ 0.5987179487179487 0.7974172719935432 ];
+CebrerosReport.RelativeZOrder = 121;
+CebrerosReport.Maximized = false;
+CebrerosReport.Filename = 'C:\Users\robbe\Documents\Git Repositories\AE4904-SEDDP\GMATReports\CebrerosReport.csv';
+CebrerosReport.Precision = 7;
+CebrerosReport.Add = {DefaultSC.A1Gregorian, DefaultSC.EarthFixed.PlanetodeticLAT, DefaultSC.EarthFixed.PlanetodeticLON, DefaultSC.Earth.Altitude, DefaultSC.CebrerosC.X, DefaultSC.CebrerosC.Y, DefaultSC.CebrerosC.Z};
+CebrerosReport.WriteHeaders = true;
+CebrerosReport.LeftJustify = On;
+CebrerosReport.ZeroFill = Off;
+CebrerosReport.FixedWidth = false;
+CebrerosReport.Delimiter = ',';
+CebrerosReport.ColumnWidth = 23;
+CebrerosReport.WriteReport = true;
+CebrerosReport.AppendToExistingFile = false;
+
+Create ReportFile MaspalomasReport;
+MaspalomasReport.SolverIterations = Current;
+MaspalomasReport.UpperLeft = [ 0.1179487179487179 0.1945117029862793 ];
+MaspalomasReport.Size = [ 0.5987179487179487 0.7974172719935432 ];
+MaspalomasReport.RelativeZOrder = 184;
+MaspalomasReport.Maximized = false;
+MaspalomasReport.Filename = 'C:\Users\robbe\Documents\Git Repositories\AE4904-SEDDP\GMATReports\MaspalomasReport.csv';
+MaspalomasReport.Precision = 7;
+MaspalomasReport.Add = {DefaultSC.A1Gregorian, DefaultSC.EarthFixed.PlanetodeticLAT, DefaultSC.EarthFixed.PlanetodeticLON, DefaultSC.Earth.Altitude, DefaultSC.MaspalomasC.X, DefaultSC.MaspalomasC.Y, DefaultSC.MaspalomasC.Z};
+MaspalomasReport.WriteHeaders = true;
+MaspalomasReport.LeftJustify = On;
+MaspalomasReport.ZeroFill = Off;
+MaspalomasReport.FixedWidth = false;
+MaspalomasReport.Delimiter = ',';
+MaspalomasReport.ColumnWidth = 23;
+MaspalomasReport.WriteReport = true;
+MaspalomasReport.AppendToExistingFile = false;
+
+Create ReportFile FucinoReport;
+FucinoReport.SolverIterations = Current;
+FucinoReport.UpperLeft = [ 0.1179487179487179 0.1945117029862793 ];
+FucinoReport.Size = [ 0.5987179487179487 0.7974172719935432 ];
+FucinoReport.RelativeZOrder = 183;
+FucinoReport.Maximized = false;
+FucinoReport.Filename = 'C:\Users\robbe\Documents\Git Repositories\AE4904-SEDDP\GMATReports\FucinoReport.csv';
+FucinoReport.Precision = 7;
+FucinoReport.Add = {DefaultSC.A1Gregorian, DefaultSC.EarthFixed.PlanetodeticLAT, DefaultSC.EarthFixed.PlanetodeticLON, DefaultSC.Earth.Altitude, DefaultSC.FucinoC.X, DefaultSC.FucinoC.Y, DefaultSC.FucinoC.Z};
+FucinoReport.WriteHeaders = true;
+FucinoReport.LeftJustify = On;
+FucinoReport.ZeroFill = Off;
+FucinoReport.FixedWidth = false;
+FucinoReport.Delimiter = ',';
+FucinoReport.ColumnWidth = 23;
+FucinoReport.WriteReport = true;
+FucinoReport.AppendToExistingFile = false;
+
+%----------------------------------------
+%---------- Arrays, Variables, Strings
+%----------------------------------------
+Create Variable minElevation;
+minElevation = 30;
+
+
+
+
+
+
+%----------------------------------------
+%---------- Mission Sequence
+%----------------------------------------
+
+BeginMissionSequence;
+Propagate DefaultProp(DefaultSC) {DefaultSC.ElapsedDays = 7.0};

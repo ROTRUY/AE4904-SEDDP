@@ -1,0 +1,435 @@
+%General Mission Analysis Tool(GMAT) Script
+%Created: 2026-02-12 15:29:00
+
+%----------------------------------------
+%---------- Spacecraft
+%----------------------------------------
+
+Create Spacecraft DefaultSC;
+DefaultSC.DateFormat = UTCGregorian;
+DefaultSC.Epoch = '13 Feb 2026 00:00:00.000';
+DefaultSC.CoordinateSystem = EarthMJ2000Eq;
+DefaultSC.DisplayStateType = Keplerian;
+DefaultSC.SMA = 6928;
+DefaultSC.ECC = 0;
+DefaultSC.INC = 80;
+DefaultSC.RAAN = 0;
+DefaultSC.AOP = 0;
+DefaultSC.TA = 0;
+DefaultSC.DryMass = 1500;
+DefaultSC.Cd = 2.2;
+DefaultSC.Cr = 1.8;
+DefaultSC.DragArea = 15;
+DefaultSC.SRPArea = 1;
+DefaultSC.SPADDragScaleFactor = 1;
+DefaultSC.SPADSRPScaleFactor = 1;
+DefaultSC.AtmosDensityScaleFactor = 1;
+DefaultSC.ExtendedMassPropertiesModel = 'None';
+DefaultSC.NAIFId = -10000001;
+DefaultSC.NAIFIdReferenceFrame = -9000001;
+DefaultSC.OrbitColor = Red;
+DefaultSC.TargetColor = Teal;
+DefaultSC.OrbitErrorCovariance = [ 1e+70 0 0 0 0 0 ; 0 1e+70 0 0 0 0 ; 0 0 1e+70 0 0 0 ; 0 0 0 1e+70 0 0 ; 0 0 0 0 1e+70 0 ; 0 0 0 0 0 1e+70 ];
+DefaultSC.CdSigma = 1e+70;
+DefaultSC.CrSigma = 1e+70;
+DefaultSC.Id = 'SatId';
+DefaultSC.Attitude = CoordinateSystemFixed;
+DefaultSC.SPADSRPInterpolationMethod = Bilinear;
+DefaultSC.SPADSRPScaleFactorSigma = 1e+70;
+DefaultSC.SPADDragInterpolationMethod = Bilinear;
+DefaultSC.SPADDragScaleFactorSigma = 1e+70;
+DefaultSC.AtmosDensityScaleFactorSigma = 1e+70;
+DefaultSC.ModelFile = 'aura.3ds';
+DefaultSC.ModelOffsetX = 0;
+DefaultSC.ModelOffsetY = 0;
+DefaultSC.ModelOffsetZ = 0;
+DefaultSC.ModelRotationX = 0;
+DefaultSC.ModelRotationY = 0;
+DefaultSC.ModelRotationZ = 0;
+DefaultSC.ModelScale = 1;
+DefaultSC.AttitudeDisplayStateType = 'Quaternion';
+DefaultSC.AttitudeRateDisplayStateType = 'AngularVelocity';
+DefaultSC.AttitudeCoordinateSystem = EarthMJ2000Eq;
+DefaultSC.EulerAngleSequence = '321';
+
+%----------------------------------------
+%---------- GroundStations
+%----------------------------------------
+
+Create GroundStation Nicosia;
+Nicosia.OrbitColor = Thistle;
+Nicosia.TargetColor = DarkGray;
+Nicosia.CentralBody = Earth;
+Nicosia.StateType = Spherical;
+Nicosia.HorizonReference = Ellipsoid;
+Nicosia.Location1 = 34.8;
+Nicosia.Location2 = 33.4;
+Nicosia.Location3 = 0.22;
+Nicosia.Id = 'Nicosia';
+Nicosia.IonosphereModel = 'None';
+Nicosia.TroposphereModel = 'None';
+Nicosia.DataSource = 'Constant';
+Nicosia.Temperature = 295.1;
+Nicosia.Pressure = 1013.5;
+Nicosia.Humidity = 55;
+Nicosia.MinimumElevationAngle = 30;
+
+Create GroundStation Porto;
+Porto.OrbitColor = Thistle;
+Porto.TargetColor = DarkGray;
+Porto.CentralBody = Earth;
+Porto.StateType = Spherical;
+Porto.HorizonReference = Ellipsoid;
+Porto.Location1 = 41.5;
+Porto.Location2 = 351.2;
+Porto.Location3 = 0.1;
+Porto.Id = 'Porto';
+Porto.IonosphereModel = 'None';
+Porto.TroposphereModel = 'None';
+Porto.DataSource = 'Constant';
+Porto.Temperature = 295.1;
+Porto.Pressure = 1013.5;
+Porto.Humidity = 55;
+Porto.MinimumElevationAngle = 30;
+
+Create GroundStation Granada;
+Granada.OrbitColor = Thistle;
+Granada.TargetColor = DarkGray;
+Granada.CentralBody = Earth;
+Granada.StateType = Spherical;
+Granada.HorizonReference = Ellipsoid;
+Granada.Location1 = 37;
+Granada.Location2 = 356.8;
+Granada.Location3 = 0.738;
+Granada.Id = 'Granada';
+Granada.IonosphereModel = 'None';
+Granada.TroposphereModel = 'None';
+Granada.DataSource = 'Constant';
+Granada.Temperature = 295.1;
+Granada.Pressure = 1013.5;
+Granada.Humidity = 55;
+Granada.MinimumElevationAngle = 30;
+
+Create GroundStation Tenerife;
+Tenerife.OrbitColor = Thistle;
+Tenerife.TargetColor = DarkGray;
+Tenerife.CentralBody = Earth;
+Tenerife.StateType = Spherical;
+Tenerife.HorizonReference = Ellipsoid;
+Tenerife.Location1 = 28.3;
+Tenerife.Location2 = 343.49;
+Tenerife.Location3 = 2.4;
+Tenerife.Id = 'Tenerife';
+Tenerife.IonosphereModel = 'None';
+Tenerife.TroposphereModel = 'None';
+Tenerife.DataSource = 'Constant';
+Tenerife.Temperature = 295.1;
+Tenerife.Pressure = 1013.5;
+Tenerife.Humidity = 55;
+Tenerife.MinimumElevationAngle = 30;
+
+Create GroundStation Nemea;
+Nemea.OrbitColor = Thistle;
+Nemea.TargetColor = DarkGray;
+Nemea.CentralBody = Earth;
+Nemea.StateType = Spherical;
+Nemea.HorizonReference = Ellipsoid;
+Nemea.Location1 = 37.85;
+Nemea.Location2 = 22.62;
+Nemea.Location3 = 0.3;
+Nemea.Id = 'Nemea';
+Nemea.IonosphereModel = 'None';
+Nemea.TroposphereModel = 'None';
+Nemea.DataSource = 'Constant';
+Nemea.Temperature = 295.1;
+Nemea.Pressure = 1013.5;
+Nemea.Humidity = 55;
+Nemea.MinimumElevationAngle = 30;
+
+Create GroundStation Delft;
+Delft.OrbitColor = Thistle;
+Delft.TargetColor = DarkGray;
+Delft.CentralBody = Earth;
+Delft.StateType = Spherical;
+Delft.HorizonReference = Ellipsoid;
+Delft.Location1 = 51.99;
+Delft.Location2 = 4.38;
+Delft.Location3 = 0.06;
+Delft.Id = 'Delft';
+Delft.IonosphereModel = 'None';
+Delft.TroposphereModel = 'None';
+Delft.DataSource = 'Constant';
+Delft.Temperature = 295.1;
+Delft.Pressure = 1013.5;
+Delft.Humidity = 55;
+Delft.MinimumElevationAngle = 30;
+
+
+
+
+%----------------------------------------
+%---------- ForceModels
+%----------------------------------------
+
+Create ForceModel DefaultProp_ForceModel;
+DefaultProp_ForceModel.CentralBody = Earth;
+DefaultProp_ForceModel.PrimaryBodies = {Earth};
+DefaultProp_ForceModel.Drag = None;
+DefaultProp_ForceModel.SRP = Off;
+DefaultProp_ForceModel.RelativisticCorrection = Off;
+DefaultProp_ForceModel.ErrorControl = RSSStep;
+DefaultProp_ForceModel.GravityField.Earth.Degree = 4;
+DefaultProp_ForceModel.GravityField.Earth.Order = 4;
+DefaultProp_ForceModel.GravityField.Earth.StmLimit = 100;
+DefaultProp_ForceModel.GravityField.Earth.PotentialFile = 'JGM2.cof';
+DefaultProp_ForceModel.GravityField.Earth.TideModel = 'None';
+
+%----------------------------------------
+%---------- Propagators
+%----------------------------------------
+
+Create Propagator DefaultProp;
+DefaultProp.FM = DefaultProp_ForceModel;
+DefaultProp.Type = RungeKutta89;
+DefaultProp.InitialStepSize = 1;
+DefaultProp.Accuracy = 1e-08;
+DefaultProp.MinStep = 1;
+DefaultProp.MaxStep = 10;
+DefaultProp.MaxStepAttempts = 50;
+DefaultProp.StopIfAccuracyIsViolated = false;
+
+%----------------------------------------
+%---------- Coordinate Systems
+%----------------------------------------
+
+Create CoordinateSystem NicosiaC;
+NicosiaC.Origin = Nicosia;
+NicosiaC.Axes = Topocentric;
+
+Create CoordinateSystem PortoC;
+PortoC.Origin = Porto;
+PortoC.Axes = Topocentric;
+
+Create CoordinateSystem GranadaC;
+GranadaC.Origin = Granada;
+GranadaC.Axes = Topocentric;
+
+Create CoordinateSystem TenerifeC;
+TenerifeC.Origin = Tenerife;
+TenerifeC.Axes = Topocentric;
+
+Create CoordinateSystem NemeaC;
+NemeaC.Origin = Nemea;
+NemeaC.Axes = Topocentric;
+
+Create CoordinateSystem DelftC;
+DelftC.Origin = Delft;
+DelftC.Axes = Topocentric;
+
+%----------------------------------------
+%---------- EventLocators
+%----------------------------------------
+
+Create ContactLocator ContactLocator1;
+ContactLocator1.Target = DefaultSC;
+ContactLocator1.Filename = 'C:\Users\robbe\Documents\Git Repositories\AE4904-SEDDP\GMATContacts\ContactLocator.txt';
+ContactLocator1.OccultingBodies = {Earth};
+ContactLocator1.InputEpochFormat = 'TAIModJulian';
+ContactLocator1.InitialEpoch = '21545';
+ContactLocator1.StepSize = 1;
+ContactLocator1.FinalEpoch = '21545.138';
+ContactLocator1.UseLightTimeDelay = true;
+ContactLocator1.UseStellarAberration = true;
+ContactLocator1.WriteReport = true;
+ContactLocator1.RunMode = Automatic;
+ContactLocator1.UseEntireInterval = true;
+ContactLocator1.Observers = {Delft, Granada, Nemea, Nicosia, Porto, Tenerife};
+ContactLocator1.LightTimeDirection = Transmit;
+ContactLocator1.LeftJustified = false;
+ContactLocator1.ReportPrecision = 6;
+ContactLocator1.ReportFormat = 'Legacy';
+ContactLocator1.IntervalStepSize = 0;
+ContactLocator1.ReportTimeFormat = 'UTCGregorian';
+
+%----------------------------------------
+%---------- Subscribers
+%----------------------------------------
+
+Create OrbitView DefaultOrbitView;
+DefaultOrbitView.SolverIterations = Current;
+DefaultOrbitView.UpperLeft = [ 0.001709401709401709 0 ];
+DefaultOrbitView.Size = [ 0.5 0.450363196125908 ];
+DefaultOrbitView.RelativeZOrder = 133;
+DefaultOrbitView.Maximized = false;
+DefaultOrbitView.Add = {DefaultSC, Earth};
+DefaultOrbitView.CoordinateSystem = EarthMJ2000Eq;
+DefaultOrbitView.DrawObject = [ true true ];
+DefaultOrbitView.DataCollectFrequency = 1;
+DefaultOrbitView.UpdatePlotFrequency = 50;
+DefaultOrbitView.NumPointsToRedraw = 0;
+DefaultOrbitView.ShowPlot = false;
+DefaultOrbitView.MaxPlotPoints = 20000;
+DefaultOrbitView.ShowLabels = true;
+DefaultOrbitView.ViewPointReference = Earth;
+DefaultOrbitView.ViewPointVector = [ 30000 0 0 ];
+DefaultOrbitView.ViewDirection = Earth;
+DefaultOrbitView.ViewScaleFactor = 1;
+DefaultOrbitView.ViewUpCoordinateSystem = EarthMJ2000Eq;
+DefaultOrbitView.ViewUpAxis = Z;
+DefaultOrbitView.EclipticPlane = Off;
+DefaultOrbitView.XYPlane = On;
+DefaultOrbitView.WireFrame = Off;
+DefaultOrbitView.Axes = On;
+DefaultOrbitView.Grid = Off;
+DefaultOrbitView.SunLine = Off;
+DefaultOrbitView.UseInitialView = On;
+DefaultOrbitView.StarCount = 7000;
+DefaultOrbitView.EnableStars = On;
+DefaultOrbitView.EnableConstellations = On;
+
+Create GroundTrackPlot DefaultGroundTrackPlot;
+DefaultGroundTrackPlot.SolverIterations = Current;
+DefaultGroundTrackPlot.UpperLeft = [ 0.000588235294117647 -0.00576036866359447 ];
+DefaultGroundTrackPlot.Size = [ 0.9876470588235294 1.042626728110599 ];
+DefaultGroundTrackPlot.RelativeZOrder = 48;
+DefaultGroundTrackPlot.Maximized = false;
+DefaultGroundTrackPlot.Add = {DefaultSC, Delft, Granada, Nemea, Nicosia, Porto, Tenerife};
+DefaultGroundTrackPlot.DataCollectFrequency = 1;
+DefaultGroundTrackPlot.UpdatePlotFrequency = 50;
+DefaultGroundTrackPlot.NumPointsToRedraw = 0;
+DefaultGroundTrackPlot.ShowPlot = false;
+DefaultGroundTrackPlot.MaxPlotPoints = 300000;
+DefaultGroundTrackPlot.CentralBody = Earth;
+DefaultGroundTrackPlot.TextureMap = 'ModifiedBlueMarble.jpg';
+
+Create ReportFile NicosiaReport;
+NicosiaReport.SolverIterations = Current;
+NicosiaReport.UpperLeft = [ 0.1162393162393162 0.1912832929782082 ];
+NicosiaReport.Size = [ 0.597008547008547 0.7941888619854721 ];
+NicosiaReport.RelativeZOrder = 265;
+NicosiaReport.Maximized = false;
+NicosiaReport.Filename = 'C:\Users\robbe\Documents\Git Repositories\AE4904-SEDDP\GMATReports\NicosiaReport.csv';
+NicosiaReport.Precision = 16;
+NicosiaReport.Add = {DefaultSC.A1Gregorian, DefaultSC.EarthFixed.PlanetodeticLAT, DefaultSC.EarthFixed.PlanetodeticLON, DefaultSC.Earth.Altitude, DefaultSC.NicosiaC.X, DefaultSC.NicosiaC.Y, DefaultSC.NicosiaC.Z};
+NicosiaReport.WriteHeaders = true;
+NicosiaReport.LeftJustify = On;
+NicosiaReport.ZeroFill = Off;
+NicosiaReport.FixedWidth = false;
+NicosiaReport.Delimiter = ',';
+NicosiaReport.ColumnWidth = 23;
+NicosiaReport.WriteReport = true;
+NicosiaReport.AppendToExistingFile = false;
+
+Create ReportFile PortoReport;
+PortoReport.SolverIterations = Current;
+PortoReport.UpperLeft = [ 0.1179487179487179 0.1945117029862793 ];
+PortoReport.Size = [ 0.5987179487179487 0.7974172719935432 ];
+PortoReport.RelativeZOrder = 121;
+PortoReport.Maximized = false;
+PortoReport.Filename = 'C:\Users\robbe\Documents\Git Repositories\AE4904-SEDDP\GMATReports\PortoReport.csv';
+PortoReport.Precision = 16;
+PortoReport.Add = {DefaultSC.A1Gregorian, DefaultSC.EarthFixed.PlanetodeticLAT, DefaultSC.EarthFixed.PlanetodeticLON, DefaultSC.Earth.Altitude, DefaultSC.PortoC.X, DefaultSC.PortoC.Y, DefaultSC.PortoC.Z};
+PortoReport.WriteHeaders = true;
+PortoReport.LeftJustify = On;
+PortoReport.ZeroFill = Off;
+PortoReport.FixedWidth = false;
+PortoReport.Delimiter = ',';
+PortoReport.ColumnWidth = 23;
+PortoReport.WriteReport = true;
+PortoReport.AppendToExistingFile = false;
+
+Create ReportFile GranadaReport;
+GranadaReport.SolverIterations = Current;
+GranadaReport.UpperLeft = [ 0.1179487179487179 0.1945117029862793 ];
+GranadaReport.Size = [ 0.5987179487179487 0.7974172719935432 ];
+GranadaReport.RelativeZOrder = 188;
+GranadaReport.Maximized = false;
+GranadaReport.Filename = 'C:\Users\robbe\Documents\Git Repositories\AE4904-SEDDP\GMATReports\GranadaReport.csv';
+GranadaReport.Precision = 16;
+GranadaReport.Add = {DefaultSC.A1Gregorian, DefaultSC.EarthFixed.PlanetodeticLAT, DefaultSC.EarthFixed.PlanetodeticLON, DefaultSC.Earth.Altitude, DefaultSC.GranadaC.X, DefaultSC.GranadaC.Y, DefaultSC.GranadaC.Z};
+GranadaReport.WriteHeaders = true;
+GranadaReport.LeftJustify = On;
+GranadaReport.ZeroFill = Off;
+GranadaReport.FixedWidth = false;
+GranadaReport.Delimiter = ',';
+GranadaReport.ColumnWidth = 23;
+GranadaReport.WriteReport = true;
+GranadaReport.AppendToExistingFile = false;
+
+Create ReportFile TenerifeReport;
+TenerifeReport.SolverIterations = Current;
+TenerifeReport.UpperLeft = [ 0.1179487179487179 0.1945117029862793 ];
+TenerifeReport.Size = [ 0.5987179487179487 0.7974172719935432 ];
+TenerifeReport.RelativeZOrder = 184;
+TenerifeReport.Maximized = false;
+TenerifeReport.Filename = 'C:\Users\robbe\Documents\Git Repositories\AE4904-SEDDP\GMATReports\TenerifeReport.csv';
+TenerifeReport.Precision = 16;
+TenerifeReport.Add = {DefaultSC.A1Gregorian, DefaultSC.EarthFixed.PlanetodeticLAT, DefaultSC.EarthFixed.PlanetodeticLON, DefaultSC.Earth.Altitude, DefaultSC.TenerifeC.X, DefaultSC.TenerifeC.Y, DefaultSC.TenerifeC.Z};
+TenerifeReport.WriteHeaders = true;
+TenerifeReport.LeftJustify = On;
+TenerifeReport.ZeroFill = Off;
+TenerifeReport.FixedWidth = false;
+TenerifeReport.Delimiter = ',';
+TenerifeReport.ColumnWidth = 23;
+TenerifeReport.WriteReport = true;
+TenerifeReport.AppendToExistingFile = false;
+
+Create ReportFile NemeaReport;
+NemeaReport.SolverIterations = Current;
+NemeaReport.UpperLeft = [ 0.1179487179487179 0.1945117029862793 ];
+NemeaReport.Size = [ 0.5987179487179487 0.7974172719935432 ];
+NemeaReport.RelativeZOrder = 183;
+NemeaReport.Maximized = false;
+NemeaReport.Filename = 'C:\Users\robbe\Documents\Git Repositories\AE4904-SEDDP\GMATReports\NemeaReport.csv';
+NemeaReport.Precision = 16;
+NemeaReport.Add = {DefaultSC.A1Gregorian, DefaultSC.EarthFixed.PlanetodeticLAT, DefaultSC.EarthFixed.PlanetodeticLON, DefaultSC.Earth.Altitude, DefaultSC.NemeaC.X, DefaultSC.NemeaC.Y, DefaultSC.NemeaC.Z};
+NemeaReport.WriteHeaders = true;
+NemeaReport.LeftJustify = On;
+NemeaReport.ZeroFill = Off;
+NemeaReport.FixedWidth = false;
+NemeaReport.Delimiter = ',';
+NemeaReport.ColumnWidth = 23;
+NemeaReport.WriteReport = true;
+NemeaReport.AppendToExistingFile = false;
+
+Create ReportFile DelftReport;
+DelftReport.SolverIterations = Current;
+DelftReport.UpperLeft = [ 0.1179487179487179 0.1945117029862793 ];
+DelftReport.Size = [ 0.5987179487179487 0.7974172719935432 ];
+DelftReport.RelativeZOrder = 182;
+DelftReport.Maximized = false;
+DelftReport.Filename = 'C:\Users\robbe\Documents\Git Repositories\AE4904-SEDDP\GMATReports\DelftReport.csv';
+DelftReport.Precision = 16;
+DelftReport.Add = {DefaultSC.A1Gregorian, DefaultSC.EarthFixed.PlanetodeticLAT, DefaultSC.EarthFixed.PlanetodeticLON, DefaultSC.Earth.Altitude, DefaultSC.DelftC.X, DefaultSC.DelftC.Y, DefaultSC.DelftC.Z};
+DelftReport.WriteHeaders = true;
+DelftReport.LeftJustify = On;
+DelftReport.ZeroFill = Off;
+DelftReport.FixedWidth = false;
+DelftReport.Delimiter = ',';
+DelftReport.ColumnWidth = 23;
+DelftReport.WriteReport = true;
+DelftReport.AppendToExistingFile = false;
+
+%----------------------------------------
+%---------- Arrays, Variables, Strings
+%----------------------------------------
+Create Variable minElevation;
+minElevation = 30;
+
+
+
+
+
+
+
+
+
+
+
+
+%----------------------------------------
+%---------- Mission Sequence
+%----------------------------------------
+
+BeginMissionSequence;
+Propagate DefaultProp(DefaultSC) {DefaultSC.ElapsedDays = 7.0};

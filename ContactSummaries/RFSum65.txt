@@ -1,0 +1,25 @@
+========== CONTACT SUMMARY ==========
+Stations taken into account:
+All
+
+Analysis window:
+Start: 2026-03-01 00:32:23.631000
+End:   2026-03-07 23:53:44.550000
+Duration: 7 days
+
+Total contact time:
+8:10:24.589000 = 490.40981666666664 minutes
+
+Contact time per day:
+2026-03-01 : 74.829 min
+2026-03-02 : 75.168 min
+2026-03-03 : 74.082 min
+2026-03-04 : 67.780 min
+2026-03-05 : 66.065 min
+2026-03-06 : 69.570 min
+2026-03-07 : 62.916 min
+
+Average contact per day: 
+70.059 min/day
+
+Data rate required based on average: 594.741 Mbps
