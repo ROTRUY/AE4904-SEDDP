@@ -19,7 +19,7 @@ optical_system1 = {
         "transmitter_aperture": 0.1, #m
         "transmitter_divergence_angle": 20*1e-6, #radians (taken from slides)
         "transmitter_laser_power": 30, #dBm (1W = 30dBm)
-        "transmitter_static_pointing_error": 3*1e-6, #radians  # TODO define this further based on fsm specs or otherwise
+        "transmitter_static_pointing_error": 10*1e-6, #radians  # TODO define this further based on fsm specs or otherwise
         "transmission_optics": 0.5, # from slides 
     },
     "receiver_specs": {
@@ -38,7 +38,7 @@ optical_system1 = {
         "beam_divergence_angle_std": 1,   # degrees
     },
     "noise_specifications" : {
-        system_temperature: 300  # Kelvin
+        "system_temperature": 300  # Kelvin
     }
 }
 

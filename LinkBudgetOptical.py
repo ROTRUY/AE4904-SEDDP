@@ -45,6 +45,13 @@ class LinkBudget():
         gain_RX = (np.pi * self.D_R / (self.Lambda))**2
         return 10 * log10(gain_RX)
 
+    def get_receiver_losses(self):
+        """
+        Losses of receiver
+        """
+        receiver_transmission = 0.5
+        return 10 * log10(receiver_transmission)
+
     def get_free_space_loss(self):
         """
         Free space loss
@@ -63,7 +70,7 @@ class LinkBudget():
         First, compute Kruse model exponent q based on visibility.
         """
         visibility_km = 10 # visibility as provided by meteorological data TODO change
-        wavelength_nm = self.Lambda 
+        wavelength = self.Lambda 
         atmosphere_height_km = 4 # reference height for Kruse model
         zenith_angle = pi/2 - self.elevation_angle # zenith angle
 
@@ -81,7 +88,7 @@ class LinkBudget():
         using Beer–Lambert + Kruse model.
         """
 
-        alpha_lambda = (3.912 / visibility_km) * (wavelength_nm / (550*1e-9)) ** (-q)
+        alpha_lambda = (3.912 / visibility_km) * (wavelength / (550*1e-9)) ** (-q)
 
         L_km = atmosphere_height_km / np.cos(zenith_angle)
 
@@ -101,14 +108,15 @@ class LinkBudget():
 
         # f = np.linspace(0, 1000, 1000)
         # pointing_jitter_variance = np.trapz([get_PSD(f) for fi in f], f)
-        pointing_jitter = 160 * np.arctan(1000) * 1e-6  # radians (sigma_pj^2)
-        return pointing_jitter
+        pointing_jitter = 160 * np.arctan(1000) * (1e-6)**2  # radians (sigma_pj^2)
+        return np.sqrt(pointing_jitter)
 
 
     def get_static_pointing_error_loss(self): # what is pointing error?
         """
         Static pointing error loss
         """
+
         T_pe = exp(-2 * self.transmitter_static_pointing_error**2 / self.transmitter_divergence_angle**2)
         return 10 * log10(T_pe)
 
@@ -120,30 +128,15 @@ class LinkBudget():
         T_pa = self.transmitter_divergence_angle**2 / (self.transmitter_divergence_angle**2 + 4 * pointing_jitter**2) 
         return 10 * log10(T_pa)
 
-    def get_pointing_jitter_scintillation_loss(self):
+    def get_pointing_jitter_scintillation_loss(self): #TODO fix
         """
         Pointing jitter scintillation loss
         """
         pointing_jitter = self.get_pointing_jitter()
-        outage_probability = 0.014 # TODO: fix, now taken from pointing_jitter.py
+        outage_probability = 0.001 # TODO: fix, now taken from pointing_jitter.py
 
-
-        print(f'Outage probability: {outage_probability}')
-        print(f'Pointing jitter (sigma_pj^2): {pointing_jitter}')
-        print(f'Transmitter divergence angle: {self.transmitter_divergence_angle}')
-        print(f'Transmitter divergence angle (theta_div^2): {self.transmitter_divergence_angle**2}')
-
-        print(f"pointing jitter is {pointing_jitter / self.transmitter_divergence_angle * 100}% of divergence angle, capping pointing jitter to 10% of divergence angle...")
-        pointing_jitter = min(pointing_jitter, 0.001 * self.transmitter_divergence_angle)
-
-        print(f'Exponent: {4*pointing_jitter / self.transmitter_divergence_angle**2}')
-
-        print("error: pointing jitter is too large, returning None")
-        # T_ps = 0.001*outage_probability**(4*pointing_jitter / self.transmitter_divergence_angle**2)
-        # return 10 * log10(T_ps)
-
-        return None
-
+        T_ps = outage_probability**(4*pointing_jitter**2 / self.transmitter_divergence_angle**2)
+        return 10 * log10(T_ps)
 
 
 
@@ -165,7 +158,6 @@ class LinkBudget():
         h = np.linspace(0, prop_distance, 500)
         cn_integral = np.trapz([self.get_HV57_CN(hi)*hi**(5/6) for hi in h], h)
         scintillation_index = 2.25 * wave_number **(7/6) * cn_integral
-        print('scintillation index: ', scintillation_index)
         return scintillation_index
 
     def get_Strehl_ratio_loss(self): # TODO check D_R
@@ -186,7 +178,6 @@ class LinkBudget():
         h = np.linspace(0, prop_distance, 500)
         cn_integral = np.trapz([self.get_HV57_CN(hi) for hi in h], h)
         r_0 = (0.423 * k**2 * cn_integral)**(-3/5)
-        print('fried parameter: ', r_0)
         return r_0
 
     def get_wavefront_error_loss(self):   #what is D
@@ -218,7 +209,7 @@ class LinkBudget():
         fried_parameter = self.get_fried_parameter()
         AoA_variance = 0.2 * (self.D_R/fried_parameter)**(5/3) * (self.Lambda/fried_parameter)**2
 
-        return 10 * log10(AoA_variance)
+        return - 10 * log10(AoA_variance)
 
     def get_p_outage(self):
         """Outage probability (receiver threshold); from config."""
@@ -230,7 +221,7 @@ class LinkBudget():
         """
         scintillation_term = np.sqrt(self.get_scintillation_index())**(4/5)
         scintillation_loss = 3.3 - 5.77 * np.sqrt(-np.log(self.get_p_outage())) * scintillation_term
-        return scintillation_loss
+        return - scintillation_loss
 
 
 optical_system = OS.optical_system1
@@ -240,7 +231,7 @@ print('Computing Link Budget...\n')
 
 print('Method: Transmitter + Atmospheric + Receiver\n')
 
-print('Transmitter:n') 
+print('Transmitter:\n') 
 
 print(f'- Transmitter power: {optical_system["transmitter_specs"]["transmitter_laser_power"]} dBm')
 print(f'- Transmitter gain: {link_budget.get_transmitter_gain()} dB')
@@ -251,12 +242,8 @@ print(f'- Atmospheric loss: {link_budget.get_atmospheric_loss()} dB')
 
 print("\nPointing losses:")
 print(f'- Static pointing error loss: {link_budget.get_static_pointing_error_loss()} dB')
-print('scintillation index: ', link_budget.get_scintillation_index())
 print(f'- Average pointing jitter loss: {link_budget.get_avg_pointing_jitter_loss()} dB \n')
-print(f'- Pointing jitter induced scintillation loss: {link_budget.get_pointing_jitter_scintillation_loss()} dB')
-
-# print(f'\nTransmitter losses: {}')
-
+# print(f'- Pointing jitter induced scintillation loss: {link_budget.get_pointing_jitter_scintillation_loss()} dB')
 
 print('\nAtmospheric losses:\n')
 
@@ -266,9 +253,14 @@ print(f'- Beam wander losses: {link_budget.get_beam_wander_loss()} dB')
 print(f'- AoA fluctuation losses: {link_budget.get_AoA_fluctuation_loss()} dB')
 print(f'- Scintillation losses: {link_budget.get_scintillation_loss()} dB')
 
-# print('Receiver:\n')
+print("Other \n")
+print('scintillation index: ', link_budget.get_scintillation_index())
+print('fried parameter: ', link_budget.get_fried_parameter())
 
-# print(f'Gain receiver: {link_budget.get_receiver_gain()} dB')
-# print(f'Receiver losses: {}')
+print('Receiver:\n')
 
-# print('Final Link Budget:\n')
+print(f'Gain receiver: {link_budget.get_receiver_gain()} dB')
+print(f'Receiver losses: {link_budget.get_receiver_losses()} dB')
+
+print('Final Link Budget:\n')
+
