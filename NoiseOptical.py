@@ -1,5 +1,6 @@
 import numpy as np
 from scipy.special import erfc
+from helpers import linear_to_dB, dB_to_linear
 
 q = 1.602e-19      # electron charge (C)
 k = 1.38e-23       # Boltzmann constant (J/K)
@@ -147,3 +148,82 @@ class opticalNoise():
     def BER(self):
         Q_value = self.Q()
         return 0.5 * erfc(Q_value / np.sqrt(2))
+    
+    def summary(self, in_dB: bool = False, Print: bool = True, save: bool = False, filename: str = "opticalNoiseSummary.txt"):
+        if in_dB:
+            summary_str = f"""
+            === Optical Noise Summary ===
+            --- Inputs ---
+            I1 (Optical Power for '1'): {self.I1:.3e} W
+            I0 (Optical Power for '0'): {self.I0:.3e} W
+            B (Bandwidth): {self.B:.3e} Hz
+            RIN: {self.RIN:.3e} 1/Hz
+            eta_PD (Responsivity): {self.eta_PD:.3f} A/W
+            eta_RX (Transimpedance Gain): {self.eta_RX:.3f} V/A
+            eta_LD (Laser Slope Efficiency): {self.eta_LD:.3f} W/A
+            eta_FO (Channel Transmission): {self.eta_FO:.3f}
+            I_TX_RMS (Transmitter Current Noise): {self.I_TX_RMS:.3e} A
+            i_dark (Dark Current): {self.i_dark:.3e} A
+            R_load (Load Resistance): {self.R_load:.3f} Ohm
+            T (Temperature): {self.T:.1f} K
+
+            --- Noise Components ---
+            Transmitter Noise: {linear_to_dB(self.sigmaTX):.3f} dBW
+            RIN Noise for '1': {linear_to_dB(self.sigmaRIN1):.3f} dBW
+            RIN Noise for '0': {linear_to_dB(self.sigmaRIN0):.3f} dBW
+            Shot Noise for '1': {linear_to_dB(self.sigmaShot1):.3f} dBW
+            Shot Noise for '0': {linear_to_dB(self.sigmaShot0):.3f} dBW
+            Dark Current Noise: {linear_to_dB(self.sigmaDark):.3f} dBW
+            Johnson Noise: {linear_to_dB(self.sigmaJohnson):.3f} dBW
+
+            --- Total Noise ---
+            Total Noise for '1': {linear_to_dB(self.sigma1):.3f} dBW
+            Total Noise for '0': {linear_to_dB(self.sigma0):.3f} dBW
+
+            --- Performance Metrics ---
+            Q-factor: {self.Q():.2f}
+            BER: {self.BER():.2e}
+            """
+        else:
+            summary_str = f"""
+            === Optical Noise Summary ===
+            --- Inputs ---
+            I1 (Optical Power for '1'): {self.I1:.3e} W
+            I0 (Optical Power for '0'): {self.I0:.3e} W
+            B (Bandwidth): {self.B:.3e} Hz
+            RIN: {self.RIN:.3e} 1/Hz
+            eta_PD (Responsivity): {self.eta_PD:.3f} A/W
+            eta_RX (Transimpedance Gain): {self.eta_RX:.3f} V/A
+            eta_LD (Laser Slope Efficiency): {self.eta_LD:.3f} W/A
+            eta_FO (Channel Transmission): {self.eta_FO:.3f}
+            I_TX_RMS (Transmitter Current Noise): {self.I_TX_RMS:.3e} A
+            i_dark (Dark Current): {self.i_dark:.3e} A
+            R_load (Load Resistance): {self.R_load:.3f} Ohm
+            T (Temperature): {self.T:.1f} K
+
+            --- Noise Components ---
+            Transmitter Noise: {self.sigmaTX:.3e} W
+            RIN Noise for '1': {self.sigmaRIN1:.3e} W
+            RIN Noise for '0': {self.sigmaRIN0:.3e} W
+            Shot Noise for '1': {self.sigmaShot1:.3e} W
+            Shot Noise for '0': {self.sigmaShot0:.3e} W
+            Dark Current Noise: {self.sigmaDark:.3e} W
+            Johnson Noise: {self.sigmaJohnson:.3e} W
+
+            --- Total Noise ---
+            Total Noise for '1': {self.sigma1:.3e} W
+            Total Noise for '0': {self.sigma0:.3e} W
+
+            --- Performance Metrics ---
+            Q-factor: {self.Q():.2f}
+            BER: {self.BER():.2e}
+            """
+        if Print:
+            print(summary_str)
+        if save:
+            with open(filename, 'w') as f:
+                f.write(summary_str)
+
+### RUN HERE
+example = opticalNoise(I1=1e-3, I0=1e-6, B=10e9, RIN=dB_to_linear(-145), eta_PD=0.9, eta_RX=1000, eta_LD=0.5, eta_FO=1, I_TX_RMS=1e-6, i_dark=10e-9, R_load=50, T=300)
+example.summary(True)
