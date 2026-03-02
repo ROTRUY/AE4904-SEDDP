@@ -1,6 +1,15 @@
 altitude = 550  # km
 inclination = 98  # deg
 dataVolume = 2.5  # Tb/day
+mu = 398600.4418 # GM in km^3/s^2
+re = 6371.0 # km
+
+
+c = 299792458.0
+# Speed of light [m/s]
+
+k_db = -228.6
+# 10*log10(Boltzmann constant) [dBW/K/Hz]
 
 #RF Parameters:
 

@@ -3,10 +3,10 @@ import CONSTANTS as C
 
 # Constants
 
-c = 299792458.0
+c = C.c
 # Speed of light [m/s]
 
-k_db = -228.6
+k_db = C.k_db
 # 10*log10(Boltzmann constant) [dBW/K/Hz]
 
 pi = math.pi
