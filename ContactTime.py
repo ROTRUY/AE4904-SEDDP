@@ -152,17 +152,18 @@ class ContactTimes():
         ax.set_title(f"Ground Stations and Visibility Footprints (h = {altitude} km, i = {inclination} deg)")
 
         # === Plot Ground Track ===
-        df = pd.read_csv(groundtrack_file)
+        if groundtrack_file is not None:
+            df = pd.read_csv(groundtrack_file)
 
-        lats = df.iloc[:, 1].values
-        lons = df.iloc[:, 2].values
+            lats = df.iloc[:, 1].values
+            lons = df.iloc[:, 2].values
 
-        ax.scatter(lons,
-                lats,
-                s=1, # point size
-                color='gray',
-                alpha=0.1,
-                transform=ccrs.PlateCarree())
+            ax.scatter(lons,
+                    lats,
+                    s=1, # point size
+                    color='gray',
+                    alpha=0.1,
+                    transform=ccrs.PlateCarree())
 
         # === Loop through stations ===
         for station, (lat_deg, lon_deg, h_g, min_elev_deg) in network.items():
@@ -350,22 +351,20 @@ def availability(P_contact: list[float]) -> float:
 
 # For RF, instead of P_CFLOS we use percentage of rainy days in the year
 # RF Network: ["Redu", "Cebreros", "Maspalomas", "Fucino"]
-# print(availability([.5069, .8767, .9288, .7260])) # RF network availability: 0.9996002775538585
+# print(availability([.5069, .8767, .9288, .7260])) # RF network availability: 0.998813879981776
 
-inclination = 80
+inclination = 50
 
 opt_groundtrack = "GMATReports\DelftReport.csv"
 rf_groundtrack = "GMATReports\CebrerosReport.csv"
 
 opticalTimes = ContactTimes(f"Opt{inclination}.txt")
-opticalTimes.summary(False, True, f"OptSum{inclination}")
-opticalTimes.plot(False, True, f"OptPlot{inclination}")
-opticalTimes.plotMap(OpticalNetwork, 550, inclination, opt_groundtrack, False, True, f"OptMap{inclination}")
+#opticalTimes.summary(False, True, f"OptSum{inclination}")
+#opticalTimes.plot(False, True, f"OptPlot{inclination}")
+opticalTimes.plotMap(OpticalNetwork, 550, inclination, None, False, True, f"OptMap")
 
 
-"""
 rfTimes = ContactTimes(f"RF{inclination}.txt")
-rfTimes.summary(False, True, f"RFSum{inclination}")
-rfTimes.plot(False, True, f"RFPlot{inclination}")
-rfTimes.plotMap(RFNetwork, 550, inclination, rf_groundtrack, False, True, f"RFMap{inclination}")
-"""
+#rfTimes.summary(False, True, f"RFSum{inclination}")
+#rfTimes.plot(False, True, f"RFPlot{inclination}")
+rfTimes.plotMap(RFNetwork, 550, inclination, None, False, True, f"RFMap")
