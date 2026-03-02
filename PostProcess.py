@@ -54,7 +54,6 @@ def process(Print: bool = True, save: bool = False, stations:list[str]=None):
 
             # Get average elevation values, save to dict
             valid_elevations = df[df.Elevation >= 30]
-            print(df["Elevation"])
             avg_elevations.append(np.average(valid_elevations.Elevation))
 
     avg_elevation = np.average(avg_elevations)
@@ -62,4 +61,7 @@ def process(Print: bool = True, save: bool = False, stations:list[str]=None):
         print(avg_elevation)
 
 ### RUN HERE
-process(True, False)
+print("RF Network average angle of elevation:")
+process(True, False, ["Cebreros", "Fucino", "Maspalomas", "Redu"])
+print("Optical Network average angle of elevation:")
+process(True, False, ["Delft", "Granada", "Nemea", "Nicosia", "Porto", "Tenerife"])
