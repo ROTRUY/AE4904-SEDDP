@@ -18,13 +18,14 @@ optical_system1 = {
         "fsm_jitter": 1e-6, #radians
         "transmitter_aperture": 0.1, #m
         "transmitter_divergence_angle": 20*1e-6, #radians (taken from slides)
-        "transmitter_laser_power": 30, #dBm (1W = 30dBm)
+        "transmitter_laser_power": 40, #dBm (10W = 30dBm)
         "transmitter_static_pointing_error": 10*1e-6, #radians  # TODO define this further based on fsm specs or otherwise
         "transmission_optics": 0.5, # from slides 
     },
     "receiver_specs": {
         "receiver_aperture": 0.405, #m  (assuming R16 telescope Delft optical diameter)
         "receiver_outage_power": 0.2, # normalised (1 = max received power) (taken from slides)
+        "outage_probability": 1e-3, # suggested assumption (0.1% outage)
         "receiver_avg_power": 0.85, # normalised (taken from slides)
         "cpa_resolution": 500*1e-3, #radians
     },

@@ -29,6 +29,7 @@ class LinkBudget():
         self.theta_div = optical_system['other_specs']['beam_width']  # Optical beam divergence
         self.transmitter_static_pointing_error = optical_system['transmitter_specs']['transmitter_static_pointing_error']
         self.receiver_outage_power = optical_system['receiver_specs']['receiver_outage_power']
+        self.outage_probability = optical_system['receiver_specs'].get('outage_probability', 1e-3)
         self.transmission_optics = optical_system['transmitter_specs']['transmission_optics']
 
     def get_transmitter_gain(self):
@@ -56,7 +57,7 @@ class LinkBudget():
         """
         Free space loss
         """
-        fsl = (4 * pi * self.R / self.Lambda)**2
+        fsl = (4 * np.pi * self.R / self.Lambda)**2
         return - 10 * log10(fsl)
 
     def get_transmission_loss(self):
@@ -209,20 +210,38 @@ class LinkBudget():
         fried_parameter = self.get_fried_parameter()
         AoA_variance = 0.2 * (self.D_R/fried_parameter)**(5/3) * (self.Lambda/fried_parameter)**2
 
-        return - 10 * log10(AoA_variance)
+        return 10 * log10(AoA_variance)
 
     def get_p_outage(self):
-        """Outage probability (receiver threshold); from config."""
-        return self.receiver_outage_power
+        """Outage probability; from config."""
+        return self.outage_probability
 
     def get_scintillation_loss(self): 
         """
         Scintillation loss
         """
-        scintillation_term = np.sqrt(self.get_scintillation_index())**(4/5)
-        scintillation_loss = 3.3 - 5.77 * np.sqrt(-np.log(self.get_p_outage())) * scintillation_term
-        return - scintillation_loss
+        sigma_I = np.sqrt(self.get_scintillation_index())
+        scintillation_loss = (3.3 - 5.77 * np.sqrt(-np.log(self.get_p_outage()))) * sigma_I**(4/5)
+        return scintillation_loss
+    
+    def get_total_link_budget(self, laser_power):
+        """
+        Total link budget
+        """
+        total = laser_power
+        total += self.get_transmitter_gain()
+        total += self.get_free_space_loss()
+        total += self.get_transmission_loss()
+        total += self.get_atmospheric_loss()
+        total += self.get_static_pointing_error_loss()
+        total += self.get_avg_pointing_jitter_loss()
+        total += self.get_WFE_beam_spread_loss()
+        total += self.get_beam_wander_loss()
+        total += self.get_scintillation_loss()
+        total += self.get_receiver_gain()
+        total += self.get_receiver_losses()
 
+        return total
 
 optical_system = OS.optical_system1
 link_budget = LinkBudget(optical_system)
@@ -233,34 +252,35 @@ print('Method: Transmitter + Atmospheric + Receiver\n')
 
 print('Transmitter:\n') 
 
-print(f'- Transmitter power: {optical_system["transmitter_specs"]["transmitter_laser_power"]} dBm')
-print(f'- Transmitter gain: {link_budget.get_transmitter_gain()} dB')
-print(f'- Free space loss: {link_budget.get_free_space_loss()} dB')
-print(f'- Transmission loss: {link_budget.get_transmission_loss()} dB')
-print(f'- Atmospheric loss: {link_budget.get_atmospheric_loss()} dB')
+print(f'- Transmitter power: {optical_system["transmitter_specs"]["transmitter_laser_power"]:.2f} dBm')
+print(f'- Transmitter gain: {link_budget.get_transmitter_gain():.2f} dB')
+print(f'- Free space loss: {link_budget.get_free_space_loss():.2f} dB')
+print(f'- Transmission loss: {link_budget.get_transmission_loss():.2f} dB')
+print(f'- Atmospheric loss: {link_budget.get_atmospheric_loss():.2f} dB')
 
 
 print("\nPointing losses:")
-print(f'- Static pointing error loss: {link_budget.get_static_pointing_error_loss()} dB')
-print(f'- Average pointing jitter loss: {link_budget.get_avg_pointing_jitter_loss()} dB \n')
+print(f'- Static pointing error loss: {link_budget.get_static_pointing_error_loss():.2f} dB')
+print(f'- Average pointing jitter loss: {link_budget.get_avg_pointing_jitter_loss():.2f} dB \n')
 # print(f'- Pointing jitter induced scintillation loss: {link_budget.get_pointing_jitter_scintillation_loss()} dB')
 
-print('\nAtmospheric losses:\n')
+print('Atmospheric losses:\n')
 
-print(f'- Wavefront error losses: {link_budget.get_wavefront_error_loss()} dB')
-print(f'- WFE and beam spread losses: {link_budget.get_WFE_beam_spread_loss()} dB')
-print(f'- Beam wander losses: {link_budget.get_beam_wander_loss()} dB')
-print(f'- AoA fluctuation losses: {link_budget.get_AoA_fluctuation_loss()} dB')
-print(f'- Scintillation losses: {link_budget.get_scintillation_loss()} dB')
+print(f'- WFE and beam spread losses: {link_budget.get_WFE_beam_spread_loss():.2f} dB')
+print(f'- Beam wander losses: {link_budget.get_beam_wander_loss():.2f} dB')
+print(f'- Scintillation losses: {link_budget.get_scintillation_loss():.2f} dB')
 
-print("Other \n")
-print('scintillation index: ', link_budget.get_scintillation_index())
-print('fried parameter: ', link_budget.get_fried_parameter())
+print("\nOther \n")
+print(f'scintillation index: {link_budget.get_scintillation_index():.2f}')
+print(f'fried parameter: {link_budget.get_fried_parameter():.2f}')
 
-print('Receiver:\n')
+print('\nReceiver:\n')
 
-print(f'Gain receiver: {link_budget.get_receiver_gain()} dB')
-print(f'Receiver losses: {link_budget.get_receiver_losses()} dB')
+print(f'Gain receiver: {link_budget.get_receiver_gain():.2f} dB')
+print(f'Receiver losses: {link_budget.get_receiver_losses():.2f} dB')
 
-print('Final Link Budget:\n')
+print(f'\n\nTotal losses (sum): {link_budget.get_total_link_budget(optical_system["transmitter_specs"]["transmitter_laser_power"]):.2f}')
 
+print(f'Receiver threshold: 30 dBm')
+
+print(f'Link margin: {link_budget.get_total_link_budget(optical_system["transmitter_specs"]["transmitter_laser_power"]) + 30:.2f} dB')
