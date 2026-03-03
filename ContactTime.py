@@ -39,6 +39,11 @@ RFNetwork = {
                 "Fucino":     (41.98,  13.60, 0.661, 10)
                 }
 
+SSONetwork = {
+                "Svalbard": (78.22, 15.63, 0, 10),
+                "Trollsat": (-72.00,  2.53, 0, 10),
+                }
+
 
 ### CLASSES
 class ContactTimes():
@@ -353,18 +358,24 @@ def availability(P_contact: list[float]) -> float:
 # RF Network: ["Redu", "Cebreros", "Maspalomas", "Fucino"]
 # print(availability([.5069, .8767, .9288, .7260])) # RF network availability: 0.998813879981776
 
-inclination = 50
+inclination = 98
 
 opt_groundtrack = "GMATReports\DelftReport.csv"
 rf_groundtrack = "GMATReports\CebrerosReport.csv"
+sso_groundtrack = "GMATReports\SvalbardReport.csv"
 
+"""
 opticalTimes = ContactTimes(f"Opt{inclination}.txt")
 #opticalTimes.summary(False, True, f"OptSum{inclination}")
 #opticalTimes.plot(False, True, f"OptPlot{inclination}")
 opticalTimes.plotMap(OpticalNetwork, 550, inclination, None, False, True, f"OptMap")
 
-
 rfTimes = ContactTimes(f"RF{inclination}.txt")
 #rfTimes.summary(False, True, f"RFSum{inclination}")
 #rfTimes.plot(False, True, f"RFPlot{inclination}")
 rfTimes.plotMap(RFNetwork, 550, inclination, None, False, True, f"RFMap")
+"""
+
+ssoTimes = ContactTimes(f"SSO.txt")
+ssoTimes.summary(True, False, f"SSOSum")
+ssoTimes.plotMap(SSONetwork, 550, inclination, sso_groundtrack, True, False, f"SSOMap")
