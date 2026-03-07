@@ -355,12 +355,12 @@ class OpticalNoiseV2:
             Avalanche Gain (M): {self.M:.3f}
 
             --- Noise Components ---
-            Shot noise: {linear_to_dB(self.sigmaShot):.3f} dBA
-            Dark current noise: {linear_to_dB(self.sigmaDark):.3f} dBA
-            Thermal noise: {linear_to_dB(self.sigmaThermal):.3f} dBA
+            Shot noise: {linear_to_dB(self.sigmaShot):.3f} dB
+            Dark current noise: {linear_to_dB(self.sigmaDark):.3f} dB
+            Thermal noise: {linear_to_dB(self.sigmaThermal):.3f} dB
 
             --- Total Noise ---
-            Total noise: {linear_to_dB(self.sigmaTotal):.3f} dBA
+            Total noise: {linear_to_dB(self.sigmaTotal):.3f} dB
 
             --- Performance Metrics ---
             SNR: {linear_to_dB(self.SNR):.3f} dB
