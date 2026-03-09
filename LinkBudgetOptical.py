@@ -1,5 +1,5 @@
 ### IMPORTS
-from math import pi, exp, log10
+from math import pi, exp, log10, sqrt
 import numpy as np
 import optical_system as OS
 
@@ -26,11 +26,14 @@ class LinkBudget():
         self.h = optical_system['link_benchmark_specs']['altitude']  # altitude [m]
         self.R = self.h / np.sin(self.elevation_angle)  # Link range
         self.theta = optical_system['transmitter_specs']['platform_drift_angle']  # Beam jitter angle
-        self.theta_div = optical_system['other_specs']['beam_width']  # Optical beam divergence
-        self.transmitter_static_pointing_error = optical_system['transmitter_specs']['transmitter_static_pointing_error']
+        self.transmitter_divergence_angle = optical_system['transmitter_specs']['transmitter_divergence_angle']  # Optical beam divergence
+        self.transmitter_pointing_error = optical_system['transmitter_specs']['transmitter_pointing_error']
         self.receiver_outage_power = optical_system['receiver_specs']['receiver_outage_power']
         self.outage_probability = optical_system['receiver_specs'].get('outage_probability', 1e-3)
         self.transmission_optics = optical_system['transmitter_specs']['transmission_optics']
+        self.fsm_bandwidth = optical_system['transmitter_specs']['fsm_bandwidth']   # Hz
+        self.psd_amplitude = optical_system['transmitter_specs']['psd_amplitude']    # rad2/Hz
+        self.psd_corner_freq = optical_system['transmitter_specs']['psd_corner_freq']  # Hz
 
     def get_transmitter_gain(self):
         """
@@ -70,10 +73,10 @@ class LinkBudget():
         """
         First, compute Kruse model exponent q based on visibility.
         """
-        visibility_km = 10 # visibility as provided by meteorological data TODO change
+        visibility_km = 10  # visibility as provided by meteorological data TODO change
         wavelength = self.Lambda 
-        atmosphere_height_km = 4 # reference height for Kruse model
-        zenith_angle = pi/2 - self.elevation_angle # zenith angle
+        atmosphere_height_km = 4  # reference height for Kruse model
+        zenith_angle = pi/2 - self.elevation_angle  # zenith angle
 
         if visibility_km > 50:
             q = 1.6
@@ -97,49 +100,50 @@ class LinkBudget():
 
         return - loss
 
-
-# TODO define pointing error, pointing jitter RMS, outage probability
-
     def get_pointing_jitter(self):
         """
-        Platform jitter
+        Open-lsoop platform pointing jitter RMS [rad], 1-axis.
+
+        Model: Lorentzian PSD  S(f) = A / (1 + (f/f_c)^2)  [rad^2/Hz]
+        Variance: sigma^2 = integral_0^{f_max} S(f) df
+                          = A * f_c * arctan(f_max / f_c)
+        - Single-axis jitter; total 2D radial sigma = sqrt(2) * sigma_1axis
+        (isotropic Gaussian assumed, consistent with pointing_jitter.py)
+        - Lorentzian PSD is a first-order approximation; no resonance peaks
+        - Integration up to fsm_bandwidth only
         """
-        # def get_PSD(f):
-        #     return 160 / (1 + f**2) # micro-radians^2/Hz
+        A = self.psd_amplitude    # rad^2/Hz
+        f_c = self.psd_corner_freq  # Hz
+        f_max = self.fsm_bandwidth  # Hz
 
-        # f = np.linspace(0, 1000, 1000)
-        # pointing_jitter_variance = np.trapz([get_PSD(f) for fi in f], f)
-        pointing_jitter = 160 * np.arctan(1000) * (1e-6)**2  # radians (sigma_pj^2)
-        return np.sqrt(pointing_jitter)
+        # Variance of one axis
+        sigma_pj = A * f_c * np.arctan(f_max / f_c)  # integral of S(f)
+        return np.sqrt(sigma_pj)  # 1-axis RMS [rad]
 
-
-    def get_static_pointing_error_loss(self): # what is pointing error?
+    def get_static_pointing_error_loss(self):
         """
         Static pointing error loss
         """
-
-        T_pe = exp(-2 * self.transmitter_static_pointing_error**2 / self.transmitter_divergence_angle**2)
+        T_pe = exp(-2 * self.transmitter_pointing_error**2 / self.transmitter_divergence_angle**2)
         return 10 * log10(T_pe)
 
     def get_avg_pointing_jitter_loss(self):
         """
-        Average pointing jitter loss
+        Average pointing jitter loss [dB].
         """
-        pointing_jitter = self.get_pointing_jitter()
-        T_pa = self.transmitter_divergence_angle**2 / (self.transmitter_divergence_angle**2 + 4 * pointing_jitter**2) 
+        sigma_pj = self.get_pointing_jitter()
+        T_pa = (self.transmitter_divergence_angle**2 / (self.transmitter_divergence_angle**2 + 4 * sigma_pj**2))
         return 10 * log10(T_pa)
 
-    def get_pointing_jitter_scintillation_loss(self): #TODO fix
+    def get_pointing_jitter_scintillation_loss(self):
         """
         Pointing jitter scintillation loss
         """
-        pointing_jitter = self.get_pointing_jitter()
-        outage_probability = 0.001 # TODO: fix, now taken from pointing_jitter.py
-
-        T_ps = outage_probability**(4*pointing_jitter**2 / self.transmitter_divergence_angle**2)
+        sigma_pj = self.get_pointing_jitter()
+        P0 = self.outage_probability
+        exponent = 4 * sigma_pj**2 / self.transmitter_divergence_angle**2
+        T_ps = P0 ** exponent
         return 10 * log10(T_ps)
-
-
 
     def get_HV57_CN(self, h, A=1.7e-14, h_0=0, v=21):
         """
@@ -157,7 +161,7 @@ class LinkBudget():
         wave_number = 2 * pi / self.Lambda
         prop_distance = self.h / np.sin(self.elevation_angle)
         h = np.linspace(0, prop_distance, 500)
-        cn_integral = np.trapezoid([self.get_HV57_CN(hi)*hi**(5/6) for hi in h], h)
+        cn_integral = np.trapz([self.get_HV57_CN(hi)*hi**(5/6) for hi in h], h)
         scintillation_index = 2.25 * wave_number **(7/6) * cn_integral
         return scintillation_index
 
@@ -177,7 +181,7 @@ class LinkBudget():
         k = 2 * pi / self.Lambda
         prop_distance = self.h / np.sin(self.elevation_angle)
         h = np.linspace(0, prop_distance, 500)
-        cn_integral = np.trapezoid([self.get_HV57_CN(hi) for hi in h], h)
+        cn_integral = np.trapz([self.get_HV57_CN(hi) for hi in h], h)
         r_0 = (0.423 * k**2 * cn_integral)**(-3/5)
         return r_0
 
@@ -243,6 +247,7 @@ class LinkBudget():
 
         return total
 
+
 optical_system = OS.optical_system1
 link_budget = LinkBudget(optical_system)
 
@@ -262,7 +267,8 @@ print(f'- Atmospheric loss: {link_budget.get_atmospheric_loss():.2f} dB')
 print("\nPointing losses:")
 print(f'- Static pointing error loss: {link_budget.get_static_pointing_error_loss():.2f} dB')
 print(f'- Average pointing jitter loss: {link_budget.get_avg_pointing_jitter_loss():.2f} dB \n')
-# print(f'- Pointing jitter induced scintillation loss: {link_budget.get_pointing_jitter_scintillation_loss()} dB')
+print(f'- Pointing jitter induced scintillation loss: {link_budget.get_pointing_jitter_scintillation_loss():.2f} dB')
+# print(f'- Sigma_pj: {link_budget.get_pointing_jitter()}')
 
 print('Atmospheric losses:\n')
 

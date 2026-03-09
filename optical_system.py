@@ -13,21 +13,22 @@ optical_system1 = {
         "system_minimum_temperature": -40,     # C
         "system_maximum_temperature": 40,      # C
         "platform_drift_angle": 0.1,     # degrees
-        "fsm_bandwidth": 1000, #Hz
-        "fsm_accuracy": 1e-6, #radians
-        "fsm_jitter": 1e-6, #radians
-        "transmitter_aperture": 0.1, #m
-        "transmitter_divergence_angle": 20*1e-6, #radians (taken from slides)
-        "transmitter_laser_power": 40, #dBm (10W = 30dBm)
-        "transmitter_static_pointing_error": 10*1e-6, #radians  # TODO define this further based on fsm specs or otherwise
-        "transmission_optics": 0.5, # from slides 
+        "fsm_bandwidth": 1000,  # Hz - FSM correction bandwidth
+        "fsm_accuracy": 1e-6,  # radians
+        "psd_amplitude": 160e-12,  # rad²/Hz - Lorentzian model
+        "psd_corner_freq": 1.0,  # Hz - Lorentzian PSD
+        "transmitter_aperture": 0.1,  # m
+        "transmitter_divergence_angle": 15.5e-6,  # radians = lambda / aperture
+        "transmitter_pointing_error": 1e-6,  # rad - same as fsm_accuracy because final correction element
+        "transmitter_laser_power": 40,  # dBm (10W = 30dBm)
+        "transmission_optics": 0.5,  # from slides 
     },
     "receiver_specs": {
-        "receiver_aperture": 0.405, #m  (assuming R16 telescope Delft optical diameter)
-        "receiver_outage_power": 0.2, # normalised (1 = max received power) (taken from slides)
-        "outage_probability": 1e-3, # suggested assumption (0.1% outage)
-        "receiver_avg_power": 0.85, # normalised (taken from slides)
-        "cpa_resolution": 500*1e-3, #radians
+        "receiver_aperture": 0.405,  # m  (assuming R16 telescope Delft optical diameter)
+        "receiver_outage_power": 0.2,  # normalised (1 = max received power) (taken from slides)
+        "outage_probability": 1e-3,  # suggested assumption (0.1% outage)
+        "receiver_avg_power": 0.85,  # normalised (taken from slides)
+        "cpa_resolution": 500*1e-3,  # radians
     },
     "other_specs": {
         "beam_width": 1,                 # degrees
@@ -38,7 +39,7 @@ optical_system1 = {
         "beam_jitter_angle_std": 1,       # degrees
         "beam_divergence_angle_std": 1,   # degrees
     },
-    "noise_specifications" : {
+    "noise_specifications": {
         "system_temperature": 300  # Kelvin
     }
 }

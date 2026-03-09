@@ -36,7 +36,7 @@ power_trace = []
 atm_loss_trace = []
 dist_trace_km = []
 
-# Instantiate your LinkBudget class
+# LinkBudget class
 lb = LinkBudget(specs)
 
 for i in range(len(t)):
