@@ -85,8 +85,7 @@ centers = 0.5 * (edges[:-1] + edges[1:])
 
 # --- Theoretical PDF: beta distribution ---
 sigma_d = sigma_pj * R          # 1-axis displacement RMS [m]
-w_0 = Lambda / (pi * theta_div)
-beta_param = w_0**2 / (4 * sigma_d**2)
+beta_param = w_r**2 / (4 * sigma_d**2)
 I_theory = np.linspace(1e-6, 1, 500)   # avoid log(0)
 pdf_theory = beta_param * I_theory ** (beta_param - 1)
 
