@@ -32,6 +32,7 @@ class LinkBudget():
         self.outage_probability = optical_system['receiver_specs'].get('outage_probability', 1e-3)
         self.transmission_optics = optical_system['transmitter_specs']['transmission_optics']
         self.fsm_bandwidth = optical_system['transmitter_specs']['fsm_bandwidth']   # Hz
+        self.fsm_accuracy = optical_system['transmitter_specs']['fsm_accuracy']  # rad
         self.psd_amplitude = optical_system['transmitter_specs']['psd_amplitude']    # rad2/Hz
         self.psd_corner_freq = optical_system['transmitter_specs']['psd_corner_freq']  # Hz
 
@@ -100,9 +101,10 @@ class LinkBudget():
 
         return - loss
 
-    def get_pointing_jitter(self):
+    def get_pointing_jitter_openloop(self):
         """
-        Open-lsoop platform pointing jitter RMS [rad], 1-axis.
+        Open-loop platform pointing jitter RMS [rad], 1-axis.
+        Raw platform vibration before FSM correction.
 
         Model: Lorentzian PSD  S(f) = A / (1 + (f/f_c)^2)  [rad^2/Hz]
         Variance: sigma^2 = integral_0^{f_max} S(f) df
@@ -119,6 +121,13 @@ class LinkBudget():
         # Variance of one axis
         sigma_pj = A * f_c * np.arctan(f_max / f_c)  # integral of S(f)
         return np.sqrt(sigma_pj)  # 1-axis RMS [rad]
+    
+    def get_pointing_jitter(self):
+        """
+        Post-FSM residual pointing jitter RMS [rad], 1-axis.
+        FSM suppresses open-loop platform jitter; residual = fsm_accuracy.
+        """
+        return self.fsm_accuracy  # 1e-6 rad
 
     def get_static_pointing_error_loss(self):
         """
