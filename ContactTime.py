@@ -40,8 +40,8 @@ RFNetwork = {
                 }
 
 SSONetwork = {
-                "Svalbard": (78.22, 15.63, 0, 10),
-                "Trollsat": (-72.00,  2.53, 0, 10),
+                "Svalbard": (78.22, 15.63, 0, 30),
+                "Trollsat": (-72.00,  2.53, 0, 30),
                 }
 
 

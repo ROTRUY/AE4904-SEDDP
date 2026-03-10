@@ -402,5 +402,5 @@ class OpticalNoiseV2:
 #example = opticalNoise(I1=1e-3, I0=1e-6, B=10e9, RIN=dB_to_linear(-145), eta_PD=0.9, eta_RX=1000, eta_LD=0.5, eta_FO=1, I_TX_RMS=1e-6, i_dark=10e-9, R_load=50, T=300)
 #example.summary(True)
 
-exampleV2 = OpticalNoiseV2(P_R=1e-3, wavelength=1550e-9, B_e=10e9, T=300, R=50, eta=0.9, i_D=1e-9, detector_type="APD", detector_material="InGaAs", M=10)
+exampleV2 = OpticalNoiseV2(P_R=1e-3, wavelength=1550e-9, B_e=1e9, T=300, R=50, eta=0.9, i_D=1e-9, detector_type="APD", detector_material="InGaAs", M=10)
 exampleV2.summary(True)
