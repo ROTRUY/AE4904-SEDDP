@@ -3,11 +3,15 @@ import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 from datetime import datetime, timedelta
 from collections import defaultdict
-from CONSTANTS import dataVolume, altitude
+import optical_system as OS
 import numpy as np
 import cartopy.crs as ccrs
 import cartopy.feature as cfeature
 import pandas as pd
+
+optical_system = OS.optical_system1
+dataVolume = optical_system['link_benchmark_specs']['dataVolume']
+altitude = optical_system['link_benchmark_specs']['altitude']
 
 ### GROUND STATION NETWORKS
 # Format: "StationName": (Latitude [deg], Longitude [deg], Altitude [km], Minimum Elevation [deg])

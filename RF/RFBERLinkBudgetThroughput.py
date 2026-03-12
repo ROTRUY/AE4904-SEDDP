@@ -1,5 +1,5 @@
 import math
-import CONSTANTS as C
+import rf_constants as C
 
 # Constants
 

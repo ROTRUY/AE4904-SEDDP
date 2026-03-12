@@ -26,7 +26,6 @@ class LinkBudget():
         self.h = optical_system['link_benchmark_specs']['altitude']  # altitude [m]
         self.R = self.h / np.sin(self.elevation_angle)  # Link range
         self.theta = optical_system['transmitter_specs']['platform_drift_angle']  # Beam jitter angle
-        self.transmitter_divergence_angle = optical_system['transmitter_specs']['transmitter_divergence_angle']  # Optical beam divergence
         self.transmitter_pointing_error = optical_system['transmitter_specs']['transmitter_pointing_error']
         self.receiver_outage_power = optical_system['receiver_specs']['receiver_outage_power']
         self.outage_probability = optical_system['receiver_specs'].get('outage_probability', 1e-3)
@@ -170,7 +169,7 @@ class LinkBudget():
         wave_number = 2 * pi / self.Lambda
         prop_distance = self.h / np.sin(self.elevation_angle)
         h = np.linspace(0, prop_distance, 500)
-        cn_integral = np.trapezoid([self.get_HV57_CN(hi)*hi**(5/6) for hi in h], h)
+        cn_integral = np.trapz([self.get_HV57_CN(hi)*hi**(5/6) for hi in h], h)
         scintillation_index = 2.25 * wave_number **(7/6) * cn_integral
         return scintillation_index
 
@@ -190,7 +189,7 @@ class LinkBudget():
         k = 2 * pi / self.Lambda
         prop_distance = self.h / np.sin(self.elevation_angle)
         h = np.linspace(0, prop_distance, 500)
-        cn_integral = np.trapezoid([self.get_HV57_CN(hi) for hi in h], h)
+        cn_integral = np.trapz([self.get_HV57_CN(hi) for hi in h], h)
         r_0 = (0.423 * k**2 * cn_integral)**(-3/5)
         return r_0
 
