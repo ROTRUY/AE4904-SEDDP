@@ -17,15 +17,15 @@ class LinkBudget():
 
     def __init__(self, optical_system):
         self.elevation_angle = optical_system['link_benchmark_specs']['elevation_angle']
-        self.transmitter_divergence_angle = optical_system['transmitter_specs']['transmitter_divergence_angle']
         self.D_T = optical_system['transmitter_specs']['transmitter_aperture']  # Transmitter aperture
         self.D_R = optical_system['receiver_specs']['receiver_aperture']  # Receiver aperture
-        self.Lambda = optical_system['transmitter_specs']['system_frequency']  # Wavelength
+        self.Lambda = optical_system['transmitter_specs']['wavelength']  # Wavelength
         c = 3e+8  # Speed of light
-        self.freq = c / optical_system['transmitter_specs']['system_frequency']  # Frequency from wavelength
+        self.freq = c / optical_system['transmitter_specs']['wavelength']  # Frequency from wavelength
         self.h = optical_system['link_benchmark_specs']['altitude']  # altitude [m]
         self.R = self.h / np.sin(self.elevation_angle)  # Link range
         self.theta = optical_system['transmitter_specs']['platform_drift_angle']  # Beam jitter angle
+        self.transmitter_divergence_angle = self.Lambda / optical_system['transmitter_specs']['transmitter_aperture']  # lambda / aperture
         self.transmitter_pointing_error = optical_system['transmitter_specs']['transmitter_pointing_error']
         self.receiver_outage_power = optical_system['receiver_specs']['receiver_outage_power']
         self.outage_probability = optical_system['receiver_specs'].get('outage_probability', 1e-3)
@@ -34,6 +34,12 @@ class LinkBudget():
         self.fsm_accuracy = optical_system['transmitter_specs']['fsm_accuracy']  # rad
         self.psd_amplitude = optical_system['transmitter_specs']['psd_amplitude']    # rad2/Hz
         self.psd_corner_freq = optical_system['transmitter_specs']['psd_corner_freq']  # Hz
+
+    def get_transmitter_divergence_angle(self):
+        """
+        theta_div
+        """
+        return self.transmitter_divergence_angle
 
     def get_transmitter_gain(self):
         """
@@ -215,7 +221,7 @@ class LinkBudget():
         # beam wander loss assumed negligible for downlink
         return 0
 
-    def get_AoA_fluctuation_loss(self): # what is D???
+    def get_AoA_fluctuation_loss(self):  # what is D???
         """
         AoA fluctuation loss
         """

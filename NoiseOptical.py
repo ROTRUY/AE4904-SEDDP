@@ -1,5 +1,6 @@
 import numpy as np
-from scipy.special import erfc
+# from scipy.special import erfc
+from math import erfc
 from helpers import linear_to_dB, dB_to_linear
 
 q = 1.602e-19      # electron charge (C)
