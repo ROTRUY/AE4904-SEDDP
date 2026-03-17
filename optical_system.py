@@ -20,7 +20,8 @@ optical_system1 = {
         "transmitter_aperture": 0.1,  # m
         "transmitter_pointing_error": 1e-6,  # rad - same as fsm_accuracy because final correction element
         "transmitter_laser_power": 40,  # dBm (10W = 30dBm)
-        "transmission_optics": 0.5,  # from slides 
+        "transmission_optics": 0.5,  # from slides
+        "tau_c": 1e-3,  # scintillation coherence time [s]
     },
     "receiver_specs": {
         "receiver_aperture": 0.405,  # m  (assuming R16 telescope Delft optical diameter)

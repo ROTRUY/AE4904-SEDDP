@@ -28,6 +28,12 @@ class OpticalNoiseV2:
         :param M: Avalanche gain for APD (ignored for PIN), default is 1
         :type M: float
         """
+        # constants
+        self.q = 1.602176634e-19  # electron charge (C)
+        self.h = 6.62607015e-34  # Planck's constant (J*s)
+        self.c = 299792458  # speed of light (m/s)
+        self.kB = 1.380649e-23  # Boltzmann constant (J/K)
+
         self.P_R = P_R  # Received optical power [W]
         self.wavelength = wavelength  # Wavelength [m]
         self.B_e = B_e  # Electrical receiver bandwidth [Hz]
@@ -35,6 +41,7 @@ class OpticalNoiseV2:
         self.R = R  # Load resistance [Ohm]
         self.eta = eta  # Photodiode quantum efficiency [-] (30% to 95% typical)
         self.i_D = i_D  # Dark current [A]
+        self.M = M
         if responsivity is None:
             self.responsivity = self.Responsivity()
         else:
@@ -61,12 +68,6 @@ class OpticalNoiseV2:
                 self.F = 1  # No excess noise for PIN
             case _:
                 raise ValueError("Invalid detector type. Must be 'PIN' or 'APD'.")
-
-        # constants
-        self.q = 1.602176634e-19  # electron charge (C)
-        self.h = 6.62607015e-34  # Planck's constant (J*s)
-        self.c = 299792458  # speed of light (m/s)
-        self.kB = 1.380649e-23  # Boltzmann constant (J/K)
 
         # Calculate everything
         self.sigmaShot = self.shotNoise()

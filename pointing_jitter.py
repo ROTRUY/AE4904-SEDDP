@@ -7,15 +7,6 @@ import LinkBudgetOptical as LBO
 class PointingJitterSimulation:
     """
     Monte Carlo simulation of pointing jitter fading for an optical downlink.
-
-    Parameters
-    ----------
-    optical_system : dict
-        System parameter dictionary (from optical_system.py).
-    T : float
-        Total simulation duration [s]. Default: 5.0.
-    seed : int or None
-        Random seed for reproducibility. Default: 42.
     """
 
     def __init__(self, optical_system: dict, T: float = 5.0, seed: int = 42):
@@ -34,9 +25,9 @@ class PointingJitterSimulation:
 
         # --- Derived geometry ---
         self.R = self.h / np.sin(self.elev)     # slant range [m]
-        self.w_r = self.theta_div * self.R      # beam radius at receiver [m], far-field
+        self.w_r = self.theta_div * self.R      # beam radius at receiver [m]
         self.sigma_d = self.sigma_pj * self.R   # 1-axis displacement RMS [m]
-        self.beta_param = self.w_r**2 / (4 * self.sigma_d**2)  # beta dist. shape parameter [-]
+        self.beta_param = self.w_r**2 / (4 * self.sigma_d**2)
 
         # --- Simulation time grid ---
         # fs = 2 * f_max satisfies Nyquist for fsm_bandwidth
