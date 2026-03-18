@@ -74,13 +74,13 @@ class BERSimulation:
         """
         rng = np.random.default_rng(seed + 1)
 
-        u_jitter = self.jitter_sim.get_normalised_power()
+        self.u_jitter = self.jitter_sim.get_normalised_power()
         t = self.jitter_sim.time
         dt = t[1] - t[0]
-        N = len(u_jitter)
+        N = len(self.u_jitter)
 
-        u_scint = self._generate_scintillation(N, dt)
-        u = u_scint * u_jitter
+        self.u_scint = self._generate_scintillation(N, dt)
+        u = self.u_scint * self.u_jitter
         u /= np.mean(u)  # normalise combined trace to unit mean
 
         n = rng.normal(0.0, np.sqrt(self.sigma2), size=N)
@@ -151,7 +151,7 @@ class BERSimulation:
         self.u_k = np.mean(u_windows, axis=1)  # store for plots
 
         return self.BER_mean
-    
+
     def compute_BER_sweep(self, P_R_min_dBm: float = -40.0, P_R_max_dBm: float = -10.0, N_points: int = 50):
         """
         Sweep received power P_R and compute <BER> at each point.
@@ -194,28 +194,126 @@ class BERSimulation:
         print(f"  <BER> (fading average)  : {self.BER_mean:.2e}")
         print("=" * 45)
 
-    def plot_all(self) -> None:
-        """
-        Generate all plots:
-        1. BER vs SNR sweep curve
-        2. Fading time trace u(t)
-        3. PDF of u vs theoretical beta distribution
-        """
-        SNR_dB, BER_arr = self.compute_BER_sweep()
+    def plot_scintillation(self) -> None:
+        plt.figure()
+        plt.plot(self.t * 1e3, self.u_scint, color='steelblue', linewidth=0.8)
+        plt.axhline(np.mean(self.u_scint), color='darkorange', linestyle='--',
+                    linewidth=1.5, label=f'Mean = {np.mean(self.u_scint):.3f}')
+        plt.xlabel('Time [ms]')
+        plt.ylabel('Normalised power [–]')
+        plt.title('Scintillation Fading $u_{scint}(t)$')
+        plt.legend()
+        plt.grid(True, alpha=0.3)
+        plt.tight_layout()
 
-        # --- BER vs SNR ---
-        # mask out exact zeros for log plot
+
+    def plot_jitter(self) -> None:
+        plt.figure()
+        plt.plot(self.t * 1e3, self.u_jitter, color='steelblue', linewidth=0.8)
+        plt.axhline(np.mean(self.u_jitter), color='darkorange', linestyle='--',
+                    linewidth=1.5, label=f'Mean = {np.mean(self.u_jitter):.4f}')
+        plt.xlabel('Time [ms]')
+        plt.ylabel('Normalised power [–]')
+        plt.title('Pointing Jitter Fading $u_{jitter}(t)$')
+        plt.legend()
+        plt.grid(True, alpha=0.3)
+        plt.tight_layout()
+
+
+    def plot_combined_fading(self) -> None:
+        plt.figure()
+        plt.plot(self.t * 1e3, self.u, color='steelblue', linewidth=0.8)
+        plt.axhline(np.mean(self.u), color='darkorange', linestyle='--',
+                    linewidth=1.5, label=f'Mean = {np.mean(self.u):.4f}')
+        plt.axhline(self.os['receiver_specs']['receiver_outage_power'],
+                    color='crimson', linestyle='--', linewidth=1.5,
+                    label=f'Outage threshold = {self.os["receiver_specs"]["receiver_outage_power"]}')
+        plt.xlabel('Time [ms]')
+        plt.ylabel('Normalised power [–]')
+        plt.title('Combined Fading $u(t) = u_{scint}(t) \cdot u_{jitter}(t)$')
+        plt.legend()
+        plt.grid(True, alpha=0.3)
+        plt.tight_layout()
+
+    def plot_noise(self) -> None:
+        plt.figure()
+        plt.plot(self.t * 1e3, self.n, color='steelblue', linewidth=0.8)
+        plt.axhline(0, color='black', linewidth=0.8)
+        plt.axhline( 3*np.sqrt(self.sigma2), color='crimson', linestyle='--',
+                    linewidth=1.5, label=r'$\pm 3\sigma$')
+        plt.axhline(-3*np.sqrt(self.sigma2), color='crimson', linestyle='--',
+                    linewidth=1.5)
+        plt.xlabel('Time [ms]')
+        plt.ylabel('Current [A]')
+        plt.title('Noise Trace $n(t)$')
+        plt.legend()
+        plt.grid(True, alpha=0.3)
+        plt.tight_layout()
+
+    def plot_BER_trace(self) -> None:
+        u_windows, _ = self._select_windows(self.N_windows)
+        BER_windows = self._compute_window_BER(u_windows)
+        t_windows = np.linspace(self.t[0] * 1e3, self.t[-1] * 1e3, self.N_windows)
+
+        plt.figure()
+        plt.semilogy(t_windows, BER_windows, color='steelblue',
+                    linewidth=1.5, marker='o', markersize=3)
+        plt.axhline(1e-6, color='crimson', linestyle='--',
+                    linewidth=1.5, label='BER = $10^{-6}$')
+        plt.axhline(self.BER_mean, color='darkorange', linestyle='--',
+                    linewidth=1.5, label=f'$\\langle$BER$\\rangle$ = {self.BER_mean:.2e}')
+        plt.xlabel('Time [ms]')
+        plt.ylabel('BER')
+        plt.title('BER Time Trace BER$(u(t))$')
+        plt.legend()
+        plt.grid(True, which='both', alpha=0.3)
+        plt.tight_layout()
+
+    def plot_BER_sweep(self) -> None:
+        SNR_dB, BER_arr = self.compute_BER_sweep()
         mask = BER_arr > 0
+
+        plt.figure()
         plt.semilogy(SNR_dB[mask], BER_arr[mask], color='steelblue', linewidth=2)
         plt.axhline(1e-6, color='crimson', linestyle='--',
-                linewidth=1.5, label='BER = $10^{-6}$')
+                    linewidth=1.5, label='BER = $10^{-6}$')
         plt.axvline(10 * np.log10(self.SNR), color='darkorange', linestyle='--',
-                linewidth=1.5, label=f'Operating point\n({10*np.log10(self.SNR):.1f} dB)')
+                    linewidth=1.5,
+                    label=f'Operating point ({10*np.log10(self.SNR):.1f} dB)')
         plt.xlabel('Mean SNR [dB]')
         plt.ylabel('BER')
         plt.title('BER vs SNR')
         plt.legend()
         plt.grid(True, which='both', alpha=0.3)
+        plt.tight_layout()
+
+    def plot_fading_pdf(self) -> None:
+        beta = self.jitter_sim.get_beta_param()
+        u_theory = np.linspace(1e-4, max(self.u), 500)
+        pdf_sim, edges = np.histogram(self.u, bins=80, density=True)
+        centers = 0.5 * (edges[:-1] + edges[1:])
+
+        plt.figure()
+        plt.bar(centers, pdf_sim, width=np.diff(edges),
+                alpha=0.5, color='steelblue', label='Simulation')
+        plt.plot(u_theory, beta * u_theory ** (beta - 1), color='crimson',
+                linestyle='--', linewidth=2,
+                label=fr'Beta PDF $\beta$={beta:.1f}')
+        plt.xlabel('Normalised power $u$ [–]')
+        plt.ylabel('Probability density')
+        plt.title('PDF of Fading $p(u)$')
+        plt.legend()
+        plt.grid(True, alpha=0.3)
+        plt.tight_layout()
+
+    def plot_all(self) -> None:
+        self.plot_scintillation()
+        self.plot_jitter()
+        self.plot_combined_fading()
+        self.plot_noise()
+        # self.plot_BER_trace()
+        self.plot_BER_sweep()
+        self.plot_fading_pdf()
         plt.show()
 
 
