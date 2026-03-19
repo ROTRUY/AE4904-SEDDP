@@ -9,7 +9,7 @@ optical_system1 = {
         "dataVolume": 2.5 * 1e12,        # bits/day (required data volume per day)
     },
     "transmitter_specs": {
-        "system_frequency": 1550*1e-9,        # m
+        "wavelength": 1550*1e-9,        # m
         "system_minimum_temperature": -40,     # C
         "system_maximum_temperature": 40,      # C
         "platform_drift_angle": 0.1,     # degrees
@@ -18,10 +18,10 @@ optical_system1 = {
         "psd_amplitude": 160e-12,  # rad²/Hz - Lorentzian model
         "psd_corner_freq": 1.0,  # Hz - Lorentzian PSD
         "transmitter_aperture": 0.1,  # m
-        "transmitter_divergence_angle": 15.5e-6,  # radians = lambda / aperture
         "transmitter_pointing_error": 1e-6,  # rad - same as fsm_accuracy because final correction element
         "transmitter_laser_power": 40,  # dBm (10W = 30dBm)
-        "transmission_optics": 0.5,  # from slides 
+        "transmission_optics": 0.5,  # from slides
+        "tau_c": 1e-3,  # scintillation coherence time [s]
     },
     "receiver_specs": {
         "receiver_aperture": 0.405,  # m  (assuming R16 telescope Delft optical diameter)
