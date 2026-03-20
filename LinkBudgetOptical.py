@@ -25,7 +25,7 @@ class LinkBudget():
         self.freq = c / optical_system['transmitter_specs']['wavelength']  # Frequency from wavelength
         self.h = optical_system['link_benchmark_specs']['altitude']  # altitude [m]
         self.R = self.h / np.sin(self.elevation_angle)  # Link range
-        self.theta = optical_system['transmitter_specs']['platform_drift_angle']  # Beam jitter angle
+        self.theta = optical_system['transmitter_specs']['platform_drift_angle']  # Beam jitter angle NOT USED
         self.transmitter_divergence_angle = self.Lambda / optical_system['transmitter_specs']['transmitter_aperture']  # lambda / aperture
         self.transmitter_pointing_error = optical_system['transmitter_specs']['transmitter_pointing_error']
         self.receiver_outage_power = optical_system['receiver_specs']['receiver_outage_power']
