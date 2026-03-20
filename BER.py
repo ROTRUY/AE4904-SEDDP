@@ -11,8 +11,7 @@ from NoiseOptical import OpticalNoiseV2
 from pointing_jitter import PointingJitterSimulation
 
 # Constants
-R_b = 2e9  # bit rate [bit/s]
-B_e = R_b / 2  # electrical receiver bandwidth (= 1 GHz)
+B_e = 2e9  # bit rate [bit/s]
 seed = 42
 
 
@@ -279,11 +278,12 @@ class BERSimulation:
         plt.tight_layout()
 
     def plot_all(self) -> None:
-        # self.plot_scintillation()
-        # self.plot_jitter()
-        # self.plot_combined_fading()
-        # self.plot_noise()
-        # self.plot_BER_trace()
+        plt.clf()
+        self.plot_scintillation()
+        self.plot_jitter()
+        self.plot_combined_fading()
+        self.plot_noise()
+        self.plot_BER_trace()
         self.plot_BER_sweep()
         plt.show()
 

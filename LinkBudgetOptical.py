@@ -1,7 +1,8 @@
-### IMPORTS
-from math import pi, exp, log10, sqrt
+# IMPORTS
+from math import pi, exp, log10
 import numpy as np
 import optical_system as OS
+
 
 class LinkBudget():
     """
@@ -31,7 +32,6 @@ class LinkBudget():
         self.outage_probability = optical_system['receiver_specs'].get('outage_probability', 1e-3)
         self.transmission_optics = optical_system['transmitter_specs']['transmission_optics']
         self.fsm_bandwidth = optical_system['transmitter_specs']['fsm_bandwidth']   # Hz
-        self.fsm_accuracy = optical_system['transmitter_specs']['fsm_accuracy']  # rad
         self.psd_amplitude = optical_system['transmitter_specs']['psd_amplitude']    # rad2/Hz
         self.psd_corner_freq = optical_system['transmitter_specs']['psd_corner_freq']  # Hz
 
@@ -250,7 +250,7 @@ class LinkBudget():
         sigma_I = np.sqrt(self.get_scintillation_index())
         scintillation_loss = (3.3 - 5.77 * np.sqrt(-np.log(self.get_p_outage()))) * sigma_I**(4/5)
         return scintillation_loss
-    
+ 
     def get_total_link_budget(self, laser_power):
         """
         Total link budget
@@ -291,7 +291,7 @@ print("\nPointing losses:")
 print(f'- Static pointing error loss: {link_budget.get_static_pointing_error_loss():.2f} dB')
 print(f'- Average pointing jitter loss: {link_budget.get_avg_pointing_jitter_loss():.2f} dB \n')
 print(f'- Pointing jitter induced scintillation loss: {link_budget.get_pointing_jitter_scintillation_loss():.2f} dB')
-# print(f'- Sigma_pj: {link_budget.get_pointing_jitter()}')
+print(f'- Sigma_pj: {link_budget.get_pointing_jitter()}')
 
 print('Atmospheric losses:\n')
 
