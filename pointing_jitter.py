@@ -27,7 +27,8 @@ class PointingJitterSimulation:
         self.R = self.h / np.sin(self.elev)     # slant range [m]
         self.w_r = self.theta_div * self.R      # beam radius at receiver [m]
         self.sigma_d = self.sigma_pj * self.R   # 1-axis displacement RMS [m]
-        self.beta_param = self.w_r**2 / (4 * self.sigma_d**2)
+        # self.beta_param = self.w_r**2 / (4 * self.sigma_d**2)
+        self.beta_param = self.theta_div**2 / (4 * self.sigma_pj**2)
 
         # --- Simulation time grid ---
         # fs = 2 * f_max satisfies Nyquist for fsm_bandwidth
@@ -151,6 +152,7 @@ class PointingJitterSimulation:
 
     def plot_all(self) -> None:
         """Generate all three plots and show them."""
+        plt.clf()
         self.plot_jitter_angles()
         self.plot_power_fading()
         self.plot_power_pdf()
