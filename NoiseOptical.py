@@ -1,6 +1,6 @@
 import numpy as np
 from math import erfc
-from helpers import linear_to_dB, dB_to_linear
+from helpers import *
 
 
 class OpticalNoiseV2:
@@ -31,7 +31,7 @@ class OpticalNoiseV2:
         # constants
         self.q = 1.602176634e-19  # electron charge (C)
         self.h = 6.62607015e-34  # Planck's constant (J*s)
-        self.c = 299792458  # speed of light (m/s)
+        self.c = 3e8  # speed of light (m/s)
         self.kB = 1.380649e-23  # Boltzmann constant (J/K)
 
         self.P_R = P_R  # Received optical power [W]
@@ -122,7 +122,7 @@ class OpticalNoiseV2:
         if in_dB:
             summary_str = f"""
             === Optical Noise Summary ===
-            --- Inputs ---
+            --- Parameters ---
             P_R (Received Optical Power): {self.P_R:.3e} W
             Wavelength: {self.wavelength:.3e} m
             B_e (Electrical Bandwidth): {self.B_e:.3e} Hz
@@ -141,7 +141,7 @@ class OpticalNoiseV2:
             Thermal noise: {linear_to_dB(self.sigmaThermal):.3f} dB
 
             --- Totals ---
-            Total signal: {linear_to_dB(self.photocurrent() ** 2):.3e} dB
+            Total photocurrent: {self.photocurrent():.3e} A
             Total noise: {linear_to_dB(self.sigmaTotal):.3f} dB
 
             --- Performance Metrics ---
@@ -150,7 +150,7 @@ class OpticalNoiseV2:
         else:
             summary_str = f"""
             === Optical Noise Summary ===
-            --- Inputs ---
+            --- Parameters ---
             P_R (Received Optical Power): {self.P_R:.3e} W
             Wavelength: {self.wavelength:.3e} m
             B_e (Electrical Bandwidth): {self.B_e:.3e} Hz
@@ -169,7 +169,7 @@ class OpticalNoiseV2:
             Thermal noise: {self.sigmaThermal:.3e} A^2
 
             --- Totals ---
-            Total signal: {self.photocurrent() ** 2:.3e} A^2
+            Total photocurrent: {self.photocurrent():.3e} A
             Total noise: {self.sigmaTotal:.3e} A^2
 
             --- Performance Metrics ---
@@ -186,5 +186,8 @@ class OpticalNoiseV2:
 #example = opticalNoise(I1=1e-3, I0=1e-6, B=10e9, RIN=dB_to_linear(-145), eta_PD=0.9, eta_RX=1000, eta_LD=0.5, eta_FO=1, I_TX_RMS=1e-6, i_dark=10e-9, R_load=50, T=300)
 #example.summary(True)
 
-exampleV2 = OpticalNoiseV2(P_R=1e-3, wavelength=1550e-9, B_e=2e9, T=300, R=20e+3, eta=0.85, i_D=1e-4, detector_type="PIN")
-exampleV2.summary(True)
+#verifyV2 = OpticalNoiseV2(P_R=3e-7, wavelength=1300e-9, B_e=20e6, T=293, R=1000, eta=0.90, i_D=4e-9)
+#verifyV2.summary(True)
+
+exampleV2 = OpticalNoiseV2(P_R=5e-6, wavelength=1550e-9, B_e=2e9, T=300, R=20e3, eta=0.80, i_D=20e-9, detector_type="APD", M=10)
+exampleV2.summary(False)
