@@ -13,7 +13,7 @@ optical_system1 = {
         "system_minimum_temperature": -40,     # C
         "system_maximum_temperature": 40,      # C
         "platform_drift_angle": 0.1,     # degrees
-        "fsm_bandwidth": 1000,  # Hz - FSM correction bandwidth
+        "fsm_bandwidth": 1700,  # Hz - FSM correction bandwidth
         "fsm_accuracy": 1e-6,  # radians
         "psd_amplitude": 160e-12,  # rad²/Hz - Lorentzian model
         "psd_corner_freq": 1.0,  # Hz - Lorentzian PSD
@@ -43,4 +43,3 @@ optical_system1 = {
         "system_temperature": 300  # Kelvin
     }
 }
-
