@@ -35,21 +35,6 @@ class PointingJitterSimulation:
         self.N = int(self.T * self.fs)
         self.time = np.linspace(0, self.T, self.N)  # [s]
 
-        # --- Internal simulation state (populated by run()) ---
-        self._theta_x = None   # [rad]
-        self._theta_y = None   # [rad]
-        self._P = None         # normalised received power [-]
-        self._simulated = False
-
-    # ------------------------------------------------------------------
-    # Core simulation
-    # ------------------------------------------------------------------
-
-    def run(self) -> None:
-        """
-        Generate pointing jitter realisations and compute normalised received power.
-        Must be called before any getter or plot method.
-        """
         rng = np.random.default_rng(self.seed)
 
         # Independent 1-axis Gaussian jitter [rad]
@@ -63,42 +48,29 @@ class PointingJitterSimulation:
 
         # Gaussian beam intensity coupling
         self._P = np.exp(-2 * r2 / self.w_r**2)
-        self._simulated = True
-
-    def _check_simulated(self) -> None:
-        if not self._simulated:
-            raise RuntimeError("Call run() before accessing simulation results.")
-
-    # ------------------------------------------------------------------
-    # Getters
-    # ------------------------------------------------------------------
 
     def get_jitter_angles(self) -> tuple[np.ndarray, np.ndarray]:
         """
         Return (theta_x, theta_y) time series [rad].
         """
-        self._check_simulated()
         return self._theta_x, self._theta_y
 
     def get_normalised_power(self) -> np.ndarray:
         """
         Return normalised received power time series [-].
         """
-        self._check_simulated()
         return self._P
 
     def get_mean_power(self) -> float:
         """
         Return mean normalised received power [-].
         """
-        self._check_simulated()
         return float(np.mean(self._P))
 
     def get_outage_probability(self) -> float:
         """
         Return simulated outage probability: fraction of samples below outage_threshold [-].
         """
-        self._check_simulated()
         return float(np.sum(self._P < self.outage_threshold) / self.N)
 
     def get_beta_param(self) -> float:
@@ -112,7 +84,6 @@ class PointingJitterSimulation:
         """
         Return a dict of key simulation statistics.
         """
-        self._check_simulated()
         return {
             'sigma_pj_urad':       self.sigma_pj * 1e6,
             'beam_radius_m':       self.w_r,
@@ -128,7 +99,6 @@ class PointingJitterSimulation:
 
     def plot_jitter_angles(self) -> None:
         """Plot angular jitter time series (theta_x, theta_y) vs time."""
-        self._check_simulated()
         plt.figure()
         plt.plot(self.time * 1e3, self._theta_x * 1e6,
                  label=r'$\theta_x$', alpha=0.7, linewidth=0.8)
@@ -145,7 +115,6 @@ class PointingJitterSimulation:
 
     def plot_power_fading(self) -> None:
         """Plot normalised received power fading vs time."""
-        self._check_simulated()
         plt.figure()
         plt.plot(self.time * 1e3, self._P, color='C0', linewidth=0.8,
                  label='Received power')
@@ -163,13 +132,7 @@ class PointingJitterSimulation:
     def plot_power_pdf(self, bins: int = 80) -> None:
         """
         Plot simulated PDF of normalised received power vs theoretical beta distribution.
-
-        Parameters
-        ----------
-        bins : int
-            Number of histogram bins. Default: 80.
         """
-        self._check_simulated()
         pdf_sim, edges = np.histogram(self._P, bins=bins, density=True)
         centers = 0.5 * (edges[:-1] + edges[1:])
 
@@ -207,6 +170,5 @@ class PointingJitterSimulation:
 
 if __name__ == '__main__':
     sim = PointingJitterSimulation(OS.optical_system1, T=5.0, seed=42)
-    sim.run()
     sim.print_summary()
     sim.plot_all()

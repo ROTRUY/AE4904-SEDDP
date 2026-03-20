@@ -3,6 +3,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.special import erfc
+from scipy.signal import butter, filtfilt
 
 import optical_system as OS
 import LinkBudgetOptical as LBO
@@ -21,6 +22,7 @@ class BERSimulation:
         self.os = optical_system
         self.lb = LBO.LinkBudget(optical_system)
         self.T_sim = T_sim
+        self.fs = 2*optical_system['transmitter_specs']['fsm_bandwidth']
 
         # --- 1. Mean received power from link budget ---
         tx_power_dBm = optical_system['transmitter_specs']['transmitter_laser_power']
@@ -35,10 +37,8 @@ class BERSimulation:
 
         # --- 3. Pointing jitter fading trace ---
         self.jitter_sim = PointingJitterSimulation(self.os, self.T_sim, seed)
-        self.jitter_sim.run()
-
         self.u, self.n_raw, self.t = self._generate_traces()
-        self.n = self._apply_lpf(self.n_raw)
+        self.n = self._apply_lpf(self.n_raw, self.fs)
 
         self.BER_mean = self.compute_mean_BER()
 
@@ -87,25 +87,19 @@ class BERSimulation:
 
         return u, n, t
 
-    def _apply_lpf(self, n: np.ndarray) -> np.ndarray:
+    def _apply_lpf(self, n: np.ndarray, fs: float):
         """
-        Low-pass filter the noise trace at cutoff B_e = R_b / 2.
-
-        Since n(t) is sampled at fs = 2*fsm_bandwidth = 2 kHz, which is far
-        below B_e = 1 GHz, the filter has no effect at this sampling rate.
-        The bandwidth B_e is already embedded in sigma2 via OpticalNoiseV2.
-
-        n : ndarray  — white Gaussian noise trace [A]
-        n_filtered : ndarray  — filtered noise trace [A]
+        Low-pass filter the noise trace at cutoff B_e using a Butterworth filter.
+        Applied via zero-phase filtering (filtfilt) to avoid phase distortion.
         """
-        fs = 2 * self.os['transmitter_specs']['fsm_bandwidth']  # 2 kHz
-        kernel_width = max(1, int(fs / B_e))                    # = 1
+        nyquist = fs / 2.0
 
-        if kernel_width == 1:
+        if B_e >= nyquist:
+            # cutoff is above or at Nyquist: filter passes everything, no-op
             return n.copy()
 
-        kernel = np.ones(kernel_width) / kernel_width
-        return np.convolve(n, kernel, mode='same')
+        b, a = butter(N=4, Wn=B_e / nyquist, btype='low')
+        return filtfilt(b, a, n)
 
     def _select_windows(self, N_windows: int = 100) -> tuple[np.ndarray, np.ndarray]:
         """
@@ -131,9 +125,10 @@ class BERSimulation:
         """
         Compute BER for each window using the mean fading level.
         """
-        u_k = np.mean(u_windows, axis=1)  # shape (N_windows,)
+        self.u_k = np.mean(u_windows, axis=1)  # shape (N_windows,)
 
-        BER_windows = 0.5 * erfc(np.sqrt(self.SNR) * u_k / (2 * np.sqrt(2)))
+        # self.BER_windows = 0.5 * erfc(np.sqrt(self.SNR) * self.u_k / (2 * np.sqrt(2)))
+        BER_windows = 0.5 * erfc(self.SNR * self.u_k / (2 * np.sqrt(2)))
 
         return BER_windows
 
@@ -145,10 +140,8 @@ class BERSimulation:
             ≈ integral_0^inf p(u) * 0.5 * erfc(<SNR>*u / 2*sqrt(2)) du
         """
         u_windows, n_windows = self._select_windows(N_windows)
-        BER_windows = self._compute_window_BER(u_windows)
-        self.BER_mean = float(np.mean(BER_windows))
-        self.BER_windows = BER_windows   # store for plots
-        self.u_k = np.mean(u_windows, axis=1)  # store for plots
+        self.BER_windows = self._compute_window_BER(u_windows)
+        self.BER_mean = float(np.mean(self.BER_windows))
 
         return self.BER_mean
 
@@ -206,7 +199,6 @@ class BERSimulation:
         plt.grid(True, alpha=0.3)
         plt.tight_layout()
 
-
     def plot_jitter(self) -> None:
         plt.figure()
         plt.plot(self.t * 1e3, self.u_jitter, color='steelblue', linewidth=0.8)
@@ -218,7 +210,6 @@ class BERSimulation:
         plt.legend()
         plt.grid(True, alpha=0.3)
         plt.tight_layout()
-
 
     def plot_combined_fading(self) -> None:
         plt.figure()
@@ -287,33 +278,13 @@ class BERSimulation:
         plt.grid(True, which='both', alpha=0.3)
         plt.tight_layout()
 
-    def plot_fading_pdf(self) -> None:
-        beta = self.jitter_sim.get_beta_param()
-        u_theory = np.linspace(1e-4, max(self.u), 500)
-        pdf_sim, edges = np.histogram(self.u, bins=80, density=True)
-        centers = 0.5 * (edges[:-1] + edges[1:])
-
-        plt.figure()
-        plt.bar(centers, pdf_sim, width=np.diff(edges),
-                alpha=0.5, color='steelblue', label='Simulation')
-        plt.plot(u_theory, beta * u_theory ** (beta - 1), color='crimson',
-                linestyle='--', linewidth=2,
-                label=fr'Beta PDF $\beta$={beta:.1f}')
-        plt.xlabel('Normalised power $u$ [–]')
-        plt.ylabel('Probability density')
-        plt.title('PDF of Fading $p(u)$')
-        plt.legend()
-        plt.grid(True, alpha=0.3)
-        plt.tight_layout()
-
     def plot_all(self) -> None:
-        self.plot_scintillation()
-        self.plot_jitter()
-        self.plot_combined_fading()
-        self.plot_noise()
+        # self.plot_scintillation()
+        # self.plot_jitter()
+        # self.plot_combined_fading()
+        # self.plot_noise()
         # self.plot_BER_trace()
         self.plot_BER_sweep()
-        self.plot_fading_pdf()
         plt.show()
 
 

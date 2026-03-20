@@ -39,7 +39,8 @@ class LinkBudget():
         """
         theta_div
         """
-        return self.transmitter_divergence_angle
+        # return self.transmitter_divergence_angle
+        return 5.45e-6
 
     def get_transmitter_gain(self):
         """
@@ -92,7 +93,7 @@ class LinkBudget():
             q = 0.16 * visibility_km + 0.34
         else:
             q = 0.0  # heavy fog regime
-        
+
         """
         Second, compute atmospheric attenuation in dB
         using Beer–Lambert + Kruse model.
@@ -126,13 +127,21 @@ class LinkBudget():
         # Variance of one axis
         sigma_pj = A * f_c * np.arctan(f_max / f_c)  # integral of S(f)
         return np.sqrt(sigma_pj)  # 1-axis RMS [rad]
-    
+
     def get_pointing_jitter(self):
         """
-        Post-FSM residual pointing jitter RMS [rad], 1-axis.
-        FSM suppresses open-loop platform jitter; residual = fsm_accuracy.
+        Post-FSM residual jitter: integral from fsm_bandwidth to infinity.
+        FSM acts as a high-pass filter; only energy above f_BW remains.
+
+        For Lorentzian S(f) = A / (1 + (f/f_c)^2):
+            ∫_{f_BW}^{inf} S(f) df = A * f_c * (pi/2 - arctan(f_BW / f_c))
         """
-        return self.fsm_accuracy  # 1e-6 rad
+        A = self.psd_amplitude
+        f_c = self.psd_corner_freq
+
+        sigma_sq = A * f_c * (np.pi / 2 - np.arctan(self.fsm_bandwidth / f_c))
+        return np.sqrt(sigma_sq)
+        # return self.fsm_accuracy  # 1e-6 rad
 
     def get_static_pointing_error_loss(self):
         """
