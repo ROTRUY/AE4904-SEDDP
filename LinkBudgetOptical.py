@@ -116,8 +116,8 @@ class LinkBudget():
         f_c = self.psd_corner_freq  # Hz
 
         # Variance of one axis
-        sigma_pj = A * f_c * pi/2
-        return np.sqrt(sigma_pj)  # 1-axis RMS [rad]
+        sigma_ol = A * f_c * pi/2
+        return np.sqrt(sigma_ol)  # 1-axis RMS [rad]
 
     def get_pointing_jitter(self):
         """
@@ -241,7 +241,7 @@ class LinkBudget():
         sigma_I = np.sqrt(self.get_scintillation_index())
         scintillation_loss = (3.3 - 5.77 * np.sqrt(-np.log(self.get_p_outage()))) * sigma_I**(4/5)
         return scintillation_loss
- 
+
     def get_total_link_budget(self, laser_power):
         """
         Total link budget
@@ -282,7 +282,8 @@ print("\nPointing losses:")
 print(f'- Static pointing error loss: {link_budget.get_static_pointing_error_loss():.2f} dB')
 print(f'- Average pointing jitter loss: {link_budget.get_avg_pointing_jitter_loss():.2f} dB \n')
 print(f'- Pointing jitter induced scintillation loss: {link_budget.get_pointing_jitter_scintillation_loss():.2f} dB')
-print(f'- Sigma_pj: {link_budget.get_pointing_jitter()}')
+print(f'- Sigma_pj: {1e6*link_budget.get_pointing_jitter():.2f} µrad')
+print(f'- Sigma_ol: {1e6*link_budget.get_pointing_jitter_openloop():.2f} µrad')
 
 print('Atmospheric losses:\n')
 
