@@ -1,7 +1,8 @@
-### IMPORTS
-from math import pi, exp, log10, sqrt
+# IMPORTS
+from math import pi, exp, log10
 import numpy as np
 import optical_system as OS
+
 
 class LinkBudget():
     """
@@ -24,23 +25,23 @@ class LinkBudget():
         self.freq = c / optical_system['transmitter_specs']['wavelength']  # Frequency from wavelength
         self.h = optical_system['link_benchmark_specs']['altitude']  # altitude [m]
         self.R = self.h / np.sin(self.elevation_angle)  # Link range
-        self.theta = optical_system['transmitter_specs']['platform_drift_angle']  # Beam jitter angle
-        self.transmitter_divergence_angle = 5.45e-6 #self.Lambda / optical_system['transmitter_specs']['transmitter_aperture']  # lambda / aperture
+        self.theta = optical_system['transmitter_specs']['platform_drift_angle']  # Beam jitter angle NOT USED
         self.transmitter_pointing_error = optical_system['transmitter_specs']['transmitter_pointing_error']
         self.receiver_outage_power = optical_system['receiver_specs']['receiver_outage_power']
         self.outage_probability = optical_system['receiver_specs'].get('outage_probability', 1e-3)
         self.receiver_threshold_dbm = optical_system['receiver_specs']['receiver_threshold_dbm']
         self.transmission_optics = optical_system['transmitter_specs']['transmission_optics']
         self.fsm_bandwidth = optical_system['transmitter_specs']['fsm_bandwidth']   # Hz
-        self.fsm_accuracy = optical_system['transmitter_specs']['fsm_accuracy']  # rad
         self.psd_amplitude = optical_system['transmitter_specs']['psd_amplitude']    # rad2/Hz
         self.psd_corner_freq = optical_system['transmitter_specs']['psd_corner_freq']  # Hz
+        self.transmitter_divergence_angle = self.get_transmitter_divergence_angle()
 
     def get_transmitter_divergence_angle(self):
         """
-        theta_div
+        Divergence angle of transmitter
         """
-        return self.transmitter_divergence_angle
+        theta_div = self.Lambda / self.D_T
+        return theta_div
 
     def get_transmitter_gain(self):
         """
@@ -81,7 +82,7 @@ class LinkBudget():
         First, compute Kruse model exponent q based on visibility.
         """
         visibility_km = 10  # visibility as provided by meteorological data TODO change
-        wavelength = self.Lambda 
+        wavelength = self.Lambda
         atmosphere_height_km = 4  # reference height for Kruse model
         zenith_angle = pi/2 - self.elevation_angle  # zenith angle
 
@@ -93,7 +94,7 @@ class LinkBudget():
             q = 0.16 * visibility_km + 0.34
         else:
             q = 0.0  # heavy fog regime
-        
+
         """
         Second, compute atmospheric attenuation in dB
         using Beer–Lambert + Kruse model.
@@ -111,29 +112,28 @@ class LinkBudget():
         """
         Open-loop platform pointing jitter RMS [rad], 1-axis.
         Raw platform vibration before FSM correction.
-
-        Model: Lorentzian PSD  S(f) = A / (1 + (f/f_c)^2)  [rad^2/Hz]
-        Variance: sigma^2 = integral_0^{f_max} S(f) df
-                          = A * f_c * arctan(f_max / f_c)
-        - Single-axis jitter; total 2D radial sigma = sqrt(2) * sigma_1axis
-        (isotropic Gaussian assumed, consistent with pointing_jitter.py)
-        - Lorentzian PSD is a first-order approximation; no resonance peaks
-        - Integration up to fsm_bandwidth only
         """
         A = self.psd_amplitude    # rad^2/Hz
         f_c = self.psd_corner_freq  # Hz
-        f_max = self.fsm_bandwidth  # Hz
 
         # Variance of one axis
-        sigma_pj = A * f_c * np.arctan(f_max / f_c)  # integral of S(f)
+        sigma_pj = A * f_c * pi/2
         return np.sqrt(sigma_pj)  # 1-axis RMS [rad]
-    
+
     def get_pointing_jitter(self):
         """
-        Post-FSM residual pointing jitter RMS [rad], 1-axis.
-        FSM suppresses open-loop platform jitter; residual = fsm_accuracy.
+        Post-FSM residual jitter: integral from fsm_bandwidth to infinity.
+        FSM acts as a high-pass filter; only energy above f_BW remains.
+
+        For Lorentzian S(f) = A / (1 + (f/f_c)^2):
+            ∫_{f_BW}^{inf} S(f) df = A * f_c * (pi/2 - arctan(f_BW / f_c))
         """
-        return self.fsm_accuracy  # 1e-6 rad
+        A = self.psd_amplitude
+        f_c = self.psd_corner_freq
+
+        sigma_sq = A * f_c * (np.pi / 2 - np.arctan(self.fsm_bandwidth / f_c))
+        return np.sqrt(sigma_sq)
+        # return self.fsm_accuracy  # 1e-6 rad
 
     def get_static_pointing_error_loss(self):
         """
@@ -176,11 +176,11 @@ class LinkBudget():
         wave_number = 2 * pi / self.Lambda
         prop_distance = self.h / np.sin(self.elevation_angle)
         h = np.linspace(0, prop_distance, 500)
-        cn_integral = np.trapz([self.get_HV57_CN(hi)*hi**(5/6) for hi in h], h)
-        scintillation_index = 2.25 * wave_number **(7/6) * cn_integral
+        cn_integral = np.trapezoid([self.get_HV57_CN(hi)*hi**(5/6) for hi in h], h)
+        scintillation_index = 2.25 * wave_number ** (7/6) * cn_integral
         return scintillation_index
 
-    def get_Strehl_ratio_loss(self): # TODO check D_R
+    def get_Strehl_ratio_loss(self):  # TODO check D_R
         """
         Strehl ratio loss
         """
@@ -196,7 +196,7 @@ class LinkBudget():
         k = 2 * pi / self.Lambda
         prop_distance = self.h / np.sin(self.elevation_angle)
         h = np.linspace(0, prop_distance, 500)
-        cn_integral = np.trapz([self.get_HV57_CN(hi) for hi in h], h)
+        cn_integral = np.trapezoid([self.get_HV57_CN(hi) for hi in h], h)
         r_0 = (0.423 * k**2 * cn_integral)**(-3/5)
         return r_0
 
@@ -242,7 +242,7 @@ class LinkBudget():
         sigma_I = np.sqrt(self.get_scintillation_index())
         scintillation_loss = (3.3 - 5.77 * np.sqrt(-np.log(self.get_p_outage()))) * sigma_I**(4/5)
         return scintillation_loss
-    
+ 
     def get_total_link_budget(self, laser_power):
         """
         Total link budget
@@ -290,15 +290,10 @@ print(f"  {('Transmission loss'): <{label_width}} {link_budget.get_transmission_
 print(f"  {('Atmospheric loss'): <{label_width}} {link_budget.get_atmospheric_loss():>8.2f} dB")
 
 print("\nPointing losses:")
-print(
-    f"  {('Static pointing error loss'): <{label_width}} {link_budget.get_static_pointing_error_loss():>8.2f} dB"
-)
-print(
-    f"  {('Average pointing jitter loss'): <{label_width}} {link_budget.get_avg_pointing_jitter_loss():>8.2f} dB"
-)
-print(
-    f"  {('Pointing jitter induced scintillation loss'): <{label_width}} {link_budget.get_pointing_jitter_scintillation_loss():>8.2f} dB"
-)
+print(f'- Static pointing error loss: {link_budget.get_static_pointing_error_loss():.2f} dB')
+print(f'- Average pointing jitter loss: {link_budget.get_avg_pointing_jitter_loss():.2f} dB \n')
+print(f'- Pointing jitter induced scintillation loss: {link_budget.get_pointing_jitter_scintillation_loss():.2f} dB')
+print(f'- Sigma_pj: {link_budget.get_pointing_jitter()}')
 
 print("\nAtmospheric losses:")
 print(
