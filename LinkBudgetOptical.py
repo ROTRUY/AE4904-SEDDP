@@ -26,7 +26,6 @@ class LinkBudget():
         self.h = optical_system['link_benchmark_specs']['altitude']  # altitude [m]
         self.R = self.h / np.sin(self.elevation_angle)  # Link range
         self.theta = optical_system['transmitter_specs']['platform_drift_angle']  # Beam jitter angle NOT USED
-        self.transmitter_divergence_angle = self.Lambda / optical_system['transmitter_specs']['transmitter_aperture']  # lambda / aperture
         self.transmitter_pointing_error = optical_system['transmitter_specs']['transmitter_pointing_error']
         self.receiver_outage_power = optical_system['receiver_specs']['receiver_outage_power']
         self.outage_probability = optical_system['receiver_specs'].get('outage_probability', 1e-3)
@@ -34,13 +33,14 @@ class LinkBudget():
         self.fsm_bandwidth = optical_system['transmitter_specs']['fsm_bandwidth']   # Hz
         self.psd_amplitude = optical_system['transmitter_specs']['psd_amplitude']    # rad2/Hz
         self.psd_corner_freq = optical_system['transmitter_specs']['psd_corner_freq']  # Hz
+        self.transmitter_divergence_angle = self.get_transmitter_divergence_angle()
 
     def get_transmitter_divergence_angle(self):
         """
-        theta_div
+        Divergence angle of transmitter
         """
-        # return self.transmitter_divergence_angle
-        return 5.45e-6
+        theta_div = self.Lambda / self.D_T
+        return theta_div
 
     def get_transmitter_gain(self):
         """
@@ -81,7 +81,7 @@ class LinkBudget():
         First, compute Kruse model exponent q based on visibility.
         """
         visibility_km = 10  # visibility as provided by meteorological data TODO change
-        wavelength = self.Lambda 
+        wavelength = self.Lambda
         atmosphere_height_km = 4  # reference height for Kruse model
         zenith_angle = pi/2 - self.elevation_angle  # zenith angle
 
@@ -111,21 +111,12 @@ class LinkBudget():
         """
         Open-loop platform pointing jitter RMS [rad], 1-axis.
         Raw platform vibration before FSM correction.
-
-        Model: Lorentzian PSD  S(f) = A / (1 + (f/f_c)^2)  [rad^2/Hz]
-        Variance: sigma^2 = integral_0^{f_max} S(f) df
-                          = A * f_c * arctan(f_max / f_c)
-        - Single-axis jitter; total 2D radial sigma = sqrt(2) * sigma_1axis
-        (isotropic Gaussian assumed, consistent with pointing_jitter.py)
-        - Lorentzian PSD is a first-order approximation; no resonance peaks
-        - Integration up to fsm_bandwidth only
         """
         A = self.psd_amplitude    # rad^2/Hz
         f_c = self.psd_corner_freq  # Hz
-        f_max = self.fsm_bandwidth  # Hz
 
         # Variance of one axis
-        sigma_pj = A * f_c * np.arctan(f_max / f_c)  # integral of S(f)
+        sigma_pj = A * f_c * pi/2
         return np.sqrt(sigma_pj)  # 1-axis RMS [rad]
 
     def get_pointing_jitter(self):
