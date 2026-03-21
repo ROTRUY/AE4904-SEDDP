@@ -27,6 +27,7 @@ optical_system1 = {
         "receiver_outage_power": 0.2,  # normalised (1 = max received power) (taken from slides)
         "outage_probability": 1e-3,  # suggested assumption (0.1% outage)
         "receiver_avg_power": 0.85,  # normalised (taken from slides)
+        "receiver_threshold_dbm": 30.0,
         "cpa_resolution": 500*1e-3,  # radians
     },
     "other_specs": {
