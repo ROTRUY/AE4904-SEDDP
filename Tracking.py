@@ -3,7 +3,7 @@ File to design lens and tracking detector.
 """
 
 ### DESIGN PARAMETERS ###
-aperture = 0.2        # Effective system aperture (about half the FSM diameter) (m)
+aperture = 0.2         # Effective system aperture (about half the FSM diameter) (m)
 focal_length = 0.1     # Focal length of the lens (m)
 angular_range = 1e-3   # FSM tracking range (rad)
 

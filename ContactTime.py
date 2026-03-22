@@ -13,7 +13,7 @@ optical_system = OS.optical_system1
 dataVolume = optical_system['link_benchmark_specs']['dataVolume']
 altitude = optical_system['link_benchmark_specs']['altitude']
 
-### GROUND STATION NETWORKS
+### GROUND STATION NETWORKS ###
 # Format: "StationName": (Latitude [deg], Longitude [deg], Altitude [km], Minimum Elevation [deg])
 # Optical
 OpticalNetwork = {
@@ -23,19 +23,8 @@ OpticalNetwork = {
                 "Nemea":    (37.85,  22.62, 0.300, 30), 
                 "Nicosia":  (34.80,  33.40, 0.220, 30), 
                 "Porto":    (41.50,  -8.80, 0.100, 30)
-                }
-
-RFFromOptical = {
-                "Delft":    (51.99,   4.38, 0.060, 10), 
-                "Granada":  (37.00,  -3.20, 0.738, 10), 
-                "Tenerife": (28.30, -16.51, 2.400, 10), 
-                "Nemea":    (37.85,  22.62, 0.300, 10), 
-                "Nicosia":  (34.80,  33.40, 0.220, 10), 
-                "Porto":    (41.50,  -8.80, 0.100, 10)
-                }
-
-# "Weilheim":  (47.88, 11.08, 0.563, 10), 
-
+                } 
+# RF
 RFNetwork = {
                 "Redu":       (50.00,  5.15,  0.387, 10), 
                 "Cebreros":   (40.45, -4.37,  0.794, 10), 
@@ -43,13 +32,7 @@ RFNetwork = {
                 "Fucino":     (41.98,  13.60, 0.661, 10)
                 }
 
-SSONetwork = {
-                "Svalbard": (78.22, 15.63, 0, 30),
-                "Trollsat": (-72.00,  2.53, 0, 30),
-                }
-
-
-### CLASSES
+### CLASSES ###
 class ContactTimes():
     """
     Class for calculating stuff about the contact times.
@@ -362,7 +345,7 @@ def availability(P_contact: list[float]) -> float:
 # RF Network: ["Redu", "Cebreros", "Maspalomas", "Fucino"]
 # print(availability([.5069, .8767, .9288, .7260])) # RF network availability: 0.998813879981776
 
-inclination = 98
+inclination = 40
 
 opt_groundtrack = "GMATReports\DelftReport.csv"
 rf_groundtrack = "GMATReports\CebrerosReport.csv"
@@ -377,9 +360,5 @@ opticalTimes.plotMap(OpticalNetwork, 550, inclination, None, False, True, f"OptM
 rfTimes = ContactTimes(f"RF{inclination}.txt")
 #rfTimes.summary(False, True, f"RFSum{inclination}")
 #rfTimes.plot(False, True, f"RFPlot{inclination}")
-rfTimes.plotMap(RFNetwork, 550, inclination, None, False, True, f"RFMap")
+rfTimes.plotMap(RFNetwork, 550, inclination, rf_groundtrack, False, True, f"RFMap{inclination}")
 """
-
-ssoTimes = ContactTimes(f"SSO.txt")
-ssoTimes.summary(True, False, f"SSOSum")
-ssoTimes.plotMap(SSONetwork, 550, inclination, sso_groundtrack, True, False, f"SSOMap")
