@@ -2,7 +2,6 @@ import numpy as np
 from math import erfc
 from helpers import *
 
-
 class OpticalNoiseV2:
 
     def __init__(self, P_R:float, wavelength:float, B_e:float, T:float=300, R:float=50, eta:float=0.9, i_D:float=1e-9, responsivity:float=None, detector_type:str="PIN", detector_material:str="ingaas", M:float=1):
@@ -189,5 +188,6 @@ class OpticalNoiseV2:
 #verifyV2 = OpticalNoiseV2(P_R=3e-7, wavelength=1300e-9, B_e=20e6, T=293, R=1000, eta=0.90, i_D=4e-9)
 #verifyV2.summary(True)
 
-exampleV2 = OpticalNoiseV2(P_R=5e-6, wavelength=1550e-9, B_e=2e9, T=300, R=20e3, eta=0.80, i_D=20e-9, detector_type="APD", M=10)
-exampleV2.summary(False)
+
+exampleV2 = OpticalNoiseV2(P_R=2e-6, wavelength=1550e-9, B_e=3e9, T=300, R=1000, eta=0.90, i_D=10e-9, detector_type="APD", M=10)
+exampleV2.summary(in_dB=True)
