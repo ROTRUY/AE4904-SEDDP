@@ -125,7 +125,7 @@ def plot_ber_contour(
     plt.ylabel('Laser power [dBm]')
     plt.title('Required aperture vs laser power — feasible region')
     plt.grid(True, alpha=0.3)
-    plt.axis([5,20,20,35])
+    # plt.axis([5,20,20,35])
     plt.tight_layout()
     plt.show()
 
@@ -169,8 +169,9 @@ def plot_ber_3d(
 
 
 if __name__ == '__main__':
+    plt.clf()
     N = 10
-    aperture_range = np.linspace(0.05, 0.20, N)  # 5 cm to 20 cm
+    aperture_range = np.linspace(0.05, 0.40, N)  # 5 cm to 20 cm
     power_range = np.linspace(5, 40, N)  # 20 dBm (100 mW) to 40 dBm (10 W)
     ber_targets = np.array([1e-6, 1e-3])
     ber_target = 1e-6
