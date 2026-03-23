@@ -37,62 +37,10 @@ def compute_ber_grid(
     return ber_grid
 
 
-def find_optimum(
-    aperture_range: np.ndarray,
-    power_range: np.ndarray,
-    ber_grid: np.ndarray,
-    ber_target: float = 1e-6,
-) -> float:
-    """
-    Find optimum operating point from the precomputed BER grid.
-
-    Hardware-efficient minimising the combined normalised cost:
-            cost = (D_T - D_T_min) / (D_T_max - D_T_min)
-                 + (P_tx - P_tx_min) / (P_tx_max - P_tx_min)
-        i.e. the point with smallest aperture and lowest power that meets
-        the target. Equal weighting assumed.
-    """
-    valid = ~np.isnan(ber_grid)
-
-    # --- Criterion: smallest hardware footprint meeting BER target ---
-    feasible = valid & (ber_grid <= ber_target)
-    if not np.any(feasible):
-        result = None
-    else:
-        D_norm = (aperture_range - aperture_range.min()) / (aperture_range.max() - aperture_range.min())
-        P_norm = (power_range - power_range.min()) / (power_range.max() - power_range.min())
-        D_mesh, P_mesh = np.meshgrid(D_norm, P_norm, indexing='ij')
-        cost = D_mesh + P_mesh
-        cost[~feasible] = np.inf
-        idx_flat2 = np.argmin(cost)
-        i2, j2 = np.unravel_index(idx_flat2, ber_grid.shape)
-        result = {
-            'D_T':  aperture_range[i2],
-            'P_tx': power_range[j2],
-            'BER':  ber_grid[i2, j2],
-            'i': i2, 'j': j2,
-        }
-
-    return result
-
-
-def print_optimum(optimum: float, ber_target: float = 1e-6) -> None:
-    r = optimum
-    print("\nCriterion 2 — Hardware-efficient (BER <= {:.0e})".format(ber_target))
-    if r is None:
-        print("  No grid point meets the BER target.")
-    else:
-        print(f"  D_T     : {r['D_T']*100:.2f} cm")
-        print(f"  P_tx    : {r['P_tx']:.1f} dBm")
-        print(f"  BER     : {r['BER']:.3e}")
-    print("=" * 50)
-
-
 def plot_ber_contour(
     aperture_range: np.ndarray,
     power_range: np.ndarray,
     ber_grid: np.ndarray,
-    optimum: dict = None,
     ber_targets: list = [1e-6, 1e-3],
 ) -> None:
     D_mesh, P_mesh = np.meshgrid(aperture_range * 100, power_range, indexing='ij')
@@ -133,12 +81,10 @@ def plot_ber_contour(
 def plot_ber_3d(
     aperture_range: np.ndarray,
     power_range: np.ndarray,
-    ber_grid: np.ndarray,
-    optimum: dict = None,
+    ber_grid: np.ndarray
 ) -> None:
     """
     3D surface plot of log10(BER) over transmitter aperture and laser power.
-    Optionally marks criterion 1 (star) and criterion 2 (diamond) optimum points.
     """
     D_mesh, P_mesh = np.meshgrid(aperture_range * 100, power_range, indexing='ij')
     log_ber = np.log10(np.clip(ber_grid, 1e-20, 1.0))
@@ -171,8 +117,8 @@ def plot_ber_3d(
 if __name__ == '__main__':
     plt.clf()
     N = 10
-    aperture_range = np.linspace(0.05, 0.40, N)  # 5 cm to 20 cm
-    power_range = np.linspace(5, 40, N)  # 20 dBm (100 mW) to 40 dBm (10 W)
+    aperture_range = np.linspace(0.05, 0.40, N)  # 5 cm to 40 cm
+    power_range = np.linspace(5, 40, N)  # 5 dBm to 40 dBm (10 W)
     ber_targets = np.array([1e-6, 1e-3])
     ber_target = 1e-6
 
@@ -184,8 +130,5 @@ if __name__ == '__main__':
         seed=42,
     )
 
-    optimum = find_optimum(aperture_range, power_range, ber_grid, ber_target)
-    print_optimum(optimum, ber_target=1e-6)
-
-    # plot_ber_3d(aperture_range, power_range, ber_grid, optimum=optimum)
-    plot_ber_contour(aperture_range, power_range, ber_grid, optimum, ber_targets)
+    # plot_ber_3d(aperture_range, power_range, ber_grid)
+    plot_ber_contour(aperture_range, power_range, ber_grid, ber_targets)
