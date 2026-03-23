@@ -16,9 +16,8 @@ optical_system1 = {
         "fsm_bandwidth": 1700,  # Hz - FSM correction bandwidth
         "psd_amplitude": 160e-12,  # rad²/Hz - Lorentzian model
         "psd_corner_freq": 1.0,  # Hz - Lorentzian PSD
-        "transmitter_aperture": 0.20,  # m
-        "transmitter_pointing_error": 1e-6,  # rad - same as fsm_accuracy because final correction element
-        "transmitter_laser_power": 20,  # dBm (10W = 30dBm)
+        "transmitter_aperture": 0.15,  # m
+        "transmitter_laser_power": 26,  # dBm (10W = 30dBm)
         "transmission_optics": 0.5,  # from slides
         "tau_c": 1e-3,  # scintillation coherence time [s]
     },
