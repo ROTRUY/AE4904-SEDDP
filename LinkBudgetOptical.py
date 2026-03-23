@@ -25,8 +25,6 @@ class LinkBudget():
         self.freq = c / optical_system['transmitter_specs']['wavelength']  # Frequency from wavelength
         self.h = optical_system['link_benchmark_specs']['altitude']  # altitude [m]
         self.R = self.h / np.sin(self.elevation_angle)  # Link range
-        self.theta = optical_system['transmitter_specs']['platform_drift_angle']  # Beam jitter angle NOT USED
-        self.transmitter_pointing_error = optical_system['transmitter_specs']['transmitter_pointing_error']
         self.receiver_outage_power = optical_system['receiver_specs']['receiver_outage_power']
         self.outage_probability = optical_system['receiver_specs'].get('outage_probability', 1e-3)
         self.receiver_threshold_dbm = optical_system['receiver_specs']['receiver_threshold_dbm']
@@ -34,7 +32,9 @@ class LinkBudget():
         self.fsm_bandwidth = optical_system['transmitter_specs']['fsm_bandwidth']   # Hz
         self.psd_amplitude = optical_system['transmitter_specs']['psd_amplitude']    # rad2/Hz
         self.psd_corner_freq = optical_system['transmitter_specs']['psd_corner_freq']  # Hz
+
         self.transmitter_divergence_angle = self.get_transmitter_divergence_angle()
+        self.transmitter_pointing_error = self.get_pointing_jitter() # last correction is fsm
 
     def get_transmitter_divergence_angle(self):
         """
