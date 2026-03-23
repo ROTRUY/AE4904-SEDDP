@@ -2,6 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 import optical_system as OS
+import LinkBudgetOptical as LBO
 
 
 def main(optical_system: dict = OS.optical_system1) -> None:
@@ -9,8 +10,12 @@ def main(optical_system: dict = OS.optical_system1) -> None:
     altitude = optical_system["link_benchmark_specs"]["altitude"]  # [m]
     wavelength = optical_system["transmitter_specs"]["wavelength"]  # [m]
 
-    transmitter_pointing_error = optical_system["transmitter_specs"]["transmitter_pointing_error"]  # [rad]
-    sigma_pj = optical_system["transmitter_specs"]["fsm_accuracy"]  # [rad]
+    link_budget = LBO.LinkBudget(optical_system)
+
+    # transmitter_pointing_error = optical_system["transmitter_specs"]["transmitter_pointing_error"]  # [rad]
+    transmitter_pointing_error = link_budget.get_transmitter_pointing_error()
+    # sigma_pj = optical_system["transmitter_specs"]["fsm_accuracy"]  # [rad]
+    sigma_pj = link_budget.get_pointing_jitter()
     outage_probability = optical_system["receiver_specs"].get("outage_probability", 1e-3)
 
     link_range = altitude / np.sin(elevation_angle)  # [m]

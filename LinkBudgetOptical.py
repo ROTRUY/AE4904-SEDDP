@@ -36,6 +36,9 @@ class LinkBudget():
         self.transmitter_divergence_angle = self.get_transmitter_divergence_angle()
         self.transmitter_pointing_error = self.get_pointing_jitter() # last correction is fsm
 
+    def get_transmitter_pointing_error(self):
+        return self.get_pointing_jitter()
+
     def get_transmitter_divergence_angle(self):
         """
         Divergence angle of transmitter
