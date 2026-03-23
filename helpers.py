@@ -11,5 +11,3 @@ def dB_to_linear(x):
 def dBm_to_watt(x):
     """Convert dBm to watt"""
     return 10 ** (x / 10) / 1000
-
-print(dBm_to_watt(22))

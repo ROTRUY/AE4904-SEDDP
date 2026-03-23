@@ -316,5 +316,6 @@ print(f"  {('Gain receiver'): <{label_width}} {link_budget.get_receiver_gain():>
 print(f"  {('Receiver losses'): <{label_width}} {link_budget.get_receiver_losses():>8.2f} dB")
 
 print(f"\nTotal losses (sum): {total_budget_dbm:.2f}")
+print(f"Link Budget: {link_budget.get_total_link_budget(26)}")
 print(f"Receiver threshold: {receiver_threshold_dbm:.2f} dBm")
 print(f"Link margin: {link_margin_db:.2f} dB")

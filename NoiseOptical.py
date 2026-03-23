@@ -1,6 +1,8 @@
 import numpy as np
 from math import erfc
 from helpers import *
+import optical_system as OS
+from LinkBudgetOptical import LinkBudget
 
 class OpticalNoiseV2:
 
@@ -187,7 +189,27 @@ class OpticalNoiseV2:
 
 #verifyV2 = OpticalNoiseV2(P_R=3e-7, wavelength=1300e-9, B_e=20e6, T=293, R=1000, eta=0.90, i_D=4e-9)
 #verifyV2.summary(True)
+optical_system = OS.optical_system1
+
+B_e = optical_system['noise_specifications']['electrical bandwidth']
+T = optical_system['noise_specifications']["system_temperature"]
+R = optical_system['noise_specifications']["resistance"]
+eta = optical_system['noise_specifications']["quantum efficiency"]
+i_D = optical_system['noise_specifications']["dark current"]
+detector_type = optical_system['noise_specifications']["detector type"]
+detector_material = optical_system['noise_specifications']["detector material"]
+M = optical_system['noise_specifications']["Avalanche gain"]
+wavelength = optical_system['transmitter_specs']['wavelength']
 
 
-exampleV2 = OpticalNoiseV2(P_R=2e-6, wavelength=1550e-9, B_e=3e9, T=300, R=1000, eta=0.90, i_D=10e-9, detector_type="APD", M=10)
+link_budget = LinkBudget(optical_system)
+power_dbm = optical_system["transmitter_specs"]["transmitter_laser_power"]
+total_budget_dbm = link_budget.get_total_link_budget(power_dbm)
+received_power = dBm_to_watt(total_budget_dbm)
+LM = link_budget.get_link_margin(power_dbm)
+
+print(f"Received power: {received_power} W")
+print(f"Total link margin: {LM} dB")
+
+exampleV2 = OpticalNoiseV2(P_R=received_power, wavelength=wavelength, B_e=B_e, T=T, R=R, eta=eta, i_D=i_D, detector_type=detector_type, M=M)
 exampleV2.summary(in_dB=True)

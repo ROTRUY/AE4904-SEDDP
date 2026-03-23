@@ -26,14 +26,14 @@ class BERSimulation:
         self.P_R = 10 ** ((total_dBm - 30) / 10)  # [W]
 
         # --- 2. Noise model at mean received power ---
-        self.B_e = 2e9
-        self.T = 300
-        self.R = 20e3
-        self.eta = 0.80
-        self.i_D = 20e-9
-        self.detector_type = "APD"
-        self.detector_material = "ingaas"
-        self.M = 10
+        self.B_e = optical_system['noise_specifications']['electrical bandwidth']
+        self.T = optical_system['noise_specifications']["system_temperature"]
+        self.R = optical_system['noise_specifications']["resistance"]
+        self.eta = optical_system['noise_specifications']["quantum efficiency"]
+        self.i_D = optical_system['noise_specifications']["dark current"]
+        self.detector_type = optical_system['noise_specifications']["detector type"]
+        self.detector_material = optical_system['noise_specifications']["detector material"]
+        self.M = optical_system['noise_specifications']["Avalanche gain"]
         self.wavelength = optical_system['transmitter_specs']['wavelength']
         self.noise = OpticalNoiseV2(P_R=self.P_R, wavelength=self.wavelength, B_e=self.B_e, T=self.T, R=self.R, eta=self.eta, i_D=self.i_D, detector_type=self.detector_type, detector_material=self.detector_material, M=self.M)
         self.SNR = self.noise.SNR

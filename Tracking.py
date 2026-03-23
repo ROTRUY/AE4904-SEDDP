@@ -7,7 +7,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 ### DESIGN PARAMETERS ###
-aperture =  0.1                            # Effective system aperture (m)
+aperture =  0.3                            # Effective system aperture (m)
 focal_length = 0.1
 #focal_length = np.arange(0.01, 0.3, 0.001) # Focal length of the lens (m), can be float for single calculation, or array for graph
 angular_range = 1                          # FSM tracking range

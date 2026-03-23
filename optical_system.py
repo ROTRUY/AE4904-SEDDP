@@ -16,9 +16,9 @@ optical_system1 = {
         "fsm_bandwidth": 1700,  # Hz - FSM correction bandwidth
         "psd_amplitude": 160e-12,  # rad²/Hz - Lorentzian model
         "psd_corner_freq": 1.0,  # Hz - Lorentzian PSD
-        "transmitter_aperture": 0.18,  # m
+        "transmitter_aperture": 0.20,  # m
         "transmitter_pointing_error": 1e-6,  # rad - same as fsm_accuracy because final correction element
-        "transmitter_laser_power": 22,  # dBm (10W = 30dBm)
+        "transmitter_laser_power": 20,  # dBm (10W = 30dBm)
         "transmission_optics": 0.5,  # from slides
         "tau_c": 1e-3,  # scintillation coherence time [s]
     },
@@ -40,6 +40,13 @@ optical_system1 = {
         "beam_divergence_angle_std": 1,   # degrees
     },
     "noise_specifications": {
-        "system_temperature": 300  # Kelvin
+        "system_temperature": 300,     # Kelvin
+        "electrical bandwidth": 3e9,   # Hz
+        "resistance": 50,            # Ohm
+        "quantum efficiency": 0.90,    # -
+        "dark current": 10e-9,         # A
+        "detector type": "APD",        # PIN or APD
+        "detector material": "ingaas", # 
+        "Avalanche gain": 10,          #
     }
 }
