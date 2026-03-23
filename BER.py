@@ -10,10 +10,6 @@ import LinkBudgetOptical as LBO
 from NoiseOptical import OpticalNoiseV2
 from pointing_jitter import PointingJitterSimulation
 
-# Constants
-B_e = 2e9  # bit rate [bit/s]
-seed = 42
-
 
 class BERSimulation:
 
@@ -22,6 +18,7 @@ class BERSimulation:
         self.lb = LBO.LinkBudget(optical_system)
         self.T_sim = T_sim
         self.fs = 2*optical_system['transmitter_specs']['fsm_bandwidth']
+        self.seed = 42
 
         # --- 1. Mean received power from link budget ---
         tx_power_dBm = optical_system['transmitter_specs']['transmitter_laser_power']
@@ -29,13 +26,21 @@ class BERSimulation:
         self.P_R = 10 ** ((total_dBm - 30) / 10)  # [W]
 
         # --- 2. Noise model at mean received power ---
+        self.B_e = 2e9
+        self.T = 300
+        self.R = 20e3
+        self.eta = 0.80
+        self.i_D = 20e-9
+        self.detector_type = "APD"
+        self.detector_material = "ingaas"
+        self.M = 10
         self.wavelength = optical_system['transmitter_specs']['wavelength']
-        self.noise = OpticalNoiseV2(self.P_R, self.wavelength, B_e)
+        self.noise = OpticalNoiseV2(P_R=self.P_R, wavelength=self.wavelength, B_e=self.B_e, T=self.T, R=self.R, eta=self.eta, i_D=self.i_D, detector_type=self.detector_type, detector_material=self.detector_material, M=self.M)
         self.SNR = self.noise.SNR
         self.sigma2 = self.noise.sigmaTotal  # noise variance [A²]
 
         # --- 3. Pointing jitter fading trace ---
-        self.jitter_sim = PointingJitterSimulation(self.os, self.T_sim, seed)
+        self.jitter_sim = PointingJitterSimulation(self.os, self.T_sim, self.seed)
         self.u, self.n_raw, self.t = self._generate_traces()
         self.n = self._apply_lpf(self.n_raw, self.fs)
 
@@ -50,7 +55,7 @@ class BERSimulation:
         rho   = exp(-dt / tau_c)
         sigma_ln^2 = log(1 + sigma_I^2)
         """
-        rng = np.random.default_rng(seed + 2)
+        rng = np.random.default_rng(self.seed + 2)
         tau_c = self.os['transmitter_specs']['tau_c']
         sigma_I2 = self.lb.get_scintillation_index()
         sigma_ln = np.sqrt(np.log(1 + sigma_I2))   # log-normal parameter
@@ -71,7 +76,7 @@ class BERSimulation:
         n : ndarray  — white Gaussian noise trace, variance = sigma2 [A]
         t : ndarray  — time vector [s]
         """
-        rng = np.random.default_rng(seed + 1)
+        rng = np.random.default_rng(self.seed + 1)
 
         self.u_jitter = self.jitter_sim.get_normalised_power()
         t = self.jitter_sim.time
@@ -93,11 +98,11 @@ class BERSimulation:
         """
         nyquist = fs / 2.0
 
-        if B_e >= nyquist:
+        if self.B_e >= nyquist:
             # cutoff is above or at Nyquist: filter passes everything, no-op
             return n.copy()
 
-        b, a = butter(N=4, Wn=B_e / nyquist, btype='low')
+        b, a = butter(N=4, Wn=self.B_e / nyquist, btype='low')
         return filtfilt(b, a, n)
 
     def _select_windows(self, N_windows: int = 100) -> tuple[np.ndarray, np.ndarray]:
@@ -126,8 +131,8 @@ class BERSimulation:
         """
         self.u_k = np.mean(u_windows, axis=1)  # shape (N_windows,)
 
-        # self.BER_windows = 0.5 * erfc(np.sqrt(self.SNR) * self.u_k / (2 * np.sqrt(2)))
-        BER_windows = 0.5 * erfc(self.SNR * self.u_k / (2 * np.sqrt(2)))
+        BER_windows = 0.5 * erfc(np.sqrt(self.SNR) * self.u_k / (2 * np.sqrt(2)))
+        # BER_windows = 0.5 * erfc(self.SNR * self.u_k / (2 * np.sqrt(2)))
 
         return BER_windows
 
@@ -157,8 +162,7 @@ class BERSimulation:
 
         for i, P_R_dBm in enumerate(P_R_dBm_arr):
             P_R_i = 10 ** ((P_R_dBm - 30) / 10)   # [W]
-
-            noise_i = OpticalNoiseV2(P_R_i, self.wavelength, B_e)
+            noise_i = OpticalNoiseV2(P_R=P_R_i, wavelength=self.wavelength, B_e=self.B_e, T=self.T, R=self.R, eta=self.eta, i_D=self.i_D, detector_type=self.detector_type, detector_material=self.detector_material, M=self.M)
             SNR_i = np.sqrt(noise_i.SNR)  # amplitude ratio
             BER_arr[i] = np.mean(0.5 * erfc(SNR_i * np.mean(u_windows, axis=1) / (2 * np.sqrt(2))))
             SNR_dB[i] = 10 * np.log10(noise_i.SNR)  # power ratio in dB
@@ -278,12 +282,12 @@ class BERSimulation:
         plt.tight_layout()
 
     def plot_all(self) -> None:
-        plt.clf()
-        self.plot_scintillation()
-        self.plot_jitter()
-        self.plot_combined_fading()
-        self.plot_noise()
-        self.plot_BER_trace()
+        plt.close("all")
+        # self.plot_scintillation()
+        # self.plot_jitter()
+        # self.plot_combined_fading()
+        # self.plot_noise()
+        # self.plot_BER_trace()
         self.plot_BER_sweep()
         plt.show()
 

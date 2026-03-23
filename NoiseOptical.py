@@ -5,7 +5,7 @@ from helpers import *
 
 class OpticalNoiseV2:
 
-    def __init__(self, P_R:float, wavelength:float, B_e:float, T:float=300, R:float=50, eta:float=0.9, i_D:float=1e-9, responsivity:float=None, detector_type:str="PIN", detector_material:str="ingaas", M:float=1):
+    def __init__(self, P_R:float, wavelength:float, B_e:float, T:float=300, R:float=50, eta:float=0.9, i_D:float=1e-9, responsivity:float=None, detector_type:str="APD", detector_material:str="ingaas", M:float=10):
         """
         :param P_R: Received optical power at the photodetector [W]
         :type P_R: float
